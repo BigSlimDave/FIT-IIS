@@ -45,3 +45,4 @@ def edit_row(table, row):
         table_head = db_describe(table)
         return render_template('admin/admin_table_edit.html', content=content, account=session, header=table_head, table_name=table)
     else: # POST
+        pass

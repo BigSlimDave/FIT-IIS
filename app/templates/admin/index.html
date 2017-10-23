@@ -29,7 +29,9 @@
                                 <input type="hidden" value="{{item1[0]}}" name="remove_row">
                                 <input type="submit" value="Odebrat">
                             </form>
-                            <button onclick="window.location.href='edit/{{item1[0]}}'">Upravit</button>
+                            <form style="display: inline-block;" method="post" action="edit/{{item1[0]}}">
+                                <input type="submit" name="Upravit">
+                            </form>
                         </span>
                     {% endif %}
                 {% endfor %}
