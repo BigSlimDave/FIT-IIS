@@ -1,0 +1,223 @@
+-- IDS PROJEKT 4/5
+
+-- upraveno na mysql a pouziti na IIS
+
+-- xsmeka13 -- David Smékal 
+-- // xsochu01 -- Jakub Sochůrek //
+DROP DATABASE content;
+
+CREATE DATABASE content
+            DEFAULT CHARACTER SET utf8
+            DEFAULT COLLATE utf8_general_ci;
+
+SET NAMES UTF8;
+
+USE content;
+
+-- VYTVORENI TABULEK --
+-- -----------------------------------------------------
+CREATE TABLE uzivatele(
+    id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    prezdivka VARCHAR(50) UNIQUE NOT NULL,
+    heslo BINARY(77) NOT NULL,
+    role VARCHAR(10) NOT NULL
+) ENGINE=InnoDB;
+
+CREATE TABLE vybaveni(
+    id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    typ VARCHAR(50) NOT NULL,
+    vyrobce VARCHAR(50) NOT NULL,
+    model VARCHAR(50) NOT NULL,
+    popis VARCHAR(255),
+    vlastnik INT UNSIGNED NOT NULL) ENGINE=InnoDB;      -- cizi klic id hrace
+
+CREATE TABLE hrac(
+    id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    prezdivka VARCHAR(50) UNIQUE NOT NULL, -- cizi klic uzivatele->prezdivka
+    jmeno VARCHAR(70) NOT NULL,
+    odberatel TINYINT NOT NULL) ENGINE=InnoDB;
+
+CREATE TABLE klan(
+    id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    nazev VARCHAR(50) NOT NULL,
+    hymna VARCHAR(50) NOT NULL,
+    logo VARCHAR(50) NOT NULL,
+    vudce INT UNSIGNED NOT NULL) ENGINE=InnoDB;       -- cizi klic id hrace
+
+CREATE TABLE hra(
+    id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    nazev_hry VARCHAR(50) NOT NULL,
+    vydavatel_hry VARCHAR(50) NOT NULL,
+    rok_vydani_hry DATE NOT NULL,
+    zanr_hry VARCHAR(50),
+    mod_hry VARCHAR(50)) ENGINE=InnoDB;
+
+CREATE TABLE tym(   
+    id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    nazev VARCHAR(50) NOT NULL,
+    emblem VARCHAR(50) NOT NULL,
+    popis VARCHAR(255),
+    vudce INT UNSIGNED NOT NULL) ENGINE=InnoDB;         -- napojit na cizi klic id hrace
+
+CREATE TABLE zapas(
+    id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    kdy DATE NOT NULL,
+    skore VARCHAR(32) NOT NULL,
+    typ VARCHAR(50) NOT NULL,
+    hra INT UNSIGNED NOT NULL,                -- napojit na cizi klic id
+    turnaj INT UNSIGNED) ENGINE=InnoDB;                     -- cizi klic id
+
+CREATE TABLE ucastnici_zapasu(
+    id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    id_zapas INT UNSIGNED NOT NULL,              -- cizi klic
+    id_tym INT UNSIGNED NOT NULL) ENGINE=InnoDB;               -- cizi klic
+
+CREATE TABLE turnaj(
+    id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    nazev VARCHAR(50) NOT NULL,
+    odmena INT NOT NULL,
+    kdy DATE NOT NULL,
+    kde VARCHAR(50) NOT NULL,
+    kapacita INT NOT NULL) ENGINE=InnoDB;
+
+CREATE TABLE turnaj_wc(
+    turnaj INT UNSIGNED NOT NULL PRIMARY KEY,     -- cizi klic
+    prvni INT UNSIGNED,                           -- cizi klic hrac
+    druhy INT UNSIGNED,                           -- cizi klic hrac
+    treti INT UNSIGNED,                           -- cizi klic hrac
+    ctvrty INT UNSIGNED,                          -- cizi klic hrac
+    paty INT UNSIGNED) ENGINE=InnoDB;                           -- cizi klic hrac
+
+CREATE TABLE turnaj_bezny(
+    turnaj INT UNSIGNED NOT NULL PRIMARY KEY,     -- cizi klic
+    vitez INT UNSIGNED) ENGINE=InnoDB;                          -- cizi klic tym
+
+CREATE TABLE sponzor(
+    id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    typ VARCHAR(50) NOT NULL,
+    nazev VARCHAR(50) NOT NULL,
+    iban VARCHAR(24) NOT NULL) ENGINE=InnoDB;
+
+CREATE TABLE sponzoroval(
+    id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    castka INT NOT NULL,
+    sponzor INT UNSIGNED NOT NULL,                  -- cizi klic sponzor id
+    turnaj INT UNSIGNED NOT NULL) ENGINE=InnoDB;                   -- cizi klic turnaj id
+
+CREATE TABLE klan_clenstvi(
+    id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    hrac INT UNSIGNED NOT NULL,               -- cizi klic id
+    klan INT UNSIGNED NOT NULL) ENGINE=InnoDB;              -- cizi klic id
+
+CREATE TABLE tym_clenstvi(
+    id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    hrac INT UNSIGNED NOT NULL,               -- cizi klic
+    tym INT UNSIGNED NOT NULL) ENGINE=InnoDB;               -- klic klic
+
+CREATE TABLE specializace(
+    id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    hrac INT UNSIGNED NOT NULL,               -- cizi klic id
+    hra INT UNSIGNED NOT NULL) ENGINE=InnoDB;                -- cizi klic id
+
+CREATE TABLE zamereni(
+    id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    klan INT UNSIGNED NOT NULL,               -- cizi klic
+    hra INT UNSIGNED NOT NULL) ENGINE=InnoDB;                -- cizi klic
+
+-- NASTAVENI CIZICH KLICU--
+-- ---------------------------------------------------
+ALTER TABLE hrac ADD FOREIGN KEY(prezdivka) REFERENCES uzivatele(prezdivka) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE vybaveni ADD FOREIGN KEY(vlastnik) REFERENCES hrac(id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE klan ADD FOREIGN KEY(vudce) REFERENCES hrac(id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE tym ADD FOREIGN KEY(vudce) REFERENCES hrac(id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE zapas ADD FOREIGN KEY(hra) REFERENCES hra(id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE zapas ADD FOREIGN KEY(turnaj) REFERENCES turnaj(id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE turnaj_wc ADD FOREIGN KEY(turnaj) REFERENCES turnaj(id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE turnaj_wc ADD FOREIGN KEY(prvni) REFERENCES tym(id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE turnaj_wc ADD FOREIGN KEY(druhy) REFERENCES tym(id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE turnaj_wc ADD FOREIGN KEY(treti) REFERENCES tym(id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE turnaj_wc ADD FOREIGN KEY(ctvrty) REFERENCES tym(id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE turnaj_wc ADD FOREIGN KEY(paty) REFERENCES tym(id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE turnaj_bezny ADD FOREIGN KEY(turnaj) REFERENCES turnaj(id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE turnaj_bezny ADD FOREIGN KEY(vitez) REFERENCES tym(id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE sponzoroval ADD FOREIGN KEY(sponzor) REFERENCES sponzor(id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE sponzoroval ADD FOREIGN KEY(turnaj) REFERENCES turnaj(id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE klan_clenstvi ADD FOREIGN KEY(klan) REFERENCES klan(id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE klan_clenstvi ADD FOREIGN KEY(hrac) REFERENCES hrac(id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE tym_clenstvi ADD FOREIGN KEY(tym) REFERENCES tym(id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE tym_clenstvi ADD FOREIGN KEY(hrac) REFERENCES hrac(id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE specializace ADD FOREIGN KEY(hrac) REFERENCES hrac(id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE specializace ADD FOREIGN KEY(hra) REFERENCES hra(id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE zamereni ADD FOREIGN KEY(klan) REFERENCES klan(id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE zamereni ADD FOREIGN KEY(hra) REFERENCES hra(id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE ucastnici_zapasu ADD FOREIGN KEY(id_zapas) REFERENCES zapas(id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE ucastnici_zapasu ADD FOREIGN KEY(id_tym) REFERENCES tym(id) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- TESTOVACI DATA--
+-- ---------------------------------------------------
+insert into uzivatele (prezdivka, heslo, role) VALUES ('borec1', '$5$rounds=535000$luAVQo8aU4Rof7K7$a4dRavFVKAPSPc0ID8JPSBkElgrIJtuLO4kDCsXgxJ7', 'user');
+insert into uzivatele (prezdivka, heslo, role) VALUES ('borec2', '$5$rounds=535000$luAVQo8aU4Rof7K7$a4dRavFVKAPSPc0ID8JPSBkElgrIJtuLO4kDCsXgxJ7', 'user');
+insert into uzivatele (prezdivka, heslo, role) VALUES ('borec3', '$5$rounds=535000$luAVQo8aU4Rof7K7$a4dRavFVKAPSPc0ID8JPSBkElgrIJtuLO4kDCsXgxJ7', 'user');
+insert into uzivatele (prezdivka, heslo, role) VALUES ('borec4', '$5$rounds=535000$luAVQo8aU4Rof7K7$a4dRavFVKAPSPc0ID8JPSBkElgrIJtuLO4kDCsXgxJ7', 'user');
+insert into uzivatele (prezdivka, heslo, role) VALUES ('borec5', '$5$rounds=535000$luAVQo8aU4Rof7K7$a4dRavFVKAPSPc0ID8JPSBkElgrIJtuLO4kDCsXgxJ7', 'user');
+insert into uzivatele (prezdivka, heslo, role) VALUES ('admin',  '$5$rounds=535000$luAVQo8aU4Rof7K7$a4dRavFVKAPSPc0ID8JPSBkElgrIJtuLO4kDCsXgxJ7', 'admin');
+
+insert into hrac (prezdivka, jmeno, odberatel) VALUES ('borec1', 'tonda kasal', 1);
+insert into hrac (prezdivka, jmeno, odberatel) VALUES ('borec2', 'lukas belovsky', 0);
+insert into hrac (prezdivka, jmeno, odberatel) VALUES ('borec3', 'adam mynarik', 1);
+insert into hrac (prezdivka, jmeno, odberatel) VALUES ('borec4', 'jan kraus', 1);
+insert into hrac (prezdivka, jmeno, odberatel) VALUES ('borec5', 'milos zeman', 0);
+
+insert into vybaveni (typ, vyrobce, model, popis, vlastnik) VALUES ('klavesnice', 'asus', 'model1', NULL, 1);
+insert into vybaveni (typ, vyrobce, model, popis, vlastnik) VALUES ('mys', 'asus', 'mysak', 'cerna', 1);
+insert into vybaveni (typ, vyrobce, model, popis, vlastnik) VALUES ('graficka karta', 'amd', '270r', NULL, 4);
+insert into vybaveni (typ, vyrobce, model, popis, vlastnik) VALUES ('procesor', 'intel', 'i7', 'kaby lake', 5);
+
+insert into klan (nazev, hymna, logo, vudce) VALUES ('drsnaci', 'hymna.mp3', 'logo.png', 1);
+
+insert into hra (nazev_hry, vydavatel_hry, rok_vydani_hry, zanr_hry, mod_hry) VALUES ('half-life', 'valve', '1999-03-01', 'akcni', 'klasik');
+insert into hra (nazev_hry, vydavatel_hry, rok_vydani_hry, zanr_hry, mod_hry) VALUES ('mafia', 'is', '2002-05-03', 'akcni', 'klasik');
+insert into hra (nazev_hry, vydavatel_hry, rok_vydani_hry, zanr_hry, mod_hry) VALUES ('dota 2', 'blizzard', '2008-02-01', 'strategie', 'defence');
+
+insert into tym (nazev, emblem, popis, vudce) VALUES ('team 1', 'emblem.png', 'tym jednicek', 4);
+insert into tym (nazev, emblem, popis, vudce) VALUES ('team 2', 'emblem2.png', 'tym dvojek', 2);
+insert into tym (nazev, emblem, popis, vudce) VALUES ('team 3', 'emblem3.png', 'tym trojek', 3);
+
+insert into turnaj (nazev, odmena, kdy, kde, kapacita) VALUES ('prazky turnaj', 2000, '2006-01-02', 'praha', 200);
+insert into turnaj (nazev, odmena, kdy, kde, kapacita) VALUES ('brnenske turnaj', 1000, '2006-03-01', 'brno', 100);
+
+insert into zapas (kdy, skore, typ, hra, turnaj) VALUES ('2005-01-02', '2:0', 'deathmatch', 1, 1);
+insert into zapas (kdy, skore, typ, hra, turnaj) VALUES ('2005-01-03', '1:1', 'attack', 2, 2);
+insert into zapas (kdy, skore, typ, hra, turnaj) VALUES ('2005-01-04', '0:98', 'deathmatch', 1, 1);
+insert into zapas (kdy, skore, typ, hra, turnaj) VALUES ('2005-01-04', '0:8', 'attack', 2, 2);
+
+insert into ucastnici_zapasu (id_zapas, id_tym) VALUES (1, 2);
+insert into ucastnici_zapasu (id_zapas, id_tym) VALUES (1, 1);
+insert into ucastnici_zapasu (id_zapas, id_tym) VALUES (2, 1);
+insert into ucastnici_zapasu (id_zapas, id_tym) VALUES (2, 3);
+insert into ucastnici_zapasu (id_zapas, id_tym) VALUES (3, 3);
+insert into ucastnici_zapasu (id_zapas, id_tym) VALUES (3, 2);
+
+insert into turnaj_wc (turnaj, prvni, druhy, treti, ctvrty, paty) VALUES (1, NULL, NULL, NULL, NULL, NULL);
+
+insert into turnaj_bezny (turnaj, vitez) VALUES (2, NULL);
+
+insert into sponzor (typ, nazev, iban) VALUES ('zlaty', 'ibm', 'CZ6508000000192000145399');
+insert into sponzor (typ, nazev, iban) VALUES ('stribrny', 'fit vutbr', 'CZ6508000000192000145399');
+insert into sponzor (typ, nazev, iban) VALUES ('zlaty', 'coca loca', 'CZ6508000000192000145399');
+
+insert into sponzoroval (castka, sponzor, turnaj) VALUES (100000, 1, 1);
+insert into sponzoroval (castka, sponzor, turnaj) VALUES (50000, 2, 1);
+insert into sponzoroval (castka, sponzor, turnaj) VALUES (100, 3, 2);
+
+insert into klan_clenstvi (hrac, klan) VALUES (2, 1);
+insert into klan_clenstvi (hrac, klan) VALUES (3, 1);
+
+insert into tym_clenstvi (hrac, tym) VALUES (2, 2);
+insert into tym_clenstvi (hrac, tym) VALUES (3, 2);
+
+insert into specializace (hrac, hra) VALUES (2, 1);
+insert into specializace (hrac, hra) VALUES (3, 3);
+insert into specializace (hrac, hra) VALUES (4, 1);
+
+insert into zamereni (klan, hra) VALUES (1, 1);
