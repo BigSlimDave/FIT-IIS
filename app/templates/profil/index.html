@@ -1,0 +1,11 @@
+{% if account['logged'] == 'admin' %}
+    {% extends 'admin_base.html' %}
+    ahoj
+{% else %}
+    {% extends 'user_base.html' %}
+    cau
+{% endif %}
+{% block content%}
+<h1>Profil</h1>
+
+{% endblock %}

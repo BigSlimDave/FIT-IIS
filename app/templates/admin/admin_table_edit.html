@@ -1,0 +1,11 @@
+{% extends 'admin_base.html' %}
+{% block content %}
+<h1>Upravit položku tabulky {{table_name}}</h1>
+    <form method="POST" action="">
+        {% for head in header %}
+            <label>{{head[0]}}</label>
+            <input type="text" name="{{head[0]}}" value="{{content[loop.index-1]}}">
+        {% endfor %}
+            <input type="submit" name="Odeslat" value="Odeslat">
+    </form>
+{% endblock %}
