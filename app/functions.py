@@ -10,44 +10,45 @@ def database():
     db = MySQLdb.connect(   host="localhost",   # your host, usually localhost
                             user="root",        # your username
                             passwd="root",      # your password
-                            db="content")       # name of the data base
+                            db="content",       # name of the data base
+                            charset='utf8')
     return db, db.cursor()
 
-def db_get_from_all(_from, *what):
+def db_get_from_all(table_name, *what):
     for item in what:
         what = ', '.join(item) 
     db, cursor = database()
-    cursor.execute("SELECT %s FROM %s" % (what, _from))
+    cursor.execute("SELECT %s FROM %s" % (what, table_name))
     content = cursor.fetchall()
     db.commit()
     db.close()
     return content
 
-def db_get_from_one(_from, *what):
+def db_get_from_one(table_name, *what):
     for item in what:
         what = ', '.join(item) 
     db, cursor = database()
-    cursor.execute("SELECT %s FROM %s" % (what, _from))
+    cursor.execute("SELECT %s FROM %s" % (what, table_name))
     content = cursor.fetchone()[0]
     db.commit()
     db.close()
     return content
 
-def db_get_from_where_all(_from, where, *what):
+def db_get_from_where_all(table_name, where, *what):
     for item in what:
         what = ', '.join(item) 
     db, cursor = database()
-    cursor.execute("SELECT %s FROM %s WHERE %s" % (what, _from, where))
+    cursor.execute("SELECT %s FROM %s WHERE %s" % (what, table_name, where))
     content = cursor.fetchall()
     db.commit()
     db.close()
     return content
 
-def db_get_from_where_one(_from, where, *what):
+def db_get_from_where_one(table_name, where, *what):
     for item in what:
         what = ', '.join(item) 
     db, cursor = database()
-    cursor.execute("SELECT %s FROM %s WHERE %s" % (what, _from, where))
+    cursor.execute("SELECT %s FROM %s WHERE %s" % (what, table_name, where))
     content = cursor.fetchone()
     db.commit()
     db.close()
@@ -62,42 +63,78 @@ def db_describe(table_name):
     db.close()
     return content
 
+def db_update_where_what(table_name, where, *what):
+    bla = []
+    for i in what[0]:
+        if i == 'Odeslat':
+            continue
+        bla += ["{0}='{1}'".format(i.encode('utf-8'), what[0][i].encode('utf-8'))]
+    values = ", ".join(bla)
+    db, cursor = database()
+    print values
+    cursor.execute("UPDATE %s SET %s WHERE %s" % (table_name, values.decode('utf-8'), where))
+    db.commit()
+    db.close()
+    return True
+
 def login_required(role):
     def decorator(f):
         @wraps(f)
         def decorated_function(*args, **kwargs):
             form = loginForm(request.form)
-            if request.method == 'GET':
-                if 'logged' in session:
-                    if session['logged'] == role or session['logged'] == 'admin':
-                        return f(*args, **kwargs)
-                    else:
-                        abort(403)
-                else:
-                    flash('Pro zobrázení se musíte přihlásit.')
-                    return render_template('login.html', form=form)
-            else: # POST
-                if 'password' in request.form:
-                    content = db_get_from_where_one('uzivatele', "prezdivka='{0}'".format(request.form['username']), ['heslo', 'role'])
-                    hash1 = content[0]
-                    role1 = content[1]
-                    if sha256_crypt.verify(request.form['password'], hash1):
-                        session['username'] = request.form['username']
-                        session['logged'] = role1
+            if 'logged' in session:
+                if request.method == 'GET':
                         if session['logged'] == role or session['logged'] == 'admin':
                             return f(*args, **kwargs)
                         else:
                             abort(403)
-                    else:
-                        flash('Přihlášení se nezdařilo, opakujte ho prosím.')
-                        return render_template('login.html', form=form)
-                elif 'logout' in request.form:
-                    session.pop('logged')
-                    session.pop('username')
-                    return redirect('/')
+                else: # POST
+                    if 'password' in request.form:
+                        content = db_get_from_where_one('uzivatele', "prezdivka='{0}'".format(request.form['username']), ['heslo', 'role'])
+                        hash1 = content[0]
+                        role1 = content[1]
+                        if sha256_crypt.verify(request.form['password'], hash1):
+                            session['username'] = request.form['username']
+                            session['logged'] = role1
+                            if session['logged'] == role or session['logged'] == 'admin':
+                                return f(*args, **kwargs)
+                            else:
+                                abort(403)
+                        else:
+                            flash('Přihlášení se nezdařilo, opakujte ho prosím.')
+                            return render_template('login.html', form=form)
+                    elif 'logout' in request.form:
+                        session.pop('logged')
+                        session.pop('username')
+                        return redirect('/')
+                    else:   # Aby prošly ostatní požadavky POST
+                        return f(*args, **kwargs)
+            else:
+                if request.method == 'POST': # POST
+                    if 'password' in request.form:
+                        content = db_get_from_where_one('uzivatele', "prezdivka='{0}'".format(request.form['username']), ['heslo', 'role'])
+                        hash1 = content[0]
+                        role1 = content[1]
+                        if sha256_crypt.verify(request.form['password'], hash1):
+                            session['username'] = request.form['username']
+                            session['logged'] = role1
+                            if session['logged'] == role or session['logged'] == 'admin':
+                                return f(*args, **kwargs)
+                            else:
+                                abort(403)
+                        else:
+                            flash('Přihlášení se nezdařilo, opakujte ho prosím.')
+                            return render_template('login.html', form=form)
+                    elif 'logout' in request.form:
+                        session.pop('logged')
+                        session.pop('username')
+                        return redirect('/')
+                    else:   # Aby prošly ostatní požadavky POST
+                        return f(*args, **kwargs)
                 else:
-                    flash('Neznámý požadavek.')
+                    flash('Pro zobrázení se musíte přihlásit.')
                     return render_template('login.html', form=form)
+
         return decorated_function
     return decorator
 

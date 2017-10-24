@@ -4,7 +4,7 @@
     <form method="POST" action="">
         {% for head in header %}
             <label>{{head[0]}}</label>
-            <input type="text" name="{{head[0]}}" value="{{content[loop.index-1]}}">
+            <input type="text" name="{{head[0]}}" value="{{content[loop.index-1]}}" {% if head[0] == 'id'%}disabled{% endif %}>
         {% endfor %}
             <input type="submit" name="Odeslat" value="Odeslat">
     </form>

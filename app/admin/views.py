@@ -40,9 +40,14 @@ def remove_row(table):
 @admin.route('/<table>/edit/<int:row>', methods=['GET', 'POST'])
 @login_required('admin')
 def edit_row(table, row):
-    if request.method == 'GET':
+    if 'Upravit' in request.form or request.method == 'GET':
         content = db_get_from_where_one(table, "id='{0}'".format(row), ['*'])
         table_head = db_describe(table)
         return render_template('admin/admin_table_edit.html', content=content, account=session, header=table_head, table_name=table)
+    elif 'Odeslat' in request.form:
+        if db_update_where_what(table, "id='{0}'".format(row), request.form) == True:
+            return redirect(url_for('admin.index'))
+        else:
+            return "chyba databaze"
     else: # POST
         pass
