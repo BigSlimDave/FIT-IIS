@@ -6,7 +6,7 @@ Vytvořte informační systém pro profesionální hráče e-sportu (elektronick
 ##Pracovní výcuc##
 ###Login###
 - User (player)
-- Worker
+- Worker (asi ne)
 - Admin
 
 ###Podstránky###
