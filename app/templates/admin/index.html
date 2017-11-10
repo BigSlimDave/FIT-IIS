@@ -1,6 +1,11 @@
 {% extends 'admin_base.html' %}
 {% block content%}
 {% if table_head %}
+<div> 
+    <a href="/admin/{{table_name}}/add">
+    <button type="button">Pridat</button>
+    </a>
+</div>
 <div class="panel-group">
   <div class="panel panel-default">
     <a data-toggle="collapse" href="#collapse1">
@@ -11,11 +16,6 @@
     </div>
     </a>
 
-    <div> 
-        <a href="/admin/{{table_name}}/add">
-        <button type="button">Pridat</button>
-        </a>
-    </div>
 
     <div id="collapse1" class="panel-collapse">
         <table class="table table-striped table-hover table-bordered table-condensed">

@@ -76,7 +76,8 @@ def adoj(nazev, id):
     print(nazev)
     account = session
     members = members_in_clan(id)
-    return render_template('admin/klan_detail.html', account=account, members=members)
+    klan_info = db_get_from_where_one('klan', "id='{0}'".format(id), ['*'])
+    return render_template('admin/klan_detail.html', account=account, members=members, klan_info=klan_info)
 
 @admin.route('/tym/detail/<nazev>/<id>', methods=['GET', 'POST'])
 @login_required('admin')
