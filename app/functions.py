@@ -93,6 +93,23 @@ def db_update_where_what(table_name, where, *what):
     db.close()
     return True
 
+def members_in_clan(id):
+    db, cursor = database()
+    cursor.execute("SELECT * FROM klan_clenstvi JOIN hrac ON ( hrac.id = klan_clenstvi.hrac ) WHERE klan_clenstvi.klan=%s" % (id))
+    content = cursor.fetchall()
+    db.commit()
+    db.close()
+    return content
+
+def members_in_team(id):
+    db, cursor = database()
+    cursor.execute("SELECT * FROM tym_clenstvi JOIN hrac ON ( hrac.id = tym_clenstvi.hrac ) WHERE tym_clenstvi.tym =%s" % (id))
+    content = cursor.fetchall()
+    db.commit()
+    db.close()
+    return content
+    
+    
 def db_insert_what(table_name, *what):
     print("")
     print(what[0])
