@@ -95,7 +95,4 @@ def turnament_detail(nazev, id):
         "zapas.id="+id,
         ["zapas.id","zapas.kdy","zapas.skore","zapas.typ","hra.nazev_hry"]
         )
-    #print(str(games))
-    #game = db_get_from_where_one("hra","id="+str(games[0][4]),["nazev_hry"])
-    #print(game)
     return render_template('admin/turnament_detail.html', account=account, members=games )
