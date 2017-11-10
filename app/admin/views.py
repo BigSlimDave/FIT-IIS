@@ -11,7 +11,7 @@ admin = Blueprint('admin', __name__, static_folder='static', template_folder='te
 def index():
     return render_template('admin/index.html', account=session, table='')
 
-@admin.route('/<string:table_name>/', methods=['GET', 'POST'])
+@admin.route('/<table_name>/', methods=['GET', 'POST'])
 @login_required('admin')
 def show_table(table_name):
     account = session
@@ -69,3 +69,11 @@ def edit_row(table, row):
             return "chyba databaze"
     else: # POST
         pass
+
+@admin.route('/klan/detail/<klan_name>/', methods=['GET', 'POST'])
+@login_required('admin')
+def show_table(klan_name):
+    account = session
+    members = 
+    return render_template('admin/index.html', account=account, table_name=table_name, content=content, table_head=table_head)
+

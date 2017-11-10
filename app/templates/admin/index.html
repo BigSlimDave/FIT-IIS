@@ -28,7 +28,13 @@
             {% for item1 in content %}
             <tr>
                 {% for item2 in item1 %}
-                    <td>{{ item2 }}</td>
+                    <td>
+                        {% if loop.index == 2 %}
+                        <a href="detail/{{item1[1]}}_{{item1[0]}}">{{ item2 }}</a>
+                        {% else %}
+                        {{ item2 }}
+                        {% endif %}
+                    </td>
                     {% if loop.last %}
                     <td>
                         <span>
