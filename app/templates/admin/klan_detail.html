@@ -1,7 +1,26 @@
 {% extends 'admin_base.html' %}
 {% block content %}
+<h1>Detail klanu {{klan_info[1]}}</h1>
+<h2>Hymna</h2>
+{{klan_info[2]}}
+ <audio controls>
+  <source src="/static/{{klan_info[2]}}" type="audio/mpeg">
+Your browser does not support the audio element.
+</audio> 
+<h2>Logo</h2>
+{{klan_info[3]}}
+<img src="/static/{{klan_info[3]}}" />
 <h2>Členové</h2>
-<div id="collapse1" class="panel-collapse">
+<div class="panel-group">
+  <div class="panel panel-default">
+    <a data-toggle="collapse" href="#collapse1">
+    <div class="panel-heading">
+      <h4 class="panel-title text-center">
+        Zobrazit/skrýt členy
+      </h4>
+    </div>
+    </a>
+    <div id="collapse1" class="panel-collapse">
         <table class="table table-striped table-hover table-bordered table-condensed">
             <tr>
                 <th>Jmeno</th>
@@ -15,4 +34,8 @@
                 {% endfor %}
         </table>
     </div>
+  </div>
+</div>
+
+
 {% endblock %}

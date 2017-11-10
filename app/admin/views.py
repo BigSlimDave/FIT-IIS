@@ -75,4 +75,5 @@ def edit_row(table, row):
 def adoj(nazev, id):
     account = session
     members = members_in_clan(id)
-    return render_template('admin/klan_detail.html', account=account, members=members)
+    klan_info = db_get_from_where_one('klan', "id='{0}'".format(id), ['*'])
+    return render_template('admin/klan_detail.html', account=account, members=members, klan_info=klan_info)
