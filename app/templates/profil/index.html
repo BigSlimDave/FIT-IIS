@@ -7,5 +7,40 @@
 {% endif %}
 {% block content%}
 <h1>Profil</h1>
+<h2>Osobní info</h2>
+Přezdívka: {{hrac[1]}}<br>
+Jméno: {{hrac[2]}}<br>
+Role: {{uzivatel[3]}}<br>
+<h2>Vybavení</h2>
+<div style="display: inline-block">
+{% for pristroj in vybaveni %}
+<span>
+    Typ: {{pristroj[1]}}<br>
+    Výrobce: {{pristroj[2]}}<br>
+    Model: {{pristroj[3]}}<br>
+    Vlastník: {{pristroj[4]}}<br>
+</span>
+{% endfor %}
+</div>
+<h2>Tým</h2>
+{% if tym == None %}
+Nejsi v týmu
+{% endif %}
+<h2>Klan</h2>
+{% if klan == None %}
+Nejsi v klanu
+{% endif %}
+<h2>Specializace</h2>
+{% if specializace == None %}
+Nemáš žádnou specializaci
+{% endif %}
+<br>
+<br>
+<br>
+<br>
+{{uzivatel}}<br>
+{{hrac}}<br>
+{{vybaveni}}<br>
+{{specializace}}
 
 {% endblock %}
