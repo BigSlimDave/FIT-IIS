@@ -5,6 +5,8 @@ from flask import request, redirect, session, render_template, abort, flash
 from wtforms import Form, BooleanField, StringField, PasswordField, validators
 from passlib.hash import sha256_crypt
 import MySQLdb
+import re
+import datetime
 
 def database():
     db = MySQLdb.connect(   host="localhost",   # your host, usually localhost
@@ -13,6 +15,20 @@ def database():
                             db="content",       # name of the data base
                             charset='utf8')
     return db, db.cursor()
+
+def check_database_type(type,data):
+    if ( re.match(ur"varchar\((\d+)\)",type) ):
+        length = int( re.findall(ur"\d+", type)[0])
+        if ( len(data) < length ):
+            return True
+        else:
+            return False;
+    elif ( re.match(ur"date",type) ):
+        try:
+            datetime.datetime.strptime(data,'%Y-%m-%d')
+            return True
+        except ValueError:
+            return False;
 
 def db_get_from_all(table_name, *what):
     for item in what:
@@ -73,6 +89,34 @@ def db_update_where_what(table_name, where, *what):
     db, cursor = database()
     print values
     cursor.execute("UPDATE %s SET %s WHERE %s" % (table_name, values.decode('utf-8'), where))
+    db.commit()
+    db.close()
+    return True
+
+def db_insert_what(table_name, *what):
+    print("")
+    print(what[0])
+    column_name = []
+    values = []
+    #bla = []
+    for i in what[0]:
+        if i == 'Odeslat':
+            continue
+        column_name.append(i.encode('utf-8'))
+        values.append("\'" + what[0][i].encode('utf-8') + "\'" )
+        #bla += ["{0}='{1}'".format(i.encode('utf-8'), what[0][i].encode('utf-8'))]
+    print("")
+    values = ", ".join(values)
+    column_name = ", ".join(column_name)
+    print(values)
+    print(column_name)
+    print("")
+    #values = ", ".join(bla)
+    db, cursor = database()
+    print values
+    #insert into zapas (kdy, skore, typ, hra, turnaj) VALUES ('2005-01-02', '2:0', 'deathmatch', 1, 1);
+    print("INSERT INTO %s (%s) VALUES (%s)" % (table_name, column_name.decode('utf-8'), values.decode('utf-8')))
+    cursor.execute("INSERT INTO %s (%s) VALUES (%s)" % (table_name, column_name.decode('utf-8'), values.decode('utf-8')))
     db.commit()
     db.close()
     return True

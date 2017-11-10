@@ -22,7 +22,25 @@ def show_table(table_name):
 @admin.route('/<table>/add/', methods=['GET', 'POST'])
 @login_required('admin')
 def add(table):
-    return "add"
+    if ( request.method == "GET" ):
+        account = session
+        table_head = db_describe(table)
+        return render_template('admin/admin_table_add.html', account=account, table_name=table, header=table_head)
+    else:
+        validation = {}
+        table_head = db_describe(table)
+        for i in table_head:
+            validation[i[0]] = i[1]
+        for i in request.form:
+            if ( i == "Odeslat"):
+                continue
+            print(validation[i])
+            if ( not check_database_type(validation[i],request.form[i]) ):
+                flash(i + " " + validation[i])
+                return redirect(url_for("add"))
+            
+        db_insert_what(table, request.form)
+        return redirect(url_for("admin.show_table", table_name = table))
 
 @admin.route('/<table>/remove/', methods=['POST'])
 @login_required('admin')
@@ -32,10 +50,10 @@ def remove_row(table):
         db, cursor = database()
         cursor.execute("DELETE FROM %s WHERE id=%s" % (table, request.form['remove_row'],))
         db.commit()
-        return redirect(url_for('index'))
+        return redirect(url_for("admin.show_table", table_name = table))
     else:
         flash('Něco se pokazilo')
-        return redirect(url_for('index'))
+        return redirect(url_for("admin.show_table", table_name = table))
 
 @admin.route('/<table>/edit/<int:row>', methods=['GET', 'POST'])
 @login_required('admin')

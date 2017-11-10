@@ -10,7 +10,14 @@
       </h4>
     </div>
     </a>
-    <div id="collapse1" class="panel-collapse collapse">
+
+    <div> 
+        <a href="/admin/{{table_name}}/add">
+        <button type="button">Pridat</button>
+        </a>
+    </div>
+
+    <div id="collapse1" class="panel-collapse">
         <table class="table table-striped table-hover table-bordered table-condensed">
             <tr>
             {% for item in table_head %}
