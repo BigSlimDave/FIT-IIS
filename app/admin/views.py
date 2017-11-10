@@ -55,7 +55,7 @@ def remove_row(table):
         flash('Něco se pokazilo')
         return redirect(url_for("admin.show_table", table_name = table))
 
-@admin.route('/<table>/edit/<int:row>', methods=['GET', 'POST'])
+@admin.route('/<table>/edit/<int:row>/', methods=['GET', 'POST'])
 @login_required('admin')
 def edit_row(table, row):
     if 'Upravit' in request.form or request.method == 'GET':
@@ -70,10 +70,9 @@ def edit_row(table, row):
     else: # POST
         pass
 
-@admin.route('/klan/detail/<klan_name>/', methods=['GET', 'POST'])
+@admin.route('/klan/detail/<nazev>/<id>', methods=['GET', 'POST'])
 @login_required('admin')
-def show_table(klan_name):
+def adoj(nazev, id):
     account = session
-    members = 
-    return render_template('admin/index.html', account=account, table_name=table_name, content=content, table_head=table_head)
-
+    members = members_in_clan(id)
+    return render_template('admin/klan_detail.html', account=account, members=members)
