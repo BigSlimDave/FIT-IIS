@@ -64,11 +64,12 @@ def db_get_from_where_one(table_name, where, *what):
     for item in what:
         what = ', '.join(item) 
     db, cursor = database()
+    print("SELECT %s FROM %s WHERE %s" % (what, table_name, where))
     cursor.execute("SELECT %s FROM %s WHERE %s" % (what, table_name, where))
     content = cursor.fetchone()
     db.commit()
     db.close()
-    print content
+    #print content
     return content
 
 def db_describe(table_name):
@@ -108,31 +109,18 @@ def members_in_team(id):
     db.commit()
     db.close()
     return content
-    
-    
+
 def db_insert_what(table_name, *what):
-    print("")
-    print(what[0])
     column_name = []
     values = []
-    #bla = []
     for i in what[0]:
         if i == 'Odeslat':
             continue
         column_name.append(i.encode('utf-8'))
         values.append("\'" + what[0][i].encode('utf-8') + "\'" )
-        #bla += ["{0}='{1}'".format(i.encode('utf-8'), what[0][i].encode('utf-8'))]
-    print("")
     values = ", ".join(values)
     column_name = ", ".join(column_name)
-    print(values)
-    print(column_name)
-    print("")
-    #values = ", ".join(bla)
     db, cursor = database()
-    print values
-    #insert into zapas (kdy, skore, typ, hra, turnaj) VALUES ('2005-01-02', '2:0', 'deathmatch', 1, 1);
-    print("INSERT INTO %s (%s) VALUES (%s)" % (table_name, column_name.decode('utf-8'), values.decode('utf-8')))
     cursor.execute("INSERT INTO %s (%s) VALUES (%s)" % (table_name, column_name.decode('utf-8'), values.decode('utf-8')))
     db.commit()
     db.close()

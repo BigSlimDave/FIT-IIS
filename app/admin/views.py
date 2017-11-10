@@ -73,6 +73,28 @@ def edit_row(table, row):
 @admin.route('/klan/detail/<nazev>/<id>', methods=['GET', 'POST'])
 @login_required('admin')
 def adoj(nazev, id):
+    print(nazev)
     account = session
     members = members_in_clan(id)
     return render_template('admin/klan_detail.html', account=account, members=members)
+
+@admin.route('/tym/detail/<nazev>/<id>', methods=['GET', 'POST'])
+@login_required('admin')
+def team_members_detail(nazev, id):
+    account = session
+    members = members_in_team(id)
+    return render_template('admin/team_detail.html', account=account, members=members)
+
+@admin.route('/turnaj/detail/<nazev>/<id>', methods=['GET', 'POST'])
+@login_required('admin')
+def turnament_detail(nazev, id):
+    account = session
+    games = db_get_from_where_all(
+        "zapas JOIN hra ON (zapas.hra = hra.id)",
+        "zapas.id="+id,
+        ["zapas.id","zapas.kdy","zapas.skore","zapas.typ","hra.nazev_hry"]
+        )
+    #print(str(games))
+    #game = db_get_from_where_one("hra","id="+str(games[0][4]),["nazev_hry"])
+    #print(game)
+    return render_template('admin/turnament_detail.html', account=account, members=games )
