@@ -1,0 +1,20 @@
+{% extends 'admin_base.html' %}
+{% block content %}
+<h2>Zápasy</h2>
+<div id="collapse1" class="panel-collapse">
+        <table class="table table-striped table-hover table-bordered table-condensed">
+            <tr>
+                <th>Název</th>
+                <th>Vydavatel hry</th>
+                <th>Datum Vydání</th>
+            </tr>
+                {% for game in ModSort %}
+            <tr>
+                <th>{{game[0]}}</th>
+                <th>{{game[1]}}</th>
+                <th>{{game[2]}}</th>
+            </tr>
+                {% endfor %}
+        </table>
+    </div>
+{% endblock %}

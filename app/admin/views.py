@@ -258,3 +258,18 @@ def games_genre(genre):
     db_c = db_get("SELECT nazev_hry, vydavatel_hry, rok_vydani_hry FROM hra WHERE zanr_hry=\"%s\"" %(genre))
     return render_template('admin/hra_genre.html', account=account, genreSort=db_c )
 
+@admin.route('/hra/detail/mod/<mods>', methods=['GET', 'POST'])
+@login_required('admin')
+def games_mods(mods):
+    account = session
+    db_c = db_get("SELECT nazev_hry, vydavatel_hry, rok_vydani_hry FROM hra WHERE mod_hry=\"%s\"" %(mods))
+    return render_template('admin/hra_mods.html', account=account, ModSort=db_c )
+
+@admin.route('/hra/detail/publisher/<pub>', methods=['GET', 'POST'])
+@login_required('admin')
+def games_publisher(pub):
+    account = session
+    db_c = db_get("SELECT nazev_hry, rok_vydani_hry, zanr_hry FROM hra WHERE vydavatel_hry=\"%s\"" %(pub))
+    return render_template('admin/hra_vydavatel.html', account=account, PubSort=db_c )
+
+
