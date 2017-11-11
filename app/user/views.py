@@ -103,3 +103,23 @@ def sponzor():
     account = session
     database = db_get_from_all('sponzor', ['*'])
     return render_template('user/sponzor.html', account=account, table_name='sponzor', database=database)
+
+@user.route('/profil/<nickname>', methods=['GET', 'POST'])
+@login_required('user')
+def profil(nickname):
+    account = session
+    vybaveni = db_get("""
+        SELECT typ, model, popis
+        FROM vybaveni JOIN hrac ON ( vybaveni.vlastnik = hrac.id )
+        WHERE hrac.prezdivka = \"""" + str(nickname) + "\"")
+    zapasy = db_get("""
+    SELECT id_zapas, skore, typ, hra.nazev_hry, tym.nazev, zapas.kdy, turnaj.kde, turnaj.odmena
+    FROM hrac JOIN tym_clenstvi ON ( hrac.id = tym_clenstvi.hrac )
+              JOIN tym          ON ( tym.id  = tym_clenstvi.tym  )
+              JOIN ucastnici_zapasu ON ( ucastnici_zapasu.id_tym = tym.id )
+              JOIN zapas ON ( ucastnici_zapasu.id_zapas = zapas.id )
+              JOIN turnaj ON ( turnaj.id = zapas.turnaj )
+              JOIN hra ON ( hra.id = zapas.hra )
+    WHERE hrac.prezdivka = \"%s\" """ %(str(nickname)))
+    print(zapasy)
+    return render_template('user/profil.html', vybaveni=vybaveni, zapasy=zapasy)

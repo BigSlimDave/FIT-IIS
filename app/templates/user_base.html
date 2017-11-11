@@ -48,7 +48,7 @@
               <form class="navbar-form navbar-right" method=post>
                 <button type="submit" name="logout" value=Odhlásit class="btn btn-default">Odhlásit</button>
               </form>
-              <p class="navbar-text navbar-right">Jste přihlášen jako <b><a href="/profil">{{ session['username'] }}</a></b></p>
+              <p class="navbar-text navbar-right">Jste přihlášen jako <b><a href="/user/profil/{{ session['username'] }}">{{ session['username'] }}</a></b></p>
             </div>
           </div>
         </nav>
