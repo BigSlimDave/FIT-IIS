@@ -6,7 +6,6 @@ from app.functions import *
 
 from app.admin.views import admin
 from app.user.views import user
-from app.profil.views import profil
 
 app = Flask(__name__)
 
@@ -54,4 +53,3 @@ def index():
 # Blueprints
 app.register_blueprint(admin, url_prefix="/admin")
 app.register_blueprint(user, url_prefix="/user")
-app.register_blueprint(profil, url_prefix="/profil")

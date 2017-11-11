@@ -155,69 +155,96 @@ ALTER TABLE ucastnici_zapasu ADD FOREIGN KEY(id_tym) REFERENCES tym(id) ON DELET
 
 -- TESTOVACI DATA--
 -- ---------------------------------------------------
-insert into uzivatele (prezdivka, heslo, role) VALUES ('borec1', '$5$rounds=535000$luAVQo8aU4Rof7K7$a4dRavFVKAPSPc0ID8JPSBkElgrIJtuLO4kDCsXgxJ7', 'user');
-insert into uzivatele (prezdivka, heslo, role) VALUES ('borec2', '$5$rounds=535000$luAVQo8aU4Rof7K7$a4dRavFVKAPSPc0ID8JPSBkElgrIJtuLO4kDCsXgxJ7', 'user');
-insert into uzivatele (prezdivka, heslo, role) VALUES ('borec3', '$5$rounds=535000$luAVQo8aU4Rof7K7$a4dRavFVKAPSPc0ID8JPSBkElgrIJtuLO4kDCsXgxJ7', 'user');
-insert into uzivatele (prezdivka, heslo, role) VALUES ('borec4', '$5$rounds=535000$luAVQo8aU4Rof7K7$a4dRavFVKAPSPc0ID8JPSBkElgrIJtuLO4kDCsXgxJ7', 'user');
-insert into uzivatele (prezdivka, heslo, role) VALUES ('borec5', '$5$rounds=535000$luAVQo8aU4Rof7K7$a4dRavFVKAPSPc0ID8JPSBkElgrIJtuLO4kDCsXgxJ7', 'user');
-insert into uzivatele (prezdivka, heslo, role) VALUES ('admin',  '$5$rounds=535000$luAVQo8aU4Rof7K7$a4dRavFVKAPSPc0ID8JPSBkElgrIJtuLO4kDCsXgxJ7', 'admin');
+INSERT INTO uzivatele (id, prezdivka, heslo, role) VALUES
+(1, 'borec1',   UNHEX('243524726F756E64733D353335303030246C754156516F38615534526F66374B372461346452617646564B4150535063304944384A5053426B456C6772494A74754C4F346B4443735867784A37'),    'user'),
+(2, 'borec2',   UNHEX('243524726F756E64733D353335303030246C754156516F38615534526F66374B372461346452617646564B4150535063304944384A5053426B456C6772494A74754C4F346B4443735867784A37'),    'user'),
+(3, 'borec3',   UNHEX('243524726F756E64733D353335303030246C754156516F38615534526F66374B372461346452617646564B4150535063304944384A5053426B456C6772494A74754C4F346B4443735867784A37'),    'user'),
+(4, 'borec4',   UNHEX('243524726F756E64733D353335303030246C754156516F38615534526F66374B372461346452617646564B4150535063304944384A5053426B456C6772494A74754C4F346B4443735867784A37'),    'user'),
+(5, 'borec5',   UNHEX('243524726F756E64733D353335303030246C754156516F38615534526F66374B372461346452617646564B4150535063304944384A5053426B456C6772494A74754C4F346B4443735867784A37'),    'user'),
+(6, 'admin',    UNHEX('243524726F756E64733D353335303030246C754156516F38615534526F66374B372461346452617646564B4150535063304944384A5053426B456C6772494A74754C4F346B4443735867784A37'),    'admin');
 
-insert into hrac (prezdivka, jmeno, odberatel) VALUES ('borec1', 'tonda kasal', 1);
-insert into hrac (prezdivka, jmeno, odberatel) VALUES ('borec2', 'lukas belovsky', 0);
-insert into hrac (prezdivka, jmeno, odberatel) VALUES ('borec3', 'adam mynarik', 1);
-insert into hrac (prezdivka, jmeno, odberatel) VALUES ('borec4', 'jan kraus', 1);
-insert into hrac (prezdivka, jmeno, odberatel) VALUES ('borec5', 'milos zeman', 0);
+INSERT INTO hra (id, nazev_hry, vydavatel_hry, rok_vydani_hry, zanr_hry, mod_hry) VALUES
+(1, 'Half-life',    'Valve',    '1999-03-01',   'Akcni',    ''),
+(2, 'Mafia',    'IS',   '2002-05-03',   'Akcni',    ''),
+(3, 'Dota 2',   'Blizzard', '2008-02-01',   'Strategie',    '5v5'),
+(4, 'League of Legends',    'RIOT', '2010-03-02',   'Moba', '5v5'),
+(5, 'Call of Duty', 'EA',   '2002-02-03',   'Akcni',    'Team Match'),
+(6, 'Heroes of the Storm',  'Blizzard', '2008-05-06',   'Strategie',    '5v5'),
+(7, 'Counter-Strike: Global Offensive', 'Valve',    '2010-04-08',   'Akcni',    'Team Match'),
+(8, 'StarCraft II', 'Blizzard', '2007-08-25',   'Strategie',    NULL),
+(9, 'HeartStone',   'Blizzard', '2005-08-25',   'Karetni',  NULL),
+(10,    'Smite',    'Hi-rez',   '2008-08-29',   'Moba', '5v5'),
+(11,    'World of Tanks',   'Wargaming',    '2011-08-30',   'Akcni',    NULL),
+(12,    'FIFA 17',  'EA',   '2016-09-30',   'Sportovni',    NULL),
+(13,    'Street Fighter V', 'Capcom',   '2016-05-07',   'Fighting', '1v1');
+ 
+INSERT INTO hrac (id, prezdivka, jmeno, odberatel) VALUES
+(1, 'borec1',   'Tonda Kasal',  1),
+(2, 'borec2',   'Lukas Belovsky',   0),
+(3, 'borec3',   'Adam Mynarik', 1),
+(4, 'borec4',   'Jan Kraus',    1),
+(5, 'borec5',   'Milos Zeman',  0);
+ 
+INSERT INTO klan (id, nazev, hymna, logo, vudce) VALUES
+(1, 'drsnaci',  'hymna.mp3',    'logo.png', 1);
+ 
+INSERT INTO klan_clenstvi (id, hrac, klan) VALUES
+(1, 2,  1),
+(2, 3,  1);
+ 
+INSERT INTO specializace (id, hrac, hra) VALUES
+(1, 2,  1),
+(2, 3,  3),
+(3, 4,  1);
+ 
+INSERT INTO sponzor (id, typ, nazev, iban) VALUES
+(1, 'zlaty',    'ibm',  'CZ6508000000192000145399'),
+(2, 'stribrny', 'fit vutbr',    'CZ6508000000192000145399'),
+(3, 'zlaty',    'coca loca',    'CZ6508000000192000145399');
+ 
+INSERT INTO tym (id, nazev, emblem, popis, vudce) VALUES
+(1, 'team 1',   'emblem.png',   'tym jednicek', 4),
+(2, 'team 2',   'emblem2.png',  'tym dvojek',   2),
+(3, 'team 3',   'emblem3.png',  'tym trojek',   3);
+ 
+INSERT INTO tym_clenstvi (id, hrac, tym) VALUES
+(1, 2,  2),
+(2, 3,  2);
+ 
+INSERT INTO turnaj (id, nazev, odmena, kdy, kde, kapacita) VALUES
+(1, 'prazky turnaj',    2000,   '2006-01-02',   'praha',    200),
+(2, 'brnenske turnaj',  1000,   '2006-03-01',   'brno', 100);
+ 
+INSERT INTO turnaj_bezny (turnaj, vitez) VALUES
+(2, 2);
+ 
+INSERT INTO sponzoroval (id, castka, sponzor, turnaj) VALUES
+(1, 100000, 1,  1),
+(2, 50000,  2,  1),
+(3, 100,    3,  2);
 
-insert into vybaveni (typ, vyrobce, model, popis, vlastnik) VALUES ('klavesnice', 'asus', 'model1', NULL, 1);
-insert into vybaveni (typ, vyrobce, model, popis, vlastnik) VALUES ('mys', 'asus', 'mysak', 'cerna', 1);
-insert into vybaveni (typ, vyrobce, model, popis, vlastnik) VALUES ('graficka karta', 'amd', '270r', NULL, 4);
-insert into vybaveni (typ, vyrobce, model, popis, vlastnik) VALUES ('procesor', 'intel', 'i7', 'kaby lake', 5);
+INSERT INTO turnaj_wc (turnaj, prvni, druhy, treti, ctvrty, paty) VALUES
+(1, 2,  3,  1,  NULL,   NULL);
+ 
+INSERT INTO vybaveni (id, typ, vyrobce, model, popis, vlastnik) VALUES
+(1, 'Klavesnice',   'Asus', 'Model1',   NULL,   1),
+(2, 'Mys',  'Asus', 'Mysak',    'Cerna',    1),
+(3, 'Graficka karta',   'Amd',  '270r', NULL,   4),
+(4, 'Procesor', 'Intel',    'i7',   'Kaby Lake',    5);
+ 
+INSERT INTO zamereni (id, klan, hra) VALUES
+(1, 1,  1);
+ 
+INSERT INTO zapas (id, kdy, skore, typ, hra, turnaj) VALUES
+(1, '2005-01-02',   '2:0',  'deathmatch',   1,  1),
+(2, '2005-01-03',   '1:1',  'attack',   2,  2),
+(3, '2005-01-04',   '0:98', 'deathmatch',   1,  1),
+(4, '2005-01-04',   '0:8',  'attack',   2,  2);
 
-insert into klan (nazev, hymna, logo, vudce) VALUES ('drsnaci', 'hymna.mp3', 'logo.png', 1);
-
-insert into hra (nazev_hry, vydavatel_hry, rok_vydani_hry, zanr_hry, mod_hry) VALUES ('half-life', 'valve', '1999-03-01', 'akcni', 'klasik');
-insert into hra (nazev_hry, vydavatel_hry, rok_vydani_hry, zanr_hry, mod_hry) VALUES ('mafia', 'is', '2002-05-03', 'akcni', 'klasik');
-insert into hra (nazev_hry, vydavatel_hry, rok_vydani_hry, zanr_hry, mod_hry) VALUES ('dota 2', 'blizzard', '2008-02-01', 'strategie', 'defence');
-
-insert into tym (nazev, emblem, popis, vudce) VALUES ('team 1', 'emblem.png', 'tym jednicek', 4);
-insert into tym (nazev, emblem, popis, vudce) VALUES ('team 2', 'emblem2.png', 'tym dvojek', 2);
-insert into tym (nazev, emblem, popis, vudce) VALUES ('team 3', 'emblem3.png', 'tym trojek', 3);
-
-insert into turnaj (nazev, odmena, kdy, kde, kapacita) VALUES ('prazky turnaj', 2000, '2006-01-02', 'praha', 200);
-insert into turnaj (nazev, odmena, kdy, kde, kapacita) VALUES ('brnenske turnaj', 1000, '2006-03-01', 'brno', 100);
-
-insert into zapas (kdy, skore, typ, hra, turnaj) VALUES ('2005-01-02', '2:0', 'deathmatch', 1, 1);
-insert into zapas (kdy, skore, typ, hra, turnaj) VALUES ('2005-01-03', '1:1', 'attack', 2, 2);
-insert into zapas (kdy, skore, typ, hra, turnaj) VALUES ('2005-01-04', '0:98', 'deathmatch', 1, 1);
-insert into zapas (kdy, skore, typ, hra, turnaj) VALUES ('2005-01-04', '0:8', 'attack', 2, 2);
-
-insert into ucastnici_zapasu (id_zapas, id_tym) VALUES (1, 2);
-insert into ucastnici_zapasu (id_zapas, id_tym) VALUES (1, 1);
-insert into ucastnici_zapasu (id_zapas, id_tym) VALUES (2, 1);
-insert into ucastnici_zapasu (id_zapas, id_tym) VALUES (2, 3);
-insert into ucastnici_zapasu (id_zapas, id_tym) VALUES (3, 3);
-insert into ucastnici_zapasu (id_zapas, id_tym) VALUES (3, 2);
-
-insert into turnaj_wc (turnaj, prvni, druhy, treti, ctvrty, paty) VALUES (1, NULL, NULL, NULL, NULL, NULL);
-
-insert into turnaj_bezny (turnaj, vitez) VALUES (2, NULL);
-
-insert into sponzor (typ, nazev, iban) VALUES ('zlaty', 'ibm', 'CZ6508000000192000145399');
-insert into sponzor (typ, nazev, iban) VALUES ('stribrny', 'fit vutbr', 'CZ6508000000192000145399');
-insert into sponzor (typ, nazev, iban) VALUES ('zlaty', 'coca loca', 'CZ6508000000192000145399');
-
-insert into sponzoroval (castka, sponzor, turnaj) VALUES (100000, 1, 1);
-insert into sponzoroval (castka, sponzor, turnaj) VALUES (50000, 2, 1);
-insert into sponzoroval (castka, sponzor, turnaj) VALUES (100, 3, 2);
-
-insert into klan_clenstvi (hrac, klan) VALUES (2, 1);
-insert into klan_clenstvi (hrac, klan) VALUES (3, 1);
-
-insert into tym_clenstvi (hrac, tym) VALUES (2, 2);
-insert into tym_clenstvi (hrac, tym) VALUES (3, 2);
-
-insert into specializace (hrac, hra) VALUES (2, 1);
-insert into specializace (hrac, hra) VALUES (3, 3);
-insert into specializace (hrac, hra) VALUES (4, 1);
-
-insert into zamereni (klan, hra) VALUES (1, 1);
+INSERT INTO ucastnici_zapasu (id, id_zapas, id_tym) VALUES
+(1, 1,  2),
+(2, 1,  1),
+(3, 2,  1),
+(4, 2,  3),
+(5, 3,  3),
+(6, 3,  2);
