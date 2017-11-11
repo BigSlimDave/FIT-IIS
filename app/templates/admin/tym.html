@@ -1,6 +1,6 @@
 {% extends 'admin_base.html' %}
 {% block content %}
-<h2>Členové</h2>
+<h2>Týmy</h2>
 <div class="panel-group">
         <div class="panel panel-default">
           <a data-toggle="collapse" href="#collapse1">
@@ -10,8 +10,6 @@
             </h4>
           </div>
           </a>
-      
-      
           <div id="collapse1" class="panel-collapse">
               <table class="table table-striped table-hover table-bordered table-condensed">
                   <tr>
@@ -24,7 +22,11 @@
                   <tr>
                       {% for item2 in item1 %}
                           <td>
-                            {{ item2 }}
+                              {% if loop.index == 2 %}
+                              <a href="detail/{{ item2 }}/{{ item1[0] }}">{{ item2 }}</a>
+                              {% else %}
+                                {{ item2 }}
+                              {% endif %}
                           </td>
                           {% if loop.last %}
                           <td>

@@ -24,7 +24,13 @@
                   <tr>
                       {% for item2 in item1 %}
                           <td>
-                            {{ item2 }}
+                                {% if loop.index == 5 %}
+                                <a href="detail/genre/{{item2}}">{{ item2 }}</a>
+                                {% elif loop.index == 2 %}
+                                <a href="detail/{{item2}}">{{ item2 }}</a>
+                                {% else %}
+                                  {{ item2 }}
+                                {% endif %}
                           </td>
                           {% if loop.last %}
                           <td>

@@ -1,0 +1,22 @@
+{% extends 'admin_base.html' %}
+{% block content %}
+<h2>Zápasy</h2>
+<div id="collapse1" class="panel-collapse">
+        <table class="table table-striped table-hover table-bordered table-condensed">
+            <tr>
+                <th>Název</th>
+                <th>Odměna</th>
+                <th>Kdy</th>
+                <th>Kapacita</th>
+            </tr>
+                {% for turnament in turnaments %}
+            <tr>
+                <th><a href="/admin/turnaj/detail/{{turnament[0]}}">{{turnament[1]}}</a></th>
+                <th>{{turnament[2]}}</th>
+                <th>{{turnament[3]}}</th>
+                <th>{{turnament[4]}}</th>
+            </tr>
+                {% endfor %}
+        </table>
+    </div>
+{% endblock %}

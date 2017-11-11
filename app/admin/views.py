@@ -148,15 +148,40 @@ def adoj(nazev, id):
 def team_members_detail(nazev, id):
     account = session
     members = members_in_team(id)
+    print(members)
     return render_template('admin/team_detail.html', account=account, members=members)
 
-@admin.route('/turnaj/detail/<nazev>/<id>', methods=['GET', 'POST'])
+@admin.route('/turnaj/detail/<id>', methods=['GET', 'POST'])
 @login_required('admin')
-def turnament_detail(nazev, id):
+def turnament_detail(id):
     account = session
     games = db_get_from_where_all(
         "zapas JOIN hra ON (zapas.hra = hra.id)",
         "zapas.id="+id,
         ["zapas.id","zapas.kdy","zapas.skore","zapas.typ","hra.nazev_hry"]
         )
-    return render_template('admin/turnament_detail.html', account=account, members=games )
+    name = db_get("SELECT nazev FROM turnaj WHERE id=\""+id+"\"")
+    return render_template('admin/turnament_detail.html', account=account, members=games, Name=name[0][0])
+
+
+@admin.route('/turnaj/detail/location/<location>', methods=['GET', 'POST'])
+@login_required('admin')
+def turnament_location(location):
+    account = session
+    db_c = db_get("SELECT id, nazev, odmena, kdy, kapacita FROM turnaj WHERE kde=\"%s\"" %(location))
+    return render_template('admin/turnament_location.html', account=account, turnaments=db_c )
+
+@admin.route('/hra/detail/<name>', methods=['GET', 'POST'])
+@login_required('admin')
+def games_detail(name):
+    account = session
+    db_c = db_get("SELECT turnaj.nazev, turnaj.kde, mod_hry, zapas.kdy, typ, turnaj.id FROM (hra JOIN zapas ON ( hra.id = zapas.hra )) JOIN turnaj ON ( zapas.turnaj = turnaj.id) WHERE nazev_hry = \"%s\"" %(name))
+    return render_template('admin/hra_detail.html', account=account, gameInfo=db_c )
+
+@admin.route('/hra/detail/genre/<genre>', methods=['GET', 'POST'])
+@login_required('admin')
+def games_genre(genre):
+    account = session
+    db_c = db_get("SELECT nazev_hry, vydavatel_hry, rok_vydani_hry FROM hra WHERE zanr_hry=\"%s\"" %(genre))
+    return render_template('admin/hra_genre.html', account=account, genreSort=db_c )
+

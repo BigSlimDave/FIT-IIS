@@ -30,6 +30,14 @@ def check_database_type(type,data):
         except ValueError:
             return False;
 
+def db_get(command):
+    db, cursor = database()
+    cursor.execute(command)
+    content = cursor.fetchall()
+    db.commit()
+    db.close()
+    return content
+
 def db_get_from_all(table_name, *what):
     for item in what:
         what = ', '.join(item) 
