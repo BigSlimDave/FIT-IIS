@@ -10,9 +10,9 @@
             </tr>
                 {% for member in members %}
             <tr>
-                <th>{{member[1]}}</th>
-                <th>{{member[5]}}</th>
-                <th>{{member[4]}}</th>
+                <th><a href="/admin/hrac/detail/{{member[1]}}">{{member[1]}}</a></th>
+                <th><a href="/admin/hrac/detail/{{member[1]}}">{{member[5]}}</a></th>
+                <th><a href="/admin/hrac/detail/{{member[1]}}">{{member[4]}}</a></th>
             </tr>
                 {% endfor %}
         </table>

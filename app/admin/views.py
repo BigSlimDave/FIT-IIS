@@ -210,10 +210,11 @@ def edit_row(table, row):
 @admin.route('/klan/detail/<nazev>/<id>', methods=['GET', 'POST'])
 @login_required('admin')
 def adoj(nazev, id):
-    print(nazev)
+    #print(nazev)
     account = session
     members = members_in_clan(id)
     klan_info = db_get_from_where_one('klan', "id='{0}'".format(id), ['*'])
+    #print(klan_info)
     return render_template('admin/klan_detail.html', account=account, members=members, klan_info=klan_info)
 
 @admin.route('/tym/detail/<nazev>/<id>', methods=['GET', 'POST'])
@@ -277,7 +278,6 @@ def games_publisher(pub):
 @login_required('admin')
 def user_detail(id):
     account = session
-    print(id)
     db_c = db_get("""
     SELECT hrac.jmeno, hrac.prezdivka, klan.id, klan.nazev, tym.id, tym.nazev
     FROM hrac LEFT JOIN klan_clenstvi ON ( hrac.id = klan_clenstvi.hrac ) 
@@ -285,5 +285,8 @@ def user_detail(id):
               LEFT JOIN tym_clenstvi  ON ( hrac.id = tym_clenstvi.hrac  )
               LEFT JOIN tym           ON ( tym.id  = tym_clenstvi.tym   )
     WHERE hrac.id =""" + str(id))
-    print (db_c)
-    return render_template('admin/user_detail.html', account=account, PlayerInfo=db_c )
+    db_vybaveni = db_get("""
+    SELECT typ , vyrobce, model ,popis
+    FROM hrac JOIN vybaveni ON ( hrac.id = vybaveni.vlastnik )
+    WHERE hrac.id = """ + str(id))
+    return render_template('admin/user_detail.html', account=account, PlayerInfo=db_c ,PlayerVybaveniInfo=db_vybaveni)

@@ -18,5 +18,24 @@
             </tr>
                 {% endfor %}
         </table>
-    </div>
+</div>
+
+<div id="collapse1" class="panel-collapse">
+        <table class="table table-striped table-hover table-bordered table-condensed">
+            <tr>
+                <th>Typ</th>
+                <th>Výrobce</th>
+                <th>Model</th>
+                <th>Popis</th>
+            </tr>
+                {% for info in PlayerVybaveniInfo %}
+            <tr>
+                <th>{{info[0]}}</th>
+                <th>{{info[1]}}</th>
+                <th>{{info[2]}}</th>
+                <th>{{info[3]}}</th>
+            </tr>
+                {% endfor %}
+        </table>
+</div>
 {% endblock %}

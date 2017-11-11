@@ -28,8 +28,8 @@ Your browser does not support the audio element.
             </tr>
                 {% for member in members %}
             <tr>
-                <th>{{member[5]}}</th>
-                <th>{{member[4]}}</th>
+                    <th><a href="/admin/hrac/detail/{{member[3]}}">{{member[5]}}</a></th>
+                    <th><a href="/admin/hrac/detail/{{member[3]}}">{{member[4]}}</a></th>
             </tr>
                 {% endfor %}
         </table>
