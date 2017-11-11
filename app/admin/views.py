@@ -2,6 +2,7 @@
 
 from flask import Blueprint, render_template, abort, request, session, redirect, flash, url_for
 from jinja2 import TemplateNotFound
+from passlib.hash import sha256_crypt
 from app.functions import *
 
 admin = Blueprint('admin', __name__, static_folder='static', template_folder='templates')
@@ -11,6 +12,7 @@ admin = Blueprint('admin', __name__, static_folder='static', template_folder='te
 def index():
     return render_template('admin/index.html', account=session, table='')
 
+################# uzivatele ###########################
 @admin.route('/uzivatele/', methods=['GET', 'POST'])
 @login_required('admin')
 def uzivatele():
@@ -18,6 +20,77 @@ def uzivatele():
     table_head = db_describe("uzivatele")
     content = db_get_from_all("uzivatele", ['*'])
     return render_template('admin/uzivatele.html', account=account, content=content, table_head=table_head)
+
+@admin.route('/uzivatele/edit/<int:id>/', methods=['GET', 'POST'])
+@login_required('admin')
+def uzivatele_edit(id):
+    if 'Upravit' in request.form or request.method == 'GET':
+        content = db_get_from_where_one('uzivatele', "id='{0}'".format(id), ['*'])
+        table_head = db_describe('uzivatele')
+        return render_template('admin/uzivatele_edit.html', content=content, account=session, header=table_head, table_name='uzivatele')
+    elif 'Odeslat' in request.form:
+        if db_update_where_what('uzivatele', "id='{0}'".format(id), request.form) == True:
+            return redirect(url_for('admin.uzivatele'))
+        else:
+            flash("chyba databaze")
+            return redirect(url_for('admin.uzivatele'))
+    else: # POST
+        pass
+
+@admin.route('/uzivatele/nove_heslo/<int:id>', methods=['GET', 'POST'])
+@login_required('admin')
+def uzivatele_heslo(id):
+    if 'Heslo' in request.form or request.method == 'GET':
+        prezdivka = db_get_from_where_one('uzivatele', "id='{0}'".format(id), ['prezdivka'])[0]
+        return render_template('admin/uzivatele_nove_heslo.html', prezdivka=prezdivka, account=session, table_name='uzivatele')
+    elif 'heslo' in request.form:
+        hashh = sha256_crypt.hash(request.form['heslo'])
+        db, cursor = database()
+        cursor.execute("UPDATE uzivatele SET heslo='%s' WHERE id=%s" % (hashh, id))
+        db.commit()
+        db.close()
+        return redirect(url_for('admin.uzivatele'))
+    else: # POST
+        pass
+
+@admin.route('/uzivatele/pridat_uzivatele', methods=['GET', 'POST'])
+@login_required('admin')
+def uzivatele_pridat():
+    print request.form
+    if request.method == 'GET':
+        return render_template('admin/uzivatele_pridat.html', account=session, table_name='uzivatele')
+    elif 'Odeslat' in request.form:
+        hashh = sha256_crypt.hash(request.form['heslo'])
+        role = request.form['role']
+        if role == 'admin':
+            db, cursor = database()
+            cursor.execute("INSERT INTO uzivatele (prezdivka, heslo, role) VALUES ('%s', '%s', '%s')" % (request.form['prezdivka'], hashh, role))
+            db.commit()
+            db.close()
+        else:
+            db, cursor = database()
+            cursor.execute("INSERT INTO uzivatele (prezdivka, heslo, role) VALUES ('%s', '%s', '%s')" % (request.form['prezdivka'], hashh, role))
+            db.commit()
+            cursor.execute("INSERT INTO hrac (prezdivka, jmeno, odberatel) VALUES ('%s', '%s', %s)" % (request.form['prezdivka'], request.form['jmeno'], 1))
+            db.commit()
+            db.close()
+        return redirect(url_for('admin.uzivatele'))
+    else: # POST
+        pass
+
+@admin.route('/uzivatele/remove/', methods=['POST'])
+@login_required('admin')
+def uzivatele_remove():
+    print request.form['remove_row']
+    if 'remove_row' in request.form:
+        db, cursor = database()
+        cursor.execute("DELETE FROM %s WHERE id=%s" % ('uzivatele', request.form['remove_row'],))
+        db.commit()
+        return redirect(url_for("admin.uzivatele"))
+    else:
+        flash('Něco se pokazilo')
+        return redirect(url_for("admin.uzivatele"))
+#############################################################
 
 @admin.route('/hrac/', methods=['GET', 'POST'])
 @login_required('admin')
@@ -114,10 +187,10 @@ def remove_row(table):
         db, cursor = database()
         cursor.execute("DELETE FROM %s WHERE id=%s" % (table, request.form['remove_row'],))
         db.commit()
-        return redirect(url_for("admin.show_table", table_name = table))
+        return redirect(url_for("admin.index"))
     else:
         flash('Něco se pokazilo')
-        return redirect(url_for("admin.show_table", table_name = table))
+        return redirect(url_for("admin.index"))
 
 @admin.route('/<table>/edit/<int:row>/', methods=['GET', 'POST'])
 @login_required('admin')

@@ -1,0 +1,18 @@
+{% extends 'admin_base.html' %}
+{% block content %}
+<h1>Upravit položku tabulky {{table_name}}</h1>
+    <form method="POST" action="">
+        {% for head in header %}
+            <label>{{head[0]}}</label>
+            {% if head[0] == 'role' %}
+                <select name="{{head[0]}}">
+                  <option value="admin" {% if content[loop.index-1] == 'admin' %}selected=selected{% endif %}>Admin</option>
+                  <option value="user" {% if content[loop.index-1] == 'user' %}selected=selected{% endif %}>User</option>
+                </select>
+            {% else %}
+                <input type="text" name="{{head[0]}}" value="{{content[loop.index-1]}}" {% if head[0] == 'id' or head[0] == 'heslo'%}disabled{% endif %}>
+            {% endif %}
+        {% endfor %}
+            <input type="submit" name="Odeslat" value="Odeslat">
+    </form>
+{% endblock %}

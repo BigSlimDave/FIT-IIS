@@ -1,6 +1,8 @@
 {% extends 'admin_base.html' %}
 {% block content %}
-<h2>Členové</h2>
+<h1>Uživatelé</h1>
+<a href="pridat_uzivatele"><button>Přidat uživatele</button></a>
+<h2>Databáze uživatelů</h2>
 <div class="panel-group">
         <div class="panel panel-default">
           <a data-toggle="collapse" href="#collapse1">
@@ -10,8 +12,6 @@
             </h4>
           </div>
           </a>
-      
-      
           <div id="collapse1" class="panel-collapse">
               <table class="table table-striped table-hover table-bordered table-condensed">
                   <tr>
@@ -35,6 +35,9 @@
                                   </form>
                                   <form style="display: inline-block;" method="post" action="edit/{{item1[0]}}/">
                                       <input type="submit" name="Upravit" value="Upravit">
+                                  </form>
+                                  <form style="display: inline-block;" method="post" action="nove_heslo/{{item1[0]}}">
+                                      <input type="submit" name="Heslo" value="Změnit heslo">
                                   </form>
                               </span>
                           {% endif %}
