@@ -32,6 +32,23 @@ def hrac():
         hraci = tmp
     return render_template('user/hrac.html', account=account, table_name='hrac', hraci=hraci)
 
+@user.route('/hrac/detail/<string:nick>', methods=['GET', 'POST'])
+@login_required('user')
+def user_detail(nick):
+    account = session
+    hrac = db_get("""
+    SELECT hrac.jmeno, hrac.prezdivka, klan.id, klan.nazev, tym.id, tym.nazev
+    FROM hrac LEFT JOIN klan_clenstvi ON ( hrac.id = klan_clenstvi.hrac ) 
+              LEFT JOIN klan          ON ( klan.id = klan_clenstvi.klan ) 
+              LEFT JOIN tym_clenstvi  ON ( hrac.id = tym_clenstvi.hrac  )
+              LEFT JOIN tym           ON ( tym.id  = tym_clenstvi.tym   )
+    WHERE hrac.prezdivka='""" + nick+"'")[0]
+    vybaveni = db_get("""
+    SELECT typ , vyrobce, model ,popis
+    FROM hrac JOIN vybaveni ON ( hrac.id = vybaveni.vlastnik )
+    WHERE hrac.prezdivka='""" + nick+"'")
+    return render_template('user/hrac_detail.html', account=account, hrac=hrac, vybaveni=vybaveni)
+
 @user.route('/vybaveni/', methods=['GET', 'POST'])
 @login_required('user')
 def vybaveni():

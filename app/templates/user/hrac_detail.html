@@ -1,0 +1,11 @@
+{% extends 'user_base.html' %}
+{% block content%}
+<h1>Procházet hráče</h1>
+<h4>Řadit podle přezdívky</h4>
+    <b>Přezdívka: </b>{{hrac[1]}}<br>
+    <b>Jméno: </b>{{hrac[0]}}<br>
+    <b>Klan: </b>{{hrac[3]}}<br>
+    <b>Tým: </b>{{hrac[5]}}<br>
+    {{hrac}}
+    {{vybaveni}}
+{% endblock %}
