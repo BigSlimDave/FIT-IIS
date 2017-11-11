@@ -1,0 +1,48 @@
+{% extends 'admin_base.html' %}
+{% block content %}
+<h2>Členové</h2>
+<div class="panel-group">
+        <div class="panel panel-default">
+          <a data-toggle="collapse" href="#collapse1">
+          <div class="panel-heading">
+            <h4 class="panel-title text-center">
+              Vypsat databázy
+            </h4>
+          </div>
+          </a>
+      
+      
+          <div id="collapse1" class="panel-collapse">
+              <table class="table table-striped table-hover table-bordered table-condensed">
+                  <tr>
+                  {% for item in table_head %}
+                      <th>{{ item[0] }}</th>
+                  {% endfor %}
+                      <th>Akce</th>
+                  </tr>
+                  {% for item1 in content %}
+                  <tr>
+                      {% for item2 in item1 %}
+                          <td>
+                            {{ item2 }}
+                          </td>
+                          {% if loop.last %}
+                          <td>
+                              <span>
+                                  <form style="display: inline-block;" method="post" action="remove/">
+                                      <input type="hidden" value="{{item1[0]}}" name="remove_row">
+                                      <input type="submit" value="Odebrat">
+                                  </form>
+                                  <form style="display: inline-block;" method="post" action="edit/{{item1[0]}}/">
+                                      <input type="submit" name="Upravit" value="Upravit">
+                                  </form>
+                              </span>
+                          {% endif %}
+                      {% endfor %}
+                  </tr>
+                  {% endfor %}
+              </table>
+          </div>
+        </div>
+      </div> 
+{% endblock %}
