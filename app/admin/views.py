@@ -229,11 +229,11 @@ def team_members_detail(nazev, id):
 @login_required('admin')
 def turnament_detail(id):
     account = session
-    games = db_get_from_where_all(
-        "zapas JOIN hra ON (zapas.hra = hra.id)",
-        "zapas.id="+id,
-        ["zapas.id","zapas.kdy","zapas.skore","zapas.typ","hra.nazev_hry"]
-        )
+    games = db_get("""
+    SELECT zapas.id,zapas.kdy,zapas.skore,zapas.typ,hra.nazev_hry
+    FROM turnaj JOIN zapas ON ( turnaj.id = zapas.turnaj )
+                JOIN hra ON ( zapas.hra = hra.id )
+    WHERE turnaj.id =""" + str(id))
     name = db_get("SELECT nazev FROM turnaj WHERE id=\""+id+"\"")
     return render_template('admin/turnament_detail.html', account=account, members=games, Name=name[0][0])
 
