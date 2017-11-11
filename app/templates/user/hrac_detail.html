@@ -1,11 +1,24 @@
 {% extends 'user_base.html' %}
 {% block content%}
-<h1>Procházet hráče</h1>
-<h4>Řadit podle přezdívky</h4>
-    <b>Přezdívka: </b>{{hrac[1]}}<br>
-    <b>Jméno: </b>{{hrac[0]}}<br>
-    <b>Klan: </b>{{hrac[3]}}<br>
-    <b>Tým: </b>{{hrac[5]}}<br>
-    {{hrac}}
-    {{vybaveni}}
+<h1>Detail hráče</h1>
+<h2>Osobní informace</h2>
+<b>Přezdívka: </b>{{hrac[1]}}<br>
+<b>Jméno: </b>{{hrac[0]}}<br>
+<b>Klan: </b>{{hrac[3]}}<br>
+<b>Tým: </b>{{hrac[5]}}<br>
+<br>
+<h2>Vybavení hráče</h2>
+<div class="card-deck" style="display: inline-block">
+{% for vyb in vybaveni %}
+  <div class="card" style="width: 300px;float:left;background-color: #cccccc;margin:10px;padding:10px;border:2px solid black">
+    <div class="card-block">
+      <h3 class="card-title"><b>Typ: {{vyb[0]}}</b></h3>
+      <h4 class="card-title"><b>Výrobce: {{vyb[1]}}</b></h4>
+      <p class="card-text"><b>Model: </b>{{vyb[2]}}</p>
+      <p class="card-text"><b>Popis: </b>{{vyb[3]}}</p>
+    </div>
+  </div>
+{% endfor %}
+</div><br>
+<h2>Posledních 5 zápasů</h2>
 {% endblock %}

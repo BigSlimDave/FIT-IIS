@@ -31,7 +31,7 @@ def index():
             return render_template('login.html', form=form)
     else: # POST
         if 'password' in request.form:
-            content = db_get_from_where_one('uzivatele', "prezdivka='{0}'".format(request.form['username']), ['heslo', 'role'])
+            content = db_get_from_where_one('uzivatele', "prezdivka='{0}'".format(request.form['username']), ['heslo', 'role', 'id'])
             try:
                 hash1 = content[0]
                 role1 = content[1]
@@ -41,6 +41,7 @@ def index():
             if sha256_crypt.verify(request.form['password'], hash1):
                 session['username'] = request.form['username']
                 session['logged'] = role1
+                session['id'] = content[2]
                 return redirect('/'+role1)
             else:
                 flash('Přihlášení se nezdařilo, opakujte ho prosím.')
