@@ -16,13 +16,21 @@ def index():
 @login_required('user')
 def hrac():
     account = session
-    database = db_get("""
+    hraci = db_get("""
         SELECT hrac.jmeno, hrac.prezdivka, klan.id, klan.nazev, tym.id, tym.nazev
         FROM hrac LEFT JOIN klan_clenstvi ON ( hrac.id = klan_clenstvi.hrac ) 
                   LEFT JOIN klan          ON ( klan.id = klan_clenstvi.klan ) 
                   LEFT JOIN tym_clenstvi  ON ( hrac.id = tym_clenstvi.hrac  )
                   LEFT JOIN tym           ON ( tym.id  = tym_clenstvi.tym   )""")
-    return render_template('user/hrac.html', account=account, table_name='hrac', database=database)
+    tmp = []
+    if 'pismeno' in request.args:
+        pismeno = request.args['pismeno']
+        print pismeno.lower()
+        for i in range(len(hraci)):
+            if (hraci[i][1][0] == pismeno.upper()) or (hraci[i][1][0] == pismeno.lower()):
+                tmp.append(hraci[i])
+        hraci = tmp
+    return render_template('user/hrac.html', account=account, table_name='hrac', hraci=hraci)
 
 @user.route('/vybaveni/', methods=['GET', 'POST'])
 @login_required('user')
