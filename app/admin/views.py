@@ -11,13 +11,77 @@ admin = Blueprint('admin', __name__, static_folder='static', template_folder='te
 def index():
     return render_template('admin/index.html', account=session, table='')
 
-@admin.route('/<table_name>/', methods=['GET', 'POST'])
+@admin.route('/uzivatele/', methods=['GET', 'POST'])
 @login_required('admin')
-def show_table(table_name):
+def show_table():
     account = session
-    table_head = db_describe(table_name)
-    content = db_get_from_all(table_name, ['*'])
-    return render_template('admin/index.html', account=account, table_name=table_name, content=content, table_head=table_head)
+    table_head = db_describe("uzivatele")
+    content = db_get_from_all("uzivatele", ['*'])
+    return render_template('admin/uzivatele.html', account=account, content=content, table_head=table_head)
+
+@admin.route('/hrac/', methods=['GET', 'POST'])
+@login_required('admin')
+def show_table():
+    account = session
+    table_head = db_describe("hrac")
+    content = db_get_from_all("hrac", ['*'])
+    return render_template('admin/hrac.html', account=account, content=content, table_head=table_head)
+
+@admin.route('/vybaveni/', methods=['GET', 'POST'])
+@login_required('admin')
+def show_table():
+    account = session
+    table_head = db_describe("vybaveni")
+    content = db_get_from_all("vybaveni", ['*'])
+    return render_template('admin/vybaveni.html', account=account, content=content, table_head=table_head)
+
+@admin.route('/hra/', methods=['GET', 'POST'])
+@login_required('admin')
+def show_table():
+    account = session
+    table_head = db_describe("hra")
+    content = db_get_from_all("hra", ['*'])
+    return render_template('admin/hra.html', account=account, content=content, table_head=table_head)
+
+@admin.route('/klan/', methods=['GET', 'POST'])
+@login_required('admin')
+def show_table():
+    account = session
+    table_head = db_describe("klan")
+    content = db_get_from_all("klan", ['*'])
+    return render_template('admin/klan.html', account=account, content=content, table_head=table_head)
+
+@admin.route('/tym/', methods=['GET', 'POST'])
+@login_required('admin')
+def show_table():
+    account = session
+    table_head = db_describe("tym")
+    content = db_get_from_all("tym", ['*'])
+    return render_template('admin/tym.html', account=account, content=content, table_head=table_head)
+
+@admin.route('/zapas/', methods=['GET', 'POST'])
+@login_required('admin')
+def show_table():
+    account = session
+    table_head = db_describe("zapas")
+    content = db_get_from_all("zapas", ['*'])
+    return render_template('admin/zapas.html', account=account, content=content, table_head=table_head)
+
+@admin.route('/turnaj/', methods=['GET', 'POST'])
+@login_required('admin')
+def show_table():
+    account = session
+    table_head = db_describe("turnaj")
+    content = db_get_from_all("turnaj", ['*'])
+    return render_template('admin/turnaj.html', account=account, content=content, table_head=table_head)
+
+@admin.route('/sponzor/', methods=['GET', 'POST'])
+@login_required('admin')
+def show_table():
+    account = session
+    table_head = db_describe("sponzor")
+    content = db_get_from_all("sponzor", ['*'])
+    return render_template('admin/sponzor.html', account=account, content=content, table_head=table_head)
 
 @admin.route('/<table>/add/', methods=['GET', 'POST'])
 @login_required('admin')
