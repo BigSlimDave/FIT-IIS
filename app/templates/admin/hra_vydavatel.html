@@ -10,9 +10,9 @@
             </tr>
                 {% for game in PubSort %}
             <tr>
-                <th>{{game[0]}}</th>
+                <th><a href="/admin/hra/detail/{{game[0]}}">{{game[0]}}</a></th>
                 <th>{{game[1]}}</th>
-                <th>{{game[2]}}</th>
+                <th><a href="/admin/hra/detail/genre/{{game[2]}}">{{game[2]}}</a></th>
             </tr>
                 {% endfor %}
         </table>

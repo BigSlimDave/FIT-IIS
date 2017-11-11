@@ -10,8 +10,8 @@
             </tr>
                 {% for game in genreSort %}
             <tr>
-                <th>{{game[0]}}</th>
-                <th>{{game[1]}}</th>
+                <th><a href="/admin/hra/detail/{{game[0]}}">{{game[0]}}</a></th>
+                <th><a href="/admin/hra/detail/publisher/{{game[1]}}">{{game[1]}}</a></th>
                 <th>{{game[2]}}</th>
             </tr>
                 {% endfor %}
