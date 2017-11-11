@@ -16,7 +16,28 @@ def index():
 @login_required('user')
 def hrac():
     account = session
-    return render_template('user/hrac.html', account=account, table_name='hrac')
+    nick = session["username"]
+    hrac = db_get("""
+    SELECT hrac.jmeno, hrac.prezdivka, klan.id, klan.nazev, tym.id, tym.nazev
+    FROM hrac LEFT JOIN klan_clenstvi ON ( hrac.id = klan_clenstvi.hrac ) 
+              LEFT JOIN klan          ON ( klan.id = klan_clenstvi.klan ) 
+              LEFT JOIN tym_clenstvi  ON ( hrac.id = tym_clenstvi.hrac  )
+              LEFT JOIN tym           ON ( tym.id  = tym_clenstvi.tym   )
+    WHERE hrac.prezdivka='""" + nick+"'")[0]
+    vybaveni = db_get("""
+    SELECT typ , vyrobce, model ,popis
+    FROM hrac JOIN vybaveni ON ( hrac.id = vybaveni.vlastnik )
+    WHERE hrac.prezdivka='""" + nick+"'")
+    zapasy = db_get("""
+    SELECT id_zapas, skore, typ, hra.nazev_hry, tym.nazev, zapas.kdy, turnaj.kde, turnaj.odmena
+    FROM hrac JOIN tym_clenstvi ON ( hrac.id = tym_clenstvi.hrac )
+              JOIN tym          ON ( tym.id  = tym_clenstvi.tym  )
+              JOIN ucastnici_zapasu ON ( ucastnici_zapasu.id_tym = tym.id )
+              JOIN zapas ON ( ucastnici_zapasu.id_zapas = zapas.id )
+              JOIN turnaj ON ( turnaj.id = zapas.turnaj )
+              JOIN hra ON ( hra.id = zapas.hra )
+    WHERE hrac.prezdivka = \"%s\" """ %(str(nick)))
+    return render_template('user/hrac.html', account=account, table_name='hrac', hrac=hrac, vybaveni=vybaveni, content=zapasy )
 
 @user.route('/hrac/prochazet/', methods=['GET', 'POST'])
 @login_required('user')

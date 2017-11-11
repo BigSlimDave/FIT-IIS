@@ -1,5 +1,45 @@
 {% extends 'user_base.html' %}
 {% block content%}
 <a href="prochazet/"><button>Procházet hráče</button></a>
-detail prave prihlaseneho hrace kde si bude moci zmenit heslo a jemno 
+detail prave prihlaseneho hrace kde si bude moci zmenit heslo a jemno
+<h2>Osobní informace</h2>
+<b>Přezdívka: </b>{{hrac[1]}}<br>
+<b>Jméno: </b>{{hrac[0]}}<br>
+<b>Klan: </b>{{hrac[3]}}<br>
+<b>Tým: </b>{{hrac[5]}}<br>
+<h2>Vybavení hráče</h2>
+<div class="card-deck" style="display: inline-block">
+{% for vyb in vybaveni %}
+  <div class="card" style="width: 300px;float:left;background-color: #cccccc;margin:10px;padding:10px;border:2px solid black">
+    <div class="card-block">
+      <h3 class="card-title"><b>Typ: {{vyb[0]}}</b></h3>
+      <h4 class="card-title"><b>Výrobce: {{vyb[1]}}</b></h4>
+      <p class="card-text"><b>Model: </b>{{vyb[2]}}</p>
+      <p class="card-text"><b>Popis: </b>{{vyb[3]}}</p>
+    </div>
+  </div>
+{% endfor %}
+</div><br>
+<h2>Posledních 5 zápasů</h2>
+<table class="table table-striped table-hover table-bordered table-condensed">
+        <tr>
+            <th>ID</th>
+            <th>Skore</th>
+            <th>Mod</th>
+            <th>Hra</th>
+            <th>Tym</th>
+            <th>Datum</th>
+            <th>Lokace</th>
+            <th>Odmena</th>
+        </tr>
+        {% for item1 in content %}
+        <tr>
+            {% for item2 in item1 %}
+                <td>
+                    {{ item2 }}
+                </td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
 {% endblock %}
