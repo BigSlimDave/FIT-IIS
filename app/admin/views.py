@@ -13,7 +13,7 @@ def index():
 
 @admin.route('/uzivatele/', methods=['GET', 'POST'])
 @login_required('admin')
-def show_table():
+def uzivatele():
     account = session
     table_head = db_describe("uzivatele")
     content = db_get_from_all("uzivatele", ['*'])
@@ -21,7 +21,7 @@ def show_table():
 
 @admin.route('/hrac/', methods=['GET', 'POST'])
 @login_required('admin')
-def show_table():
+def hrac():
     account = session
     table_head = db_describe("hrac")
     content = db_get_from_all("hrac", ['*'])
@@ -29,7 +29,7 @@ def show_table():
 
 @admin.route('/vybaveni/', methods=['GET', 'POST'])
 @login_required('admin')
-def show_table():
+def vybaveni():
     account = session
     table_head = db_describe("vybaveni")
     content = db_get_from_all("vybaveni", ['*'])
@@ -37,7 +37,7 @@ def show_table():
 
 @admin.route('/hra/', methods=['GET', 'POST'])
 @login_required('admin')
-def show_table():
+def hra():
     account = session
     table_head = db_describe("hra")
     content = db_get_from_all("hra", ['*'])
@@ -45,7 +45,7 @@ def show_table():
 
 @admin.route('/klan/', methods=['GET', 'POST'])
 @login_required('admin')
-def show_table():
+def klan():
     account = session
     table_head = db_describe("klan")
     content = db_get_from_all("klan", ['*'])
@@ -53,7 +53,7 @@ def show_table():
 
 @admin.route('/tym/', methods=['GET', 'POST'])
 @login_required('admin')
-def show_table():
+def tym():
     account = session
     table_head = db_describe("tym")
     content = db_get_from_all("tym", ['*'])
@@ -61,7 +61,7 @@ def show_table():
 
 @admin.route('/zapas/', methods=['GET', 'POST'])
 @login_required('admin')
-def show_table():
+def zapas():
     account = session
     table_head = db_describe("zapas")
     content = db_get_from_all("zapas", ['*'])
@@ -69,7 +69,7 @@ def show_table():
 
 @admin.route('/turnaj/', methods=['GET', 'POST'])
 @login_required('admin')
-def show_table():
+def turnaj():
     account = session
     table_head = db_describe("turnaj")
     content = db_get_from_all("turnaj", ['*'])
@@ -77,7 +77,7 @@ def show_table():
 
 @admin.route('/sponzor/', methods=['GET', 'POST'])
 @login_required('admin')
-def show_table():
+def sponzor():
     account = session
     table_head = db_describe("sponzor")
     content = db_get_from_all("sponzor", ['*'])
