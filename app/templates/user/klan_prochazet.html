@@ -1,0 +1,72 @@
+{% extends 'user_base.html' %}
+{% block content%}
+<h1>Procházet klany</h1>
+<h4>Řadit podle přezdívky</h4>
+<nav class="navbar navbar-inverse">
+          <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-2" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="/user/klan_prochazet">Zobrazit všechny</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
+              <ul class="nav navbar-nav">
+                <li><a href="/user/klan_prochazet/?pismeno=A">A</a></li>
+                <li><a href="/user/klan_prochazet/?pismeno=B">B</a></li>
+                <li><a href="/user/klan_prochazet/?pismeno=C">C</a></li>
+                <li><a href="/user/klan_prochazet/?pismeno=D">D</a></li>
+                <li><a href="/user/klan_prochazet/?pismeno=E">E</a></li>
+                <li><a href="/user/klan_prochazet/?pismeno=F">F</a></li>
+                <li><a href="/user/klan_prochazet/?pismeno=G">G</a></li>
+                <li><a href="/user/klan_prochazet/?pismeno=H">H</a></li>
+                <li><a href="/user/klan_prochazet/?pismeno=I">I</a></li>
+                <li><a href="/user/klan_prochazet/?pismeno=J">J</a></li>
+                <li><a href="/user/klan_prochazet/?pismeno=K">K</a></li>
+                <li><a href="/user/klan_prochazet/?pismeno=L">L</a></li>
+                <li><a href="/user/klan_prochazet/?pismeno=M">M</a></li>
+                <li><a href="/user/klan_prochazet/?pismeno=N">N</a></li>
+                <li><a href="/user/klan_prochazet/?pismeno=P">O</a></li>
+                <li><a href="/user/klan_prochazet/?pismeno=P">P</a></li>
+                <li><a href="/user/klan_prochazet/?pismeno=Q">Q</a></li>
+                <li><a href="/user/klan_prochazet/?pismeno=R">R</a></li>
+                <li><a href="/user/klan_prochazet/?pismeno=S">S</a></li>
+                <li><a href="/user/klan_prochazet/?pismeno=T">T</a></li>
+                <li><a href="/user/klan_prochazet/?pismeno=U">U</a></li>
+                <li><a href="/user/klan_prochazet/?pismeno=V">V</a></li>
+                <li><a href="/user/klan_prochazet/?pismeno=W">W</a></li>
+                <li><a href="/user/klan_prochazet/?pismeno=X">X</a></li>
+                <li><a href="/user/klan_prochazet/?pismeno=Y">Y</a></li>
+                <li><a href="/user/klan_prochazet/?pismeno=Z">Z</a></li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+        {% if pismeno %}
+        <h2>Pouze klany začínající na {{pismeno}}</h2>
+        {% endif %}
+        {% if klany == [] %}
+        Zadanému filtru neodpovídají žádné klany
+        {% else %}
+            <div class="card-deck" style="display: inline-block">
+            {% for klan in klany %}
+            <a href="detail/{{klan[1]}}"" style="color: black; text-decoration: none;">
+                  <div class="card" style="width: 200px;float:left;background-color: #cccccc;margin:10px;padding:10px;border:2px solid black">
+                    <div class="card-block">
+                      <h3 class="card-title"><b>{{klan[1]}}</b></h3>
+                      <h4 class="card-title"><b>{{klan[0]}}</b></h4>
+                      <p class="card-text"><b>Klan: </b>{{klan[3]}}</p>
+                      <p class="card-text"><b>Tým: </b>{{klan[5]}}</p>
+                    </div>
+                  </div>
+              </a>
+            {% endfor %}
+            </div><br>
+        {% endif  %}
+{% endblock %}

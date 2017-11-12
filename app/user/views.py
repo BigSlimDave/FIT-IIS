@@ -140,6 +140,42 @@ def klan_zalozit():
     account = session
     return render_template('user/klan_zalozit.html', account=account, table_name='klan_zalozit')
 
+@user.route('/klan_prochazet/', methods=['GET', 'POST'])
+@login_required('user')
+def klan_prochazet():
+    account = session
+    klany = db_get_from_all('klan', ['*'])
+    tmp = []
+    pismeno = ''
+    if 'pismeno' in request.args:
+        pismeno = request.args['pismeno']
+        print pismeno.lower()
+        for i in range(len(klany)):
+            if (klany[i][1][0] == pismeno.upper()) or (klany[i][1][0] == pismeno.lower()):
+                tmp.append(klany[i])
+        klany = tmp
+    return render_template('user/klan_prochazet.html', account=account, table_name='klan_prochazet', klany=klany)
+
+@user.route('/klan_prochazet/detail/<string:nick>', methods=['GET', 'POST'])
+@login_required('user')
+def klan_detail(nick):
+    account = session
+    klan = db_get("""SELECT * FROM klan WHERE klan.nazev='""" +nick+"'")
+    if klan:
+        klan = klan[0]
+        vudce_klanu = db_get("""
+            SELECT hrac.prezdivka FROM hrac
+                INNER JOIN klan ON ( klan.vudce = hrac.id ) 
+                WHERE klan.nazev='""" +nick+"'")
+        if vudce_klanu:
+            vudce_klanu = vudce_klanu[0][0]
+    clenove = db_get("""
+                SELECT hrac.jmeno, hrac.prezdivka, hrac.id
+                FROM hrac LEFT JOIN klan_clenstvi ON ( hrac.id = klan_clenstvi.hrac ) 
+                  LEFT JOIN klan ON ( klan.id = klan_clenstvi.klan ) 
+                WHERE klan_clenstvi.klan='""" + str(klan[0])+"'")
+    return render_template('user/klan_detail.html', account=account, table_name='klan_prochazet', klan=klan, clenove=clenove, vudce_klanu=vudce_klanu)
+
 @user.route('/tym/', methods=['GET', 'POST'])
 @login_required('user')
 def tym():
