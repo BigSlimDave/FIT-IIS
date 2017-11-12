@@ -174,10 +174,10 @@ def add(table):
             print(validation[i])
             if ( not check_database_type(validation[i],request.form[i]) ):
                 flash(i + " " + validation[i])
-                return redirect(url_for("add"))
+                return redirect(url_for("admin.{0}".format(table)))
             
         db_insert_what(table, request.form)
-        return redirect(url_for("admin.show_table", table_name = table))
+        return redirect(url_for("admin.{0}".format(table)))
 
 @admin.route('/<table>/remove/', methods=['POST'])
 @login_required('admin')
