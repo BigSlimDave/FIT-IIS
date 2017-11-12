@@ -6,6 +6,10 @@
         <input type="hidden" name="id" value="{{klan[0]}}">
         <button type="submit" name="zrusit" class="btn btn-default">Zrušit klan</button>
     </form>
+    {% else %}
+    <form class="navbar-form navbar-right" method=post>
+        <button type="submit" name="opustit" class="btn btn-default">Opustit klan</button>
+    </form>
     {% endif %}
     <h1>Můj klan</h1>
     <h1><b><u>{{klan[1]}}</u></b></h1>
@@ -24,6 +28,7 @@
     <h2>Logo</h2>
     {{klan[3]}}
     <img src="/static/{{klan[3]}}" />
+    <h2>Vudce klanu: {{vudce_klanu}}</h2>
     <h2>Členové</h2>
     <div class="panel-group">
       <div class="panel panel-default">
@@ -61,7 +66,6 @@
     </div>
 {% else %}
 <h2>Aktualne nejsi v klanu, muzes ale nejaky zalozit <a href="zalozit/">zde</a>, nebo se k nejakemu <a href="/user/prochazet_klany">pridat</a><h2>
-
 {% endif %}
 
 {% endblock %}

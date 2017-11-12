@@ -92,6 +92,7 @@ def klan():
         account = session
         klan = db_get_from_where_one('klan', "vudce='{}'".format(session['id']), ['*'])
         vudce = True
+        vudce_klanu = session['username']
         if klan == None:
             vudce = False
             klan = db_get("""
@@ -100,25 +101,35 @@ def klan():
                     WHERE klan_clenstvi.hrac='""" +str(session['id'])+"'")
             if klan:
                 klan = klan[0]
+                vudce_klanu = db_get("""
+                    SELECT hrac.prezdivka FROM hrac
+                        INNER JOIN klan ON ( klan.vudce = hrac.id ) 
+                        INNER JOIN klan_clenstvi ON ( klan.id = klan_clenstvi.klan ) 
+                        WHERE klan_clenstvi.hrac='""" +str(session['id'])+"'")
+                if vudce_klanu:
+                    vudce_klanu = vudce_klanu[0][0]
         clenove = None
-        if klan != None:
+        if klan != ():
             clenove = db_get("""
                 SELECT hrac.jmeno, hrac.prezdivka, hrac.id
                 FROM hrac LEFT JOIN klan_clenstvi ON ( hrac.id = klan_clenstvi.hrac ) 
                   LEFT JOIN klan ON ( klan.id = klan_clenstvi.klan ) 
-                WHERE hrac.id='""" + str(session['id'])+"'")
-        return render_template('user/klan.html', account=account, table_name='klan', database=database, klan=klan, vudce=vudce, clenove=clenove)
+                WHERE klan_clenstvi.klan='""" + str(klan[0])+"'")
+        return render_template('user/klan.html', account=account, table_name='klan', database=database, klan=klan, vudce=vudce, clenove=clenove, vudce_klanu=vudce_klanu)
     else:   # POST
         if 'zrusit' in request.form:
-            print request.form['id']
             db, cursor = database()
             cursor.execute("DELETE FROM klan WHERE id=%s" % (request.form['id'],))
             db.commit()
             return redirect(url_for("user.klan"))
         elif 'vyhodit' in request.form:
-            print request.form['id']
             db, cursor = database()
             cursor.execute("DELETE FROM klan_clenstvi WHERE hrac=%s" % (request.form['id'],))
+            db.commit()
+            return redirect(url_for("user.klan"))
+        elif 'opustit' in request.form:
+            db, cursor = database()
+            cursor.execute("DELETE FROM klan_clenstvi WHERE hrac=%s" % (session['id'],))
             db.commit()
             return redirect(url_for("user.klan"))
         return "chyba"
@@ -126,13 +137,14 @@ def klan():
 @user.route('/klan/zalozit/', methods=['GET', 'POST'])
 @login_required('user')
 def klan_zalozit():
-    return "zalozit klan"
+    account = session
+    return render_template('user/klan_zalozit.html', account=account, table_name='klan_zalozit')
 
 @user.route('/tym/', methods=['GET', 'POST'])
 @login_required('user')
 def tym():
     account = session
-    database = db_get_from_all('klan', ['*'])
+    database = db_get_from_all('tym', ['*'])
     return render_template('user/tym.html', account=account, table_name='tym', database=database)
 
 @user.route('/zapas/', methods=['GET', 'POST'])
