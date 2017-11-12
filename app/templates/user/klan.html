@@ -1,0 +1,67 @@
+{% extends 'user_base.html' %}
+{% block content %}
+{% if klan %}
+    {% if vudce %}
+    <form class="navbar-form navbar-right" method=post>
+        <input type="hidden" name="id" value="{{klan[0]}}">
+        <button type="submit" name="zrusit" class="btn btn-default">Zrušit klan</button>
+    </form>
+    {% endif %}
+    <h1>Můj klan</h1>
+    <h1><b><u>{{klan[1]}}</u></b></h1>
+    <h3>Tvoje pozice v klanu: 
+    {% if vudce %}
+    vůdce
+    {% else %}
+    člen
+    {% endif %}
+    <h2>Hymna</h2>
+    {{klan[2]}}
+     <audio controls>
+      <source src="/static/{{klan[2]}}" type="audio/mpeg">
+    Your browser does not support the audio element.
+    </audio> 
+    <h2>Logo</h2>
+    {{klan[3]}}
+    <img src="/static/{{klan[3]}}" />
+    <h2>Členové</h2>
+    <div class="panel-group">
+      <div class="panel panel-default">
+        <a data-toggle="collapse" href="#collapse1">
+        <div class="panel-heading">
+          <h4 class="panel-title text-center">
+            Zobrazit/skrýt členy
+          </h4>
+        </div>
+        </a>
+        <div id="collapse1" class="panel-collapse">
+            <table class="table table-striped table-hover table-bordered table-condensed">
+                <tr>
+                    <th>Jmeno</th>
+                    <th>Prezdivka</th>
+                    {% if vudce %}<th>Akce</th>{% endif %}
+                </tr>
+                    {% for member in clenove %}
+                <tr>
+                        <td><a href="/user/prochazet/detail/{{member[1]}}">{{member[0]}}</a></td>
+                        <td><a href="/user/prochazet/detail/{{member[1]}}">{{member[1]}}</a></td>
+                        {% if vudce %}
+                        <td>
+                            <form method=post>
+                            <input type="hidden" name="id" value="{{member[2]}}">
+                            <button type="submit" name="vyhodit" class="btn btn-default">Vyhodit člena</button>
+                        </form>
+                        </td>
+                        {% endif %}
+                </tr>
+                    {% endfor %}
+            </table>
+        </div>
+      </div>
+    </div>
+{% else %}
+<h2>Aktualne nejsi v klanu, muzes ale nejaky zalozit <a href="zalozit/">zde</a>, nebo se k nejakemu <a href="/user/prochazet_klany">pridat</a><h2>
+
+{% endif %}
+
+{% endblock %}
