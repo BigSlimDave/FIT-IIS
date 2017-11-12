@@ -39,7 +39,7 @@ def hrac():
     WHERE hrac.prezdivka = \"%s\" """ %(str(nick)))
     return render_template('user/hrac.html', account=account, table_name='hrac', hrac=hrac, vybaveni=vybaveni, content=zapasy )
 
-@user.route('/hrac/prochazet/', methods=['GET', 'POST'])
+@user.route('/prochazet/', methods=['GET', 'POST'])
 @login_required('user')
 def hrac_prochazet():
     account = session
@@ -50,6 +50,7 @@ def hrac_prochazet():
                   LEFT JOIN tym_clenstvi  ON ( hrac.id = tym_clenstvi.hrac  )
                   LEFT JOIN tym           ON ( tym.id  = tym_clenstvi.tym   )""")
     tmp = []
+    pismeno = ''
     if 'pismeno' in request.args:
         pismeno = request.args['pismeno']
         print pismeno.lower()
@@ -57,9 +58,9 @@ def hrac_prochazet():
             if (hraci[i][1][0] == pismeno.upper()) or (hraci[i][1][0] == pismeno.lower()):
                 tmp.append(hraci[i])
         hraci = tmp
-    return render_template('user/hrac_prochazet.html', account=account, table_name='hrac', hraci=hraci)
+    return render_template('user/hrac_prochazet.html', account=account, table_name='prochazet', hraci=hraci, pismeno=pismeno)
 
-@user.route('/hrac/prochazet/detail/<string:nick>', methods=['GET', 'POST'])
+@user.route('/prochazet/detail/<string:nick>', methods=['GET', 'POST'])
 @login_required('user')
 def user_detail(nick):
     account = session
@@ -74,14 +75,7 @@ def user_detail(nick):
     SELECT typ , vyrobce, model ,popis
     FROM hrac JOIN vybaveni ON ( hrac.id = vybaveni.vlastnik )
     WHERE hrac.prezdivka='""" + nick+"'")
-    return render_template('user/hrac_detail.html', account=account, hrac=hrac, vybaveni=vybaveni)
-
-@user.route('/vybaveni/', methods=['GET', 'POST'])
-@login_required('user')
-def vybaveni():
-    account = session
-    vybaveni = db_get_from_where_all('vybaveni', "vlastnik='{0}'".format(session['id']), ['*'])
-    return render_template('user/vybaveni.html', account=account, table_name='vybaveni', vybaveni=vybaveni)
+    return render_template('user/hrac_detail.html', account=account, table_name='prochazet', hrac=hrac, vybaveni=vybaveni)
 
 @user.route('/hra/', methods=['GET', 'POST'])
 @login_required('user')

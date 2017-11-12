@@ -12,42 +12,45 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
               </button>
-              <a class="navbar-brand" href="/user/hrac/prochazet">Zobrazit všechny</a>
+              <a class="navbar-brand" href="/user/prochazet">Zobrazit všechny</a>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
               <ul class="nav navbar-nav">
-                <li><a href="/user/hrac/prochazet/?pismeno=A">A</a></li>
-                <li><a href="/user/hrac/prochazet/?pismeno=B">B</a></li>
-                <li><a href="/user/hrac/prochazet/?pismeno=C">C</a></li>
-                <li><a href="/user/hrac/prochazet/?pismeno=D">D</a></li>
-                <li><a href="/user/hrac/prochazet/?pismeno=E">E</a></li>
-                <li><a href="/user/hrac/prochazet/?pismeno=F">F</a></li>
-                <li><a href="/user/hrac/prochazet/?pismeno=G">G</a></li>
-                <li><a href="/user/hrac/prochazet/?pismeno=H">H</a></li>
-                <li><a href="/user/hrac/prochazet/?pismeno=I">I</a></li>
-                <li><a href="/user/hrac/prochazet/?pismeno=J">J</a></li>
-                <li><a href="/user/hrac/prochazet/?pismeno=K">K</a></li>
-                <li><a href="/user/hrac/prochazet/?pismeno=L">L</a></li>
-                <li><a href="/user/hrac/prochazet/?pismeno=M">M</a></li>
-                <li><a href="/user/hrac/prochazet/?pismeno=N">N</a></li>
-                <li><a href="/user/hrac/prochazet/?pismeno=P">O</a></li>
-                <li><a href="/user/hrac/prochazet/?pismeno=P">P</a></li>
-                <li><a href="/user/hrac/prochazet/?pismeno=Q">Q</a></li>
-                <li><a href="/user/hrac/prochazet/?pismeno=R">R</a></li>
-                <li><a href="/user/hrac/prochazet/?pismeno=S">S</a></li>
-                <li><a href="/user/hrac/prochazet/?pismeno=T">T</a></li>
-                <li><a href="/user/hrac/prochazet/?pismeno=U">U</a></li>
-                <li><a href="/user/hrac/prochazet/?pismeno=V">V</a></li>
-                <li><a href="/user/hrac/prochazet/?pismeno=W">W</a></li>
-                <li><a href="/user/hrac/prochazet/?pismeno=X">X</a></li>
-                <li><a href="/user/hrac/prochazet/?pismeno=Y">Y</a></li>
-                <li><a href="/user/hrac/prochazet/?pismeno=Z">Z</a></li>
+                <li><a href="/user/prochazet/?pismeno=A">A</a></li>
+                <li><a href="/user/prochazet/?pismeno=B">B</a></li>
+                <li><a href="/user/prochazet/?pismeno=C">C</a></li>
+                <li><a href="/user/prochazet/?pismeno=D">D</a></li>
+                <li><a href="/user/prochazet/?pismeno=E">E</a></li>
+                <li><a href="/user/prochazet/?pismeno=F">F</a></li>
+                <li><a href="/user/prochazet/?pismeno=G">G</a></li>
+                <li><a href="/user/prochazet/?pismeno=H">H</a></li>
+                <li><a href="/user/prochazet/?pismeno=I">I</a></li>
+                <li><a href="/user/prochazet/?pismeno=J">J</a></li>
+                <li><a href="/user/prochazet/?pismeno=K">K</a></li>
+                <li><a href="/user/prochazet/?pismeno=L">L</a></li>
+                <li><a href="/user/prochazet/?pismeno=M">M</a></li>
+                <li><a href="/user/prochazet/?pismeno=N">N</a></li>
+                <li><a href="/user/prochazet/?pismeno=P">O</a></li>
+                <li><a href="/user/prochazet/?pismeno=P">P</a></li>
+                <li><a href="/user/prochazet/?pismeno=Q">Q</a></li>
+                <li><a href="/user/prochazet/?pismeno=R">R</a></li>
+                <li><a href="/user/prochazet/?pismeno=S">S</a></li>
+                <li><a href="/user/prochazet/?pismeno=T">T</a></li>
+                <li><a href="/user/prochazet/?pismeno=U">U</a></li>
+                <li><a href="/user/prochazet/?pismeno=V">V</a></li>
+                <li><a href="/user/prochazet/?pismeno=W">W</a></li>
+                <li><a href="/user/prochazet/?pismeno=X">X</a></li>
+                <li><a href="/user/prochazet/?pismeno=Y">Y</a></li>
+                <li><a href="/user/prochazet/?pismeno=Z">Z</a></li>
               </ul>
             </div>
           </div>
         </nav>
+        {% if pismeno %}
+        <h2>Pouze přezdívky začínající na {{pismeno}}</h2>
+        {% endif %}
         {% if hraci == [] %}
         Zadanému filtru neodpovídají žádní hráči
         {% else %}
