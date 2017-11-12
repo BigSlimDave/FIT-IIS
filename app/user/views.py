@@ -267,8 +267,21 @@ def add_equipment():
 @login_required('user')
 def games_detail(name):
     account = session
-    db_c = db_get("SELECT turnaj.nazev, turnaj.kde, mod_hry, zapas.kdy, typ, turnaj.id FROM (hra JOIN zapas ON ( hra.id = zapas.hra )) JOIN turnaj ON ( zapas.turnaj = turnaj.id) WHERE nazev_hry = \"%s\"" %(name))
-    return render_template('user/hra_detail.html', account=account, gameInfo=db_c )
+    db_c = db_get("""
+    SELECT nazev, turnaj.kde, mod_hry, kapacita, turnaj.kdy, zapas.typ
+    FROM turnaj JOIN zapas ON ( zapas.turnaj = turnaj.id )
+                JOIN hra   ON ( hra.id = zapas.hra )
+    WHERE nazev_hry = "%s"
+    GROUP BY nazev, turnaj.kde, mod_hry, kapacita, turnaj.kdy, zapas.typ"""%(name))
+    zapasy = db_get("""
+    SELECT zapas.kdy, turnaj.kde, t1.nazev, skore, t2.nazev, typ
+    FROM zapas JOIN turnaj ON ( zapas.turnaj = turnaj.id ) 
+               JOIN ucastnici_zapasu ON ( ucastnici_zapasu.id_zapas = zapas.id )
+               JOIN tym t1 ON ( id_tym = t1.id )
+               JOIN tym t2 ON ( id_tym2 = t2.id )
+    WHERE hra = ( SELECT id FROM hra WHERE nazev_hry = "%s" )
+    LIMIT 10"""%(name))
+    return render_template('user/hra_detail.html', account=account, gameInfo=db_c, zapasy=zapasy, name=name)
 
 @user.route('/hra/detail/genre/<genre>', methods=['GET', 'POST'])
 @login_required('user')

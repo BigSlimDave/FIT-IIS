@@ -1,22 +1,46 @@
 {% extends 'user_base.html' %}
 {% block content %}
+<h1>{{name}}</h1>
 <h2>Turnaje</h2>
+<div id="collapse1" class="panel-collapse">
+    <table class="table table-striped table-hover table-bordered table-condensed">
+        <tr>
+            <th>Název turnaje</th>
+            <th>Místo konání</th>
+            <th>Mód</th>
+            <th>Datum</th>
+            <th>Druh</th>
+        </tr>
+            {% for game in gameInfo %}
+        <tr>
+            <th><a href="/user/turnaj/detail/{{game[5]}}">{{game[0]}}</a></th>
+            <th><a href="/user/turnaj/detail/location/{{game[1]}}">{{game[1]}}</a></th>
+            <th><a href="/user/hra/detail/mod/{{game[2]}}">{{game[2]}}</a></th>
+            <th>{{game[3]}}</th>
+            <th>{{game[4]}}</th>
+        </tr>
+            {% endfor %}
+    </table>
+</div>
+<h2>Poslední zápasy</h2>
 <div id="collapse1" class="panel-collapse">
         <table class="table table-striped table-hover table-bordered table-condensed">
             <tr>
-                <th>Název turnaje</th>
-                <th>Místo konání</th>
-                <th>Mód</th>
                 <th>Datum</th>
+                <th>Místo konaní</th>
+                <th>Team 1</th>
+                <th>Skóre</th>
+                <th>Team 2</th>
                 <th>Druh</th>
             </tr>
-                {% for game in gameInfo %}
+                {% for zapas in zapasy %}
             <tr>
-                <th><a href="/user/turnaj/detail/{{game[5]}}">{{game[0]}}</a></th>
-                <th><a href="/user/turnaj/detail/location/{{game[1]}}">{{game[1]}}</a></th>
-                <th><a href="/user/hra/detail/mod/{{game[2]}}">{{game[2]}}</a></th>
-                <th>{{game[3]}}</th>
-                <th>{{game[4]}}</th>
+                <th>{{zapas[0]}}</th>
+                <th>{{zapas[1]}}</th>
+                <th>{{zapas[2]}}</th>
+                <th>{{zapas[3]}}</th>
+                <th>{{zapas[4]}}</th>
+                <th>{{zapas[5]}}</th>
             </tr>
                 {% endfor %}
         </table>
