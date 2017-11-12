@@ -1,5 +1,5 @@
 Hrac - Mazani a pridavani vybavy
-    
+
 Hry - Prochazeni her + detaily hry
 Klan - Aktualni klan
      - Prochazeni klanu
@@ -11,7 +11,7 @@ Zapasy - vypis zapasu + filtrovani
 Turnaj - Prohlizeni turnaju + detaily ( zapasy atd. )
        - Sponzory u turnaju
        - Prihlasovani na Turnaj, pokud je leader
-   
+
 ADMIN_____
 
 pridavani vysledku zapasu ( 2x s otocenym skorem pro tym ) 

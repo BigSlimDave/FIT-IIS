@@ -25,7 +25,7 @@ def hrac():
               LEFT JOIN tym           ON ( tym.id  = tym_clenstvi.tym   )
     WHERE hrac.prezdivka='""" + nick+"'")[0]
     vybaveni = db_get("""
-    SELECT typ , vyrobce, model ,popis
+    SELECT typ , vyrobce, model ,popis, vybaveni.id
     FROM hrac JOIN vybaveni ON ( hrac.id = vybaveni.vlastnik )
     WHERE hrac.prezdivka='""" + nick+"'")
     zapasy = db_get("""
@@ -138,3 +138,42 @@ def profil(nickname):
     WHERE hrac.prezdivka = \"%s\" """ %(str(nickname)))
     print(zapasy)
     return render_template('user/profil.html', vybaveni=vybaveni, zapasy=zapasy)
+
+@user.route('/hrac/remove/', methods=['GET', 'POST'])
+@login_required('user')
+def remove_equipment():
+    print(request.form["remove_id"])
+    if 'remove_id' in request.form:
+        db, cursor = database()
+        cursor.execute("DELETE FROM %s WHERE id=%s" % ("vybaveni", request.form['remove_id'],))
+        db.commit()
+        return redirect(url_for("user.hrac"))
+    else:
+        flash('Něco se pokazilo')
+        return redirect(url_for("user.index"))
+
+@user.route('/hrac/add/equipment/', methods=['GET', 'POST'])
+@login_required('user')
+def add_equipment():
+    table = "vybaveni"
+    if ( request.method == "GET" ):
+        account = session
+        table_head = db_describe(table)
+        id = session['id']
+        return render_template('user/hrac_add_equipment.html',id=id, account=account, table_name=table, header=table_head)
+    else:
+        print(request.form)
+        validation = {}
+        table_head = db_describe(table)
+        for i in table_head:
+            validation[i[0]] = i[1]
+        for i in request.form:
+            if ( i == "Odeslat"):
+                continue
+            print(validation[i])
+            if ( not check_database_type(validation[i],request.form[i]) ):
+                flash(i + " " + validation[i])
+                return redirect(url_for("user.hrac"))
+            
+        db_insert_what(table, request.form)
+        return redirect(url_for("user.hrac"))

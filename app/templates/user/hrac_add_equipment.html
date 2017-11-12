@@ -1,0 +1,23 @@
+{% extends 'user_base.html' %}
+{% block content %}
+<h1>Přidat {{table_name}}</h1>
+    <form method="POST" action="">
+        <table>
+        {% for head in header if head[0] != 'id'%}
+        {% if head[0] == 'vlastnik' %}
+        <tr>
+            <td></td>
+            <td><input type="hidden" value="{{id}}" name="{{head[0]}}"></td>
+        </tr>
+        {% else %}
+        <tr>
+            <td style="text-align:right"><label >{{head[0]}}: </label></td>
+            <td><input type="text" name="{{head[0]}}"></td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+        </table>
+        <input type="submit" name="Odeslat" value="Odeslat">
+    </form>
+
+{% endblock %}

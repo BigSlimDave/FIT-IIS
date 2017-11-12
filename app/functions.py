@@ -17,6 +17,8 @@ def database():
     return db, db.cursor()
 
 def check_database_type(type,data):
+    print(type),
+    print(data)
     if ( re.match(ur"varchar\((\d+)\)",type) ):
         length = int( re.findall(ur"\d+", type)[0])
         if ( len(data) < length ):
@@ -29,6 +31,14 @@ def check_database_type(type,data):
             return True
         except ValueError:
             return False;
+    elif ( re.match(ur"int\((\d+)\)",type) ):
+        length = int( re.findall(ur"\d+", type)[0])
+        if ( len(data) < length ):
+            return True
+        else:
+            return False;
+    else:
+        return False
 
 def db_get(command):
     db, cursor = database()
