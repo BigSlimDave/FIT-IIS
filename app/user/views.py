@@ -81,8 +81,9 @@ def user_detail(nick):
 @login_required('user')
 def hra():
     account = session
+    table_head = db_describe("hra")
     database = db_get_from_all('hra', ['*'])
-    return render_template('user/hra.html', account=account, table_name='hra', database=database)
+    return render_template('user/hra.html', account=account, table_name='hra', content=database, table_head=table_head)
 
 @user.route('/klan/', methods=['GET', 'POST'])
 @login_required('user')
@@ -177,3 +178,31 @@ def add_equipment():
             
         db_insert_what(table, request.form)
         return redirect(url_for("user.hrac"))
+
+@user.route('/hra/detail/<name>', methods=['GET', 'POST'])
+@login_required('user')
+def games_detail(name):
+    account = session
+    db_c = db_get("SELECT turnaj.nazev, turnaj.kde, mod_hry, zapas.kdy, typ, turnaj.id FROM (hra JOIN zapas ON ( hra.id = zapas.hra )) JOIN turnaj ON ( zapas.turnaj = turnaj.id) WHERE nazev_hry = \"%s\"" %(name))
+    return render_template('user/hra_detail.html', account=account, gameInfo=db_c )
+
+@user.route('/hra/detail/genre/<genre>', methods=['GET', 'POST'])
+@login_required('user')
+def games_genre(genre):
+    account = session
+    db_c = db_get("SELECT nazev_hry, vydavatel_hry, rok_vydani_hry FROM hra WHERE zanr_hry=\"%s\"" %(genre))
+    return render_template('user/hra_genre.html', account=account, genreSort=db_c, genre=genre)
+
+@user.route('/hra/detail/mod/<mods>', methods=['GET', 'POST'])
+@login_required('user')
+def games_mods(mods):
+    account = session
+    db_c = db_get("SELECT nazev_hry, vydavatel_hry, rok_vydani_hry FROM hra WHERE mod_hry=\"%s\"" %(mods))
+    return render_template('user/hra_mods.html', account=account, ModSort=db_c, mod=mods )
+
+@user.route('/hra/detail/publisher/<pub>', methods=['GET', 'POST'])
+@login_required('user')
+def games_publisher(pub):
+    account = session
+    db_c = db_get("SELECT nazev_hry, rok_vydani_hry, zanr_hry FROM hra WHERE vydavatel_hry=\"%s\"" %(pub))
+    return render_template('user/hra_vydavatel.html', account=account, PubSort=db_c, publisher=pub)
