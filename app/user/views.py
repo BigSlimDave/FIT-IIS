@@ -1,6 +1,7 @@
 # -*- encoding: UTF-8 -*-
 
 from flask import Blueprint, render_template, abort, request, session, redirect, flash, url_for
+from time import strftime
 from jinja2 import TemplateNotFound
 from app.functions import *
 
@@ -195,7 +196,48 @@ def zapas():
 def turnaj():
     account = session
     database = db_get_from_all('turnaj', ['*'])
-    return render_template('user/turnaj.html', account=account, table_name='turnaj', database=database)
+    future_champ = db_get("""
+    SELECT nazev, kdy, kde, odmena, kapacita, id
+    FROM turnaj 
+    WHERE kdy > '%s' 
+    ORDER BY YEAR(kdy) DESC, MONTH(kdy) DESC, DAY(kdy) DESC
+    """%(strftime("%Y-%m-%d")))
+    past_champ = db_get("""
+    SELECT nazev, kdy, kde, odmena, kapacita, id
+    FROM turnaj 
+    WHERE kdy <= '%s' 
+    ORDER BY YEAR(kdy) DESC, MONTH(kdy) DESC, DAY(kdy) DESC"""
+    %(strftime("%Y-%m-%d")))
+    return render_template('user/turnaj.html', account=account, table_name='turnaj', future=future_champ, past=past_champ)
+
+@user.route('/turnaj/detail/location/<location>')
+@login_required('user')
+def turnaj_location_detail(location):
+    account = session
+    turnaments = db_get("""
+    SELECT id, nazev, odmena, kdy, kapacita 
+    FROM turnaj 
+    WHERE kde="%s"
+    ORDER BY YEAR(kdy) DESC, MONTH(kdy) DESC, DAY(kdy) DESC""" %(location))
+    return render_template('user/turnaj_location.html', account=account, place=location, turnaments=turnaments)
+
+@user.route('/turnaj/detail/<id>', methods=['GET', 'POST'])
+@login_required('user')
+def turnaj_detail(id):
+    account = session
+    games = db_get("""
+    SELECT zapas.cas, zapas.kdy, turnaj.kde, zapas.skore, hra.nazev_hry, zapas.typ
+    FROM zapas JOIN turnaj ON ( zapas.turnaj = turnaj.id )
+               JOIN hra ON ( hra.id = zapas.hra )
+    WHERE turnaj = %s
+    """%(id))
+    sponzors = db_get("""
+    SELECT nazev
+    FROM sponzor JOIN sponzoroval ON ( sponzor.id = sponzoroval.sponzor )
+    WHERE turnaj=%s
+    """%(id))
+    name = db_get("SELECT nazev FROM turnaj WHERE id = %s"%(id))[0][0]
+    return render_template('user/turnaj_detail.html', account=account, table_name='turnaj', zapasy=games, Name=name, sponzors=sponzors)
 
 @user.route('/sponzor/', methods=['GET', 'POST'])
 @login_required('user')
@@ -268,11 +310,11 @@ def add_equipment():
 def games_detail(name):
     account = session
     db_c = db_get("""
-    SELECT nazev, turnaj.kde, mod_hry, kapacita, turnaj.kdy, zapas.typ
+    SELECT nazev, turnaj.kde, mod_hry, turnaj.kdy, zapas.typ, turnaj.id
     FROM turnaj JOIN zapas ON ( zapas.turnaj = turnaj.id )
                 JOIN hra   ON ( hra.id = zapas.hra )
     WHERE nazev_hry = "%s"
-    GROUP BY nazev, turnaj.kde, mod_hry, kapacita, turnaj.kdy, zapas.typ"""%(name))
+    GROUP BY nazev, turnaj.kde, mod_hry, kapacita, turnaj.kdy, zapas.typ, turnaj.id"""%(name))
     zapasy = db_get("""
     SELECT zapas.kdy, turnaj.kde, t1.nazev, skore, t2.nazev, typ
     FROM zapas JOIN turnaj ON ( zapas.turnaj = turnaj.id ) 

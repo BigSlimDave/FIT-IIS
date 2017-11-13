@@ -1,0 +1,34 @@
+{% extends 'user_base.html' %}
+{% block content %}
+<h2>Zápasy - {{Name}}</h2>
+<table class="table table-striped table-hover table-bordered table-condensed">
+    <tr>
+        <th>Čas</th>
+        <th>Datum</th>
+        <th>Lokace</th>
+        <th>Score</th>
+        <th>Hra</th>
+        <th>Druh</th>
+    </tr>
+        {% for zapas in zapasy %}
+    <tr>
+        <th>{{zapas[0]}}</th>
+        <th>{{zapas[1]}}</th>
+        <th><a href="/user/turnaj/detail/location/{{zapas[2]}}">{{zapas[2]}}</a></th>
+        <th>{{zapas[3]}}</th>
+        <th><a href="/user/hra/detail/{{zapas[4]}}">{{zapas[4]}}</a></th>
+        <th>{{zapas[5]}}</th>
+    </tr>
+        {% endfor %}
+</table>
+<br>
+<h2>Sponzoři</h2>
+<table>
+        {% for sponzor in sponzors %}
+    <tr>
+        <th>{{sponzor[0]}}</th>
+        <th>{{sponzor[1]}}</th>
+    </tr>
+        {% endfor %}
+</table>
+{% endblock %}

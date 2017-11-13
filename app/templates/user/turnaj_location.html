@@ -1,4 +1,4 @@
-{% extends 'admin_base.html' %}
+{% extends 'user_base.html' %}
 {% block content %}
 <h2>{{place}} Turnaje</h2>
 <div id="collapse1" class="panel-collapse">
@@ -11,7 +11,7 @@
             </tr>
                 {% for turnament in turnaments %}
             <tr>
-                <th><a href="/admin/turnaj/detail/{{turnament[0]}}">{{turnament[1]}}</a></th>
+                <th><a href="/user/turnaj/detail/{{turnament[0]}}">{{turnament[1]}}</a></th>
                 <th>{{turnament[2]}}</th>
                 <th>{{turnament[3]}}</th>
                 <th>{{turnament[4]}}</th>
