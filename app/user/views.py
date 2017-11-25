@@ -19,12 +19,16 @@ def hrac():
     account = session
     nick = session["username"]
     hrac = db_get("""
-    SELECT hrac.jmeno, hrac.prezdivka, klan.id, klan.nazev, tym.id, tym.nazev
-    FROM hrac LEFT JOIN klan_clenstvi ON ( hrac.id = klan_clenstvi.hrac ) 
-              LEFT JOIN klan          ON ( klan.id = klan_clenstvi.klan ) 
-              LEFT JOIN tym_clenstvi  ON ( hrac.id = tym_clenstvi.hrac  )
-              LEFT JOIN tym           ON ( tym.id  = tym_clenstvi.tym   )
-    WHERE hrac.prezdivka='""" + nick+"'")[0]
+        SELECT hrac.jmeno, hrac.prezdivka, klan.id, klan.nazev, tym.id, tym.nazev
+        FROM hrac LEFT JOIN klan_clenstvi ON ( hrac.id = klan_clenstvi.hrac ) 
+                  LEFT JOIN klan          ON ( klan.id = klan_clenstvi.klan ) 
+                  LEFT JOIN tym_clenstvi  ON ( hrac.id = tym_clenstvi.hrac  )
+                  LEFT JOIN tym           ON ( tym.id  = tym_clenstvi.tym   )
+        WHERE hrac.prezdivka='""" + nick+"'")
+    try:
+        hrac = hrac[0]
+    except:
+        hrac = ['',('unknown')]
     vybaveni = db_get("""
     SELECT typ , vyrobce, model ,popis, vybaveni.id
     FROM hrac JOIN vybaveni ON ( hrac.id = vybaveni.vlastnik )

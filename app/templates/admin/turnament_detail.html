@@ -3,6 +3,18 @@
 <h2>Detail - {{Name}}</h2>
 
 <h1>Sponzori</h1>
+<h3>Přidat sponzora</h3>
+<form method="post" action="" id="add_sponsor">
+    <select form="add_sponsor" name="sponsor_id_add">
+    {% for sponsor in all_sponsors %}
+        <option value="{{sponsor[2]}}">{{sponsor[0]}} - {{sponsor[1]}}</option>
+    {% endfor %}
+    </select>
+    <label>Částka:</label>
+    <input type="text" name="castka">
+    <input type="submit" name="add_sponsor" value="Přidat sponzora">
+</form>
+<br>
 <table class="table table-striped table-hover table-bordered table-condensed">
     <tr>
         <th>Název</th>
@@ -14,6 +26,12 @@
         <th>{{sponzor[0]}}</th>
         <th>{{sponzor[1]}}</th>
         <th>{{sponzor[2]}}</th>
+        <th>
+            <form method="post" action="">
+                <input type="hidden" name="id" value="{{sponzor[3]}}">
+                <input type="submit" name="remove" value="Odebrat">
+            </form>
+        </th>
     </tr>
     {% endfor %}
 </table>

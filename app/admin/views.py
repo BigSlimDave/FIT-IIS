@@ -228,21 +228,37 @@ def team_members_detail(nazev, id):
 @admin.route('/turnaj/detail/<id>', methods=['GET', 'POST'])
 @login_required('admin')
 def turnament_detail(id):
-    account = session
-    games = db_get("""
-    SELECT zapas.id,zapas.kdy,zapas.skore,zapas.typ,hra.nazev_hry
-    FROM turnaj JOIN zapas ON ( turnaj.id = zapas.turnaj )
-                JOIN hra ON ( zapas.hra = hra.id )
-    WHERE turnaj.id =""" + str(id))
-    name = db_get("SELECT nazev FROM turnaj WHERE id=\""+id+"\"")
-    sponzors = db_get("""
-    SELECT sponzor.nazev, sponzor.typ, sponzoroval.castka
-    FROM turnaj JOIN sponzoroval ON ( turnaj.id = sponzoroval.turnaj )
-                JOIN sponzor     ON ( sponzoroval.sponzor = sponzor.id )
-    WHERE turnaj.id = %s
-    """%(id))
-    return render_template('admin/turnament_detail.html', account=account, members=games, Name=name[0][0], sponzors=sponzors)
-
+    if request.method == 'GET':
+        account = session
+        games = db_get("""
+            SELECT zapas.id,zapas.kdy,zapas.skore,zapas.typ,hra.nazev_hry
+            FROM turnaj JOIN zapas ON ( turnaj.id = zapas.turnaj )
+                        JOIN hra ON ( zapas.hra = hra.id )
+            WHERE turnaj.id =""" + str(id))
+        name = db_get("SELECT nazev FROM turnaj WHERE id=\""+id+"\"")
+        sponzors = db_get("""
+            SELECT sponzor.nazev, sponzor.typ, sponzoroval.castka, sponzoroval.id
+            FROM turnaj JOIN sponzoroval ON ( turnaj.id = sponzoroval.turnaj )
+                        JOIN sponzor     ON ( sponzoroval.sponzor = sponzor.id )
+            WHERE turnaj.id = %s
+            """%(id))
+        all_sponsors = db_get("""SELECT nazev, typ, id FROM sponzor""")
+        return render_template('admin/turnament_detail.html', account=account, members=games, Name=name[0][0], sponzors=sponzors, all_sponsors=all_sponsors)
+    else:
+        print request.form
+        if 'add_sponsor' in request.form:
+            id_sponzora = request.form['sponsor_id_add']
+            castka = request.form['castka']
+            db_get("""INSERT INTO sponzoroval (castka, sponzor, turnaj) VALUES
+                    (%s, %s, %s)""" % (castka, id_sponzora, id))
+            return redirect(url_for('admin.turnament_detail', id=id))
+        elif 'remove' in request.form:
+            id_row = request.form['id']
+            db_get("""DELETE FROM sponzoroval WHERE id=%s""" % (id_row))
+            return redirect(url_for('admin.turnament_detail', id=id))
+        else:
+            flash('Neznámý požadavek')
+            return redirect(url_for('admin.turnament_detail', id=id))
 
 @admin.route('/turnaj/detail/location/<location>', methods=['GET', 'POST'])
 @login_required('admin')
