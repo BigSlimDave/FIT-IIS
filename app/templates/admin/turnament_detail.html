@@ -1,6 +1,23 @@
 {% extends 'admin_base.html' %}
 {% block content %}
-<h2>Zápasy - {{Name}}</h2>
+<h2>Detail - {{Name}}</h2>
+
+<h1>Sponzori</h1>
+<table class="table table-striped table-hover table-bordered table-condensed">
+    <tr>
+        <th>Název</th>
+        <th>Typ</th>
+        <th>Částka</th>
+    </tr>
+    {% for sponzor in sponzors %}
+    <tr>
+        <th>{{sponzor[0]}}</th>
+        <th>{{sponzor[1]}}</th>
+        <th>{{sponzor[2]}}</th>
+    </tr>
+    {% endfor %}
+</table>
+<h1>Zapasy</h1>
 <div id="collapse1" class="panel-collapse">
         <table class="table table-striped table-hover table-bordered table-condensed">
             <tr>

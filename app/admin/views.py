@@ -235,7 +235,13 @@ def turnament_detail(id):
                 JOIN hra ON ( zapas.hra = hra.id )
     WHERE turnaj.id =""" + str(id))
     name = db_get("SELECT nazev FROM turnaj WHERE id=\""+id+"\"")
-    return render_template('admin/turnament_detail.html', account=account, members=games, Name=name[0][0])
+    sponzors = db_get("""
+    SELECT sponzor.nazev, sponzor.typ, sponzoroval.castka
+    FROM turnaj JOIN sponzoroval ON ( turnaj.id = sponzoroval.turnaj )
+                JOIN sponzor     ON ( sponzoroval.sponzor = sponzor.id )
+    WHERE turnaj.id = %s
+    """%(id))
+    return render_template('admin/turnament_detail.html', account=account, members=games, Name=name[0][0], sponzors=sponzors)
 
 
 @admin.route('/turnaj/detail/location/<location>', methods=['GET', 'POST'])
