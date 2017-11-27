@@ -4,6 +4,8 @@ from flask import Blueprint, render_template, abort, request, session, redirect,
 from time import strftime
 from jinja2 import TemplateNotFound
 from app.functions import *
+from werkzeug.utils import secure_filename
+import os
 
 user = Blueprint('user', __name__, static_folder='static', template_folder='templates')
 
@@ -142,8 +144,41 @@ def klan():
 @user.route('/klan/zalozit/', methods=['GET', 'POST'])
 @login_required('user')
 def klan_zalozit():
-    account = session
-    return render_template('user/klan_zalozit.html', account=account, table_name='klan_zalozit')
+    if request.method == 'GET':
+            account = session
+            return render_template('user/klan_zalozit.html', account=account, table_name='klan')
+    else:
+        print request.files
+        if 'odeslat' in request.form:
+            if 'file' in request.files:
+                file = request.files['file']
+                print str(file)
+                if allowed_photo(file.filename):
+                    filename1 = secure_filename(file.filename)
+                    file.save(os.path.join(UPLOAD_FOLDER, filename1))
+                else:
+                    flash("Nepodporovaný formát souboru logo")
+                    return redirect(url_for("user.klan_zalozit"))
+            if 'song' in request.files:
+                file = request.files['song']
+                if allowed_song(file.filename):
+                    filename2 = secure_filename(file.filename)
+                    file.save(os.path.join(UPLOAD_FOLDER, filename2))
+                else:
+                    flash("Nepodporovaný formát souboru hymna")
+                    return redirect(url_for("user.klan_zalozit"))
+            # ted je nahranej soubor jestli byl
+            nazev = request.form['nazev']
+            try:
+                db_get("""INSERT INTO klan (nazev, hymna, logo, vudce) 
+                        VALUES  ('%s', '%s', '%s', '%s')""" % (nazev, filename2, filename1, session['id']))
+                flash("Klan byl úspěšně vytvořen")
+            except:
+                flash("Chyba při vytváření klanu, duplicita")
+            return redirect(url_for('user.klan'))
+        else:
+            flash("Neznámý požadavek")
+            return redirect(url_for("klan_zalozit"))
 
 @user.route('/klan_prochazet/', methods=['GET', 'POST'])
 @login_required('user')
@@ -184,9 +219,82 @@ def klan_detail(nick):
 @user.route('/tym/', methods=['GET', 'POST'])
 @login_required('user')
 def tym():
-    account = session
-    database = db_get_from_all('tym', ['*'])
-    return render_template('user/tym.html', account=account, table_name='tym', database=database)
+    if request.method == 'GET':
+        account = session
+        tym = db_get_from_where_one('tym', "vudce='{}'".format(session['id']), ['*'])
+        vudce = True
+        vudce_tymu = session['username']
+        if tym == None:
+            vudce = False
+            tym = db_get("""
+                SELECT * FROM tym
+                    INNER JOIN tym_clenstvi ON ( tym.id = tym_clenstvi.tym ) 
+                    WHERE tym_clenstvi.hrac='""" +str(session['id'])+"'")
+            if tym:
+                tym = tym[0]
+                vudce_tymu = db_get("""
+                    SELECT hrac.prezdivka FROM hrac
+                        INNER JOIN tym ON ( tym.vudce = hrac.id ) 
+                        INNER JOIN tym_clenstvi ON ( tym.id = tym_clenstvi.tym ) 
+                        WHERE tym_clenstvi.hrac='""" +str(session['id'])+"'")
+                if vudce_tymu:
+                    vudce_tymu = vudce_tymu[0][0]
+        clenove = None
+        if tym != ():
+            clenove = db_get("""
+                SELECT hrac.jmeno, hrac.prezdivka, hrac.id
+                FROM hrac LEFT JOIN tym_clenstvi ON ( hrac.id = tym_clenstvi.hrac ) 
+                  LEFT JOIN tym ON ( tym.id = tym_clenstvi.tym ) 
+                WHERE tym_clenstvi.tym='""" + str(tym[0])+"'")
+        return render_template('user/tym.html', account=account, table_name='tym', database=database, tym=tym, vudce=vudce, clenove=clenove, vudce_tymu=vudce_tymu)
+    else:   # POST
+        if 'zrusit' in request.form:
+            db, cursor = database()
+            cursor.execute("DELETE FROM tym WHERE id=%s" % (request.form['id'],))
+            db.commit()
+            return redirect(url_for("user.tym"))
+        elif 'vyhodit' in request.form:
+            db, cursor = database()
+            cursor.execute("DELETE FROM tym_clenstvi WHERE hrac=%s" % (request.form['id'],))
+            db.commit()
+            return redirect(url_for("user.tym"))
+        elif 'opustit' in request.form:
+            db, cursor = database()
+            cursor.execute("DELETE FROM tym_clenstvi WHERE hrac=%s" % (session['id'],))
+            db.commit()
+            return redirect(url_for("user.tym"))
+        return "chyba"
+
+@user.route('/tym/zalozit/', methods=['GET', 'POST'])
+@login_required('user')
+def tym_zalozit():
+    if request.method == 'GET':
+        account = session
+        return render_template('user/tym_zalozit.html', account=account, table_name='tym')
+    else:
+        print request.files
+        if 'odeslat' in request.form:
+            if 'file' in request.files:
+                file = request.files['file']
+                if allowed_photo(file.filename):
+                    filename = secure_filename(file.filename)
+                    file.save(os.path.join(UPLOAD_FOLDER, filename))
+                else:
+                    flash("Nepodporovaný formát souboru")
+                    return redirect(url_for("user.tym_zalozit"))
+            # ted je nahranej soubor jestli byl
+            nazev = request.form['nazev']
+            popis = request.form['popis']
+            try:
+                db_get("""INSERT INTO tym (nazev, emblem, popis, vudce) 
+                        VALUES  ('%s', '%s', '%s', '%s')""" % (nazev, filename, popis, session['id']))
+                flash("Tým byl úspěšně vytvořen")
+            except:
+                flash("Chyba při vytváření týmu, duplicita")
+            return redirect(url_for('user.tym'))
+        else:
+            flash("Neznámý požadavek")
+            return redirect(url_for("tym_zalozit"))
 
 @user.route('/zapas/', methods=['GET', 'POST'])
 @login_required('user')

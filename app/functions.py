@@ -8,6 +8,10 @@ import MySQLdb
 import re
 import datetime
 
+ALLOWED_EXTENSIONS_PHOTO = set(['png', 'jpg', 'jpeg'])
+ALLOWED_EXTENSIONS_SONG = set(['mp3'])
+UPLOAD_FOLDER = 'app/static'
+
 def database():
     db = MySQLdb.connect(   host="localhost",   # your host, usually localhost
                             user="root",        # your username
@@ -209,3 +213,11 @@ def login_required(role):
 class loginForm(Form):
     username = StringField('Username', [validators.DataRequired()])
     password = PasswordField('Heslo', [validators.DataRequired()])
+
+def allowed_photo(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS_PHOTO
+
+def allowed_song(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS_SONG

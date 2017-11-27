@@ -3,6 +3,7 @@
 from flask import Flask, render_template, request, session, redirect, flash
 from passlib.hash import sha256_crypt
 from app.functions import *
+import os
 
 from app.admin.views import admin
 from app.user.views import user
@@ -11,6 +12,7 @@ app = Flask(__name__)
 
 # Configurations
 app.config.from_object('config')
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Sample HTTP error handling
 @app.errorhandler(404)
