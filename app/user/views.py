@@ -331,6 +331,45 @@ def tym_prochazet():
         tymy = tmp
     return render_template('user/tym_prochazet.html', account=account, table_name='tym_prochazet', tymy=tymy)
 
+@user.route('/tym_prochazet/detail/<string:nick>', methods=['GET', 'POST'])
+@login_required('user')
+def tym_detail(nick):
+    if request.method == 'GET':
+        jsemvetymu = True;
+        account = session
+        tym = db_get("""SELECT * FROM tym WHERE tym.nazev='""" +nick+"'")
+        if tym:
+            tym = tym[0]
+            vudce_tymu = db_get("""
+                SELECT hrac.prezdivka FROM hrac
+                    INNER JOIN tym ON ( tym.vudce = hrac.id ) 
+                    WHERE tym.nazev='""" +nick+"'")
+            if vudce_tymu:
+                vudce_tymu = vudce_tymu[0][0]
+            clenove = db_get("""
+                        SELECT hrac.jmeno, hrac.prezdivka, hrac.id
+                        FROM hrac LEFT JOIN tym_clenstvi ON ( hrac.id = tym_clenstvi.hrac ) 
+                          LEFT JOIN tym ON ( tym.id = tym_clenstvi.tym ) 
+                        WHERE tym_clenstvi.tym='""" + str(tym[0])+"'")
+        # patri uzivatel do nejakeho tymu?
+        patri = db_get_from_where_one('tym', "vudce='{}'".format(session['id']), ['*'])
+        if patri == None:
+            patri = db_get("""SELECT * FROM tym
+                    INNER JOIN tym_clenstvi ON ( tym.id = tym_clenstvi.tym ) 
+                    WHERE tym_clenstvi.hrac='""" +str(session['id'])+"'")
+            if patri == ():
+                jsemvetymu = False
+        return render_template('user/tym_detail.html', account=account, table_name='tym_prochazet', tym=tym, clenove=clenove, vudce_tymu=vudce_tymu, jsemvetymu=jsemvetymu)
+    else:   # pridani se ke tymu
+        if 'vstoupit' in request.form:
+            tym_id = db_get("SELECT id FROM tym WHERE nazev='%s'" % (nick))[0][0]
+            db_get("""INSERT INTO tym_clenstvi (hrac, tym) VALUES ('%s', '%s')""" % (session['id'], tym_id))
+            flash("Byl jsi úspěšně přidán do tymu")
+            return redirect(url_for('user.tym'))
+        else:
+            flash("Neznámý požadavek")
+            return redirect(url_for('user.tym'))
+
 @user.route('/zapas/', methods=['GET', 'POST'])
 @login_required('user')
 def zapas():

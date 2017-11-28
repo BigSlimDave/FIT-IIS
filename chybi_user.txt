@@ -1,5 +1,3 @@
-Tym = Klan
-
 Zapasy - vypis zapasu + filtrovani
 
 Turnaj - Prohlizeni turnaju + detaily ( zapasy atd. )
