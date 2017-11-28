@@ -199,22 +199,41 @@ def klan_prochazet():
 @user.route('/klan_prochazet/detail/<string:nick>', methods=['GET', 'POST'])
 @login_required('user')
 def klan_detail(nick):
-    account = session
-    klan = db_get("""SELECT * FROM klan WHERE klan.nazev='""" +nick+"'")
-    if klan:
-        klan = klan[0]
-        vudce_klanu = db_get("""
-            SELECT hrac.prezdivka FROM hrac
-                INNER JOIN klan ON ( klan.vudce = hrac.id ) 
-                WHERE klan.nazev='""" +nick+"'")
-        if vudce_klanu:
-            vudce_klanu = vudce_klanu[0][0]
-    clenove = db_get("""
-                SELECT hrac.jmeno, hrac.prezdivka, hrac.id
-                FROM hrac LEFT JOIN klan_clenstvi ON ( hrac.id = klan_clenstvi.hrac ) 
-                  LEFT JOIN klan ON ( klan.id = klan_clenstvi.klan ) 
-                WHERE klan_clenstvi.klan='""" + str(klan[0])+"'")
-    return render_template('user/klan_detail.html', account=account, table_name='klan_prochazet', klan=klan, clenove=clenove, vudce_klanu=vudce_klanu)
+    if request.method == 'GET':
+        jsemveklanu = True;
+        account = session
+        klan = db_get("""SELECT * FROM klan WHERE klan.nazev='""" +nick+"'")
+        if klan:
+            klan = klan[0]
+            vudce_klanu = db_get("""
+                SELECT hrac.prezdivka FROM hrac
+                    INNER JOIN klan ON ( klan.vudce = hrac.id ) 
+                    WHERE klan.nazev='""" +nick+"'")
+            if vudce_klanu:
+                vudce_klanu = vudce_klanu[0][0]
+            clenove = db_get("""
+                        SELECT hrac.jmeno, hrac.prezdivka, hrac.id
+                        FROM hrac LEFT JOIN klan_clenstvi ON ( hrac.id = klan_clenstvi.hrac ) 
+                          LEFT JOIN klan ON ( klan.id = klan_clenstvi.klan ) 
+                        WHERE klan_clenstvi.klan='""" + str(klan[0])+"'")
+        # patri uzivatel do nejakeho klanu?
+        patri = db_get_from_where_one('klan', "vudce='{}'".format(session['id']), ['*'])
+        if patri == None:
+            patri = db_get("""SELECT * FROM klan
+                    INNER JOIN klan_clenstvi ON ( klan.id = klan_clenstvi.klan ) 
+                    WHERE klan_clenstvi.hrac='""" +str(session['id'])+"'")
+            if patri == ():
+                jsemveklanu = False
+        return render_template('user/klan_detail.html', account=account, table_name='klan_prochazet', klan=klan, clenove=clenove, vudce_klanu=vudce_klanu, jsemveklanu=jsemveklanu)
+    else:   # pridani se ke klanu
+        if 'vstoupit' in request.form:
+            klan_id = db_get("SELECT id FROM klan WHERE nazev='%s'" % (nick))[0][0]
+            db_get("""INSERT INTO klan_clenstvi (hrac, klan) VALUES ('%s', '%s')""" % (session['id'], klan_id))
+            flash("Byl jsi úspěšně přidán do klanu")
+            return redirect(url_for('user.klan'))
+        else:
+            flash("Neznámý požadavek")
+            return redirect(url_for('user.klan'))
 
 @user.route('/tym/', methods=['GET', 'POST'])
 @login_required('user')

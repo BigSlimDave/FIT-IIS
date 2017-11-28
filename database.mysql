@@ -86,11 +86,11 @@ CREATE TABLE turnaj_wc(
     druhy INT UNSIGNED,                           -- cizi klic hrac
     treti INT UNSIGNED,                           -- cizi klic hrac
     ctvrty INT UNSIGNED,                          -- cizi klic hrac
-    paty INT UNSIGNED) ENGINE=InnoDB;                           -- cizi klic hrac
+    paty INT UNSIGNED) ENGINE=InnoDB;             -- cizi klic hrac
 
 CREATE TABLE turnaj_bezny(
     turnaj INT UNSIGNED NOT NULL PRIMARY KEY,     -- cizi klic
-    vitez INT UNSIGNED) ENGINE=InnoDB;                          -- cizi klic tym
+    vitez INT UNSIGNED) ENGINE=InnoDB;            -- cizi klic tym
 
 CREATE TABLE sponzor(
     id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,

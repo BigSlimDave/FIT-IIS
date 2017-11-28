@@ -1,14 +1,17 @@
 {% extends 'user_base.html' %}
 {% block content %}
+    {% if jsemveklanu == False %}
+    <form class="navbar-form navbar-right" method=post>
+        <button type="submit" name="vstoupit" class="btn btn-default">Vstoupit do klanu</button>
+    </form>
+    {% endif %}
     <h1>Detail klanu {{klan[1]}}</h1>
     <h2>Hymna</h2>
-    {{klan[2]}}
      <audio controls>
       <source src="/static/{{klan[2]}}" type="audio/mpeg">
     Your browser does not support the audio element.
     </audio> 
     <h2>Logo</h2>
-    {{klan[3]}}
     <img src="/static/{{klan[3]}}" />
     <h2>Vudce klanu: {{vudce_klanu}}</h2>
     <h2>Členové</h2>
