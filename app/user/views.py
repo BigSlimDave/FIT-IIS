@@ -296,6 +296,22 @@ def tym_zalozit():
             flash("Neznámý požadavek")
             return redirect(url_for("tym_zalozit"))
 
+@user.route('/tym_prochazet/', methods=['GET', 'POST'])
+@login_required('user')
+def tym_prochazet():
+    account = session
+    tymy = db_get_from_all('tym', ['*'])
+    tmp = []
+    pismeno = ''
+    if 'pismeno' in request.args:
+        pismeno = request.args['pismeno']
+        print pismeno.lower()
+        for i in range(len(tymy)):
+            if (tymy[i][1][0] == pismeno.upper()) or (tymy[i][1][0] == pismeno.lower()):
+                tmp.append(tymy[i])
+        tymy = tmp
+    return render_template('user/tym_prochazet.html', account=account, table_name='tym_prochazet', tymy=tymy)
+
 @user.route('/zapas/', methods=['GET', 'POST'])
 @login_required('user')
 def zapas():
