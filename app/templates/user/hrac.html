@@ -1,6 +1,8 @@
 {% extends 'user_base.html' %}
 {% block content%}
-detail prave prihlaseneho hrace kde si bude moci zmenit heslo a jemno
+<form method=get action="heslo/" class="navbar-form navbar-right">
+    <input style="margin-bottom: 0.7em" class="btn btn-default" name="heslo" type="submit" value="Zmenit heslo"/>
+</form>
 <h2>Osobní informace</h2>
 <b>Přezdívka: </b>{{hrac[1]}}<br>
 <b>Jméno: </b>{{hrac[0]}}<br>

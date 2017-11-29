@@ -18,34 +18,63 @@ def index():
 @user.route('/hrac/', methods=['GET', 'POST'])
 @login_required('user')
 def hrac():
-    account = session
-    nick = session["username"]
-    hrac = db_get("""
-        SELECT hrac.jmeno, hrac.prezdivka, klan.id, klan.nazev, tym.id, tym.nazev
-        FROM hrac LEFT JOIN klan_clenstvi ON ( hrac.id = klan_clenstvi.hrac ) 
-                  LEFT JOIN klan          ON ( klan.id = klan_clenstvi.klan ) 
-                  LEFT JOIN tym_clenstvi  ON ( hrac.id = tym_clenstvi.hrac  )
-                  LEFT JOIN tym           ON ( tym.id  = tym_clenstvi.tym   )
+    if request.method == 'GET':
+        account = session
+        nick = session["username"]
+        hrac = db_get("""
+            SELECT hrac.jmeno, hrac.prezdivka, klan.id, klan.nazev, tym.id, tym.nazev
+            FROM hrac LEFT JOIN klan_clenstvi ON ( hrac.id = klan_clenstvi.hrac ) 
+                      LEFT JOIN klan          ON ( klan.id = klan_clenstvi.klan ) 
+                      LEFT JOIN tym_clenstvi  ON ( hrac.id = tym_clenstvi.hrac  )
+                      LEFT JOIN tym           ON ( tym.id  = tym_clenstvi.tym   )
+            WHERE hrac.prezdivka='""" + nick+"'")
+        print str(hrac)
+        try:
+            hrac = hrac[0]
+        except:
+            hrac = ['',('unknown')]
+        vybaveni = db_get("""
+        SELECT typ , vyrobce, model ,popis, vybaveni.id
+        FROM hrac JOIN vybaveni ON ( hrac.id = vybaveni.vlastnik )
         WHERE hrac.prezdivka='""" + nick+"'")
-    print str(hrac)
-    try:
-        hrac = hrac[0]
-    except:
-        hrac = ['',('unknown')]
-    vybaveni = db_get("""
-    SELECT typ , vyrobce, model ,popis, vybaveni.id
-    FROM hrac JOIN vybaveni ON ( hrac.id = vybaveni.vlastnik )
-    WHERE hrac.prezdivka='""" + nick+"'")
-    zapasy = db_get("""
-    SELECT id_zapas, skore, typ, hra.nazev_hry, tym.nazev, zapas.kdy, turnaj.kde, turnaj.odmena
-    FROM hrac JOIN tym_clenstvi ON ( hrac.id = tym_clenstvi.hrac )
-              JOIN tym          ON ( tym.id  = tym_clenstvi.tym  )
-              JOIN ucastnici_zapasu ON ( ucastnici_zapasu.id_tym = tym.id )
-              JOIN zapas ON ( ucastnici_zapasu.id_zapas = zapas.id )
-              JOIN turnaj ON ( turnaj.id = zapas.turnaj )
-              JOIN hra ON ( hra.id = zapas.hra )
-    WHERE hrac.prezdivka = \"%s\" """ %(str(nick)))
-    return render_template('user/hrac.html', account=account, table_name='hrac', hrac=hrac, vybaveni=vybaveni, content=zapasy )
+        zapasy = db_get("""
+        SELECT id_zapas, skore, typ, hra.nazev_hry, tym.nazev, zapas.kdy, turnaj.kde, turnaj.odmena
+        FROM hrac JOIN tym_clenstvi ON ( hrac.id = tym_clenstvi.hrac )
+                  JOIN tym          ON ( tym.id  = tym_clenstvi.tym  )
+                  JOIN ucastnici_zapasu ON ( ucastnici_zapasu.id_tym = tym.id )
+                  JOIN zapas ON ( ucastnici_zapasu.id_zapas = zapas.id )
+                  JOIN turnaj ON ( turnaj.id = zapas.turnaj )
+                  JOIN hra ON ( hra.id = zapas.hra )
+        WHERE hrac.prezdivka = \"%s\" """ %(str(nick)))
+        return render_template('user/hrac.html', account=account, table_name='hrac', hrac=hrac, vybaveni=vybaveni, content=zapasy )
+    else:
+        flash("Neznámý požadavek")
+        return redirect(url_for("hrac"))
+
+@user.route('/hrac/heslo/', methods=['GET', 'POST'])
+@login_required('user')
+def hrac_heslo():
+    if request.method == 'GET':
+        account = session
+        return render_template('user/heslo.html', account=account, table_name='hrac')
+    else:
+        print str(request.form)
+        if 'stare' in request.form:
+            stare = request.form['stare']
+            nove = request.form['nove']
+            content = db_get_from_where_one('uzivatele', "prezdivka='{0}'".format(session['username']), ['heslo', 'role'])
+            hash1 = content[0]
+            if sha256_crypt.verify(stare, hash1):
+                db_get("""UPDATE uzivatele SET heslo='%s' WHERE id='%s'""" % (sha256_crypt.hash(nove), session['id']))
+                flash("Helo bylo úspěšně změněno.")
+                return redirect(url_for('user.hrac'))
+            else:
+                flash('Aktualní heslo je chybné')
+                return redirect(url_for('user.hrac_heslo'))
+        else:
+            flash("Neznámý požadavek")
+            return redirect(url_for('user.hrac_heslo'))
+
 
 @user.route('/prochazet/', methods=['GET', 'POST'])
 @login_required('user')
@@ -464,26 +493,6 @@ def sponzor():
     database = db_get_from_all('sponzor', ['*'])
     return render_template('user/sponzor.html', account=account, table_name='sponzor', database=database)
 
-@user.route('/profil/<nickname>', methods=['GET', 'POST'])
-@login_required('user')
-def profil(nickname):
-    account = session
-    vybaveni = db_get("""
-        SELECT typ, model, popis
-        FROM vybaveni JOIN hrac ON ( vybaveni.vlastnik = hrac.id )
-        WHERE hrac.prezdivka = \"""" + str(nickname) + "\"")
-    zapasy = db_get("""
-    SELECT id_zapas, skore, typ, hra.nazev_hry, tym.nazev, zapas.kdy, turnaj.kde, turnaj.odmena
-    FROM hrac JOIN tym_clenstvi ON ( hrac.id = tym_clenstvi.hrac )
-              JOIN tym          ON ( tym.id  = tym_clenstvi.tym  )
-              JOIN ucastnici_zapasu ON ( ucastnici_zapasu.id_tym = tym.id )
-              JOIN zapas ON ( ucastnici_zapasu.id_zapas = zapas.id )
-              JOIN turnaj ON ( turnaj.id = zapas.turnaj )
-              JOIN hra ON ( hra.id = zapas.hra )
-    WHERE hrac.prezdivka = \"%s\" """ %(str(nickname)))
-    print(zapasy)
-    return render_template('user/profil.html', vybaveni=vybaveni, zapasy=zapasy)
-
 @user.route('/hrac/remove/', methods=['GET', 'POST'])
 @login_required('user')
 def remove_equipment():
@@ -507,7 +516,7 @@ def add_equipment():
         id = session['id']
         return render_template('user/hrac_add_equipment.html',id=id, account=account, table_name=table, header=table_head)
     else:
-        print(request.form)
+        # print(request.form)
         validation = {}
         table_head = db_describe(table)
         for i in table_head:
