@@ -1,0 +1,24 @@
+hledani hracu podle
+ - hry ( specializace )              // TODO
+ - predchozich vysledku v turnajich  // TODO
+
+prochazeni her podle                 
+ - datum vydani                      // COMPLETE
+ - herni zanry                       // COMPLETE
+ - herni mody                        // COMPLETE
+ - vydavatele                        // COMPLETE
+
+prihlasovani tymu na zapasy          // TODO 
+
+turnaj
+ - vysledky turnaje                  // TODO
+ - sponzori turnaje                  // COMPLETE
+ - hlavni cena turnaje               // TODO
+ - zapasy ktere se hrali na turnaji  // COMPLETE
+
+statistiky
+ - hracu v ramci jednotlivych her    // TODO 
+ - hracu v probehlich turnajich      // TODO
+ - v ramci klanu                     // TODO
+
+zapsani se o subscribe informaci     // TODO

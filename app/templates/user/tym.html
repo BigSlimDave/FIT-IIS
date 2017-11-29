@@ -1,62 +1,50 @@
 {% extends 'user_base.html' %}
 {% block content %}
 {% if tym %}
-    {% if vudce %}
-    <form class="navbar-form navbar-right" method=post>
-        <input type="hidden" name="id" value="{{tym[0]}}">
-        <button type="submit" name="zrusit" class="btn btn-default">Zrušit tym</button>
-    </form>
-    {% else %}
-    <form class="navbar-form navbar-right" method=post>
-        <button type="submit" name="opustit" class="btn btn-default">Opustit tym</button>
-    </form>
-    {% endif %}
-    <h1>Můj tym</h1>
-    <h1><b><u>{{tym[1]}}</u></b></h1>
-    <h3>Tvoje pozice v tymu: 
-    {% if vudce %}
-    vůdce
-    {% else %}
-    člen
-    {% endif %}
-    <h2>Emblem</h2>
-    <img src="/static/{{tym[2]}}" />
-    <h2>Vudce tymu: {{vudce_tymu}}</h2>
-    <h2>Členové</h2>
-    <div class="panel-group">
-      <div class="panel panel-default">
-        <a data-toggle="collapse" href="#collapse1">
-        <div class="panel-heading">
-          <h4 class="panel-title text-center">
-            Zobrazit/skrýt členy
-          </h4>
-        </div>
-        </a>
-        <div id="collapse1" class="panel-collapse">
-            <table class="table table-striped table-hover table-bordered table-condensed">
-                <tr>
-                    <th>Jmeno</th>
-                    <th>Prezdivka</th>
-                    {% if vudce %}<th>Akce</th>{% endif %}
-                </tr>
-                    {% for member in clenove %}
-                <tr>
-                        <td><a href="/user/prochazet/detail/{{member[1]}}">{{member[0]}}</a></td>
-                        <td><a href="/user/prochazet/detail/{{member[1]}}">{{member[1]}}</a></td>
-                        {% if vudce %}
-                        <td>
-                            <form method=post>
-                            <input type="hidden" name="id" value="{{member[2]}}">
-                            <button type="submit" name="vyhodit" class="btn btn-default">Vyhodit člena</button>
-                        </form>
-                        </td>
-                        {% endif %}
-                </tr>
-                    {% endfor %}
-            </table>
-        </div>
-      </div>
-    </div>
+{% if vudce %}
+<form class="navbar-form navbar-right" method=post>
+    <input type="hidden" name="id" value="{{tym[0]}}">
+    <button type="submit" name="zrusit" class="btn btn-default">Zrušit tym</button>
+</form>
+{% else %}
+<form class="navbar-form navbar-right" method=post>
+    <button type="submit" name="opustit" class="btn btn-default">Opustit tym</button>
+</form>
+{% endif %}
+<h1>Můj tym</h1>
+<h1><b><u>{{tym[1]}}</u></b></h1>
+<h3>Tvoje pozice v tymu: 
+{% if vudce %}
+vůdce
+{% else %}
+člen
+{% endif %}
+<h2>Emblem</h2>
+<img src="/static/{{tym[2]}}" />
+<h2>Vudce tymu: {{vudce_tymu}}</h2>
+<h2>Členové</h2>
+<table class="table table-striped table-hover table-bordered table-condensed">
+    <tr>
+        <th>Jmeno</th>
+        <th>Prezdivka</th>
+        {% if vudce %}<th>Akce</th>{% endif %}
+    </tr>
+        {% for member in clenove %}
+    <tr>
+        <td><a href="/user/prochazet/detail/{{member[1]}}">{{member[0]}}</a></td>
+        <td><a href="/user/prochazet/detail/{{member[1]}}">{{member[1]}}</a></td>
+        {% if vudce %}
+        <td>
+            <form method=post>
+                <input type="hidden" name="id" value="{{member[2]}}">
+                <button type="submit" name="vyhodit" class="btn btn-default">Vyhodit člena</button>
+            </form>
+        </td>
+        {% endif %}
+    </tr>
+        {% endfor %}
+</table>
+
 {% else %}
 <h2>Aktualne nejsi v tymu, muzes ale nejaky zalozit <a href="zalozit/">zde</a>, nebo se k nejakemu <a href="/user/tym_prochazet">pridat</a><h2>
 {% endif %}
