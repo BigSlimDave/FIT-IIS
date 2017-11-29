@@ -30,4 +30,4 @@ statistiky
  - hracu v probehlich turnajich      // TODO: HOW ??
  - v ramci klanu                     // TODO: HOW ??
 
-zapsani se o subscribe informaci     // COMPLETE???
+zapsani se o subscribe informaci     // COMPLETE

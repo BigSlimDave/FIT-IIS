@@ -78,10 +78,11 @@ CREATE TABLE turnaj(
     odmena INT NOT NULL,
     kdy DATE NOT NULL,
     kde VARCHAR(50) NOT NULL,
-    kapacita INT NOT NULL) ENGINE=InnoDB;
+    kapacita INT NOT NULL,
+    typ INT NOT NULL) ENGINE=InnoDB;    -- WC nebo bezny
 
 CREATE TABLE turnaj_wc(
-    turnaj INT UNSIGNED NOT NULL PRIMARY KEY,     -- cizi klic
+    id INT UNSIGNED NOT NULL PRIMARY KEY,
     prvni INT UNSIGNED,                           -- cizi klic hrac
     druhy INT UNSIGNED,                           -- cizi klic hrac
     treti INT UNSIGNED,                           -- cizi klic hrac
@@ -89,7 +90,7 @@ CREATE TABLE turnaj_wc(
     paty INT UNSIGNED) ENGINE=InnoDB;             -- cizi klic hrac
 
 CREATE TABLE turnaj_bezny(
-    turnaj INT UNSIGNED NOT NULL PRIMARY KEY,     -- cizi klic
+    id INT UNSIGNED NOT NULL PRIMARY KEY,
     vitez INT UNSIGNED) ENGINE=InnoDB;            -- cizi klic tym
 
 CREATE TABLE sponzor(
