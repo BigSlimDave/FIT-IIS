@@ -312,9 +312,18 @@ def user_detail(id):
         SELECT typ , vyrobce, model ,popis, vybaveni.id
         FROM hrac JOIN vybaveni ON ( hrac.id = vybaveni.vlastnik )
         WHERE hrac.id = """ + str(id))
-        return render_template('admin/user_detail.html', account=account, PlayerInfo=db_c[0] ,PlayerVybaveniInfo=db_vybaveni)
+        db_specialization = db_get("""
+        SELECT nazev_hry, specializace.id
+        FROM specializace JOIN hra ON hra.id = specializace.hra 
+        WHERE hrac = %s
+        """%(id))
+        return render_template('admin/user_detail.html', account=account, PlayerInfo=db_c[0] ,PlayerVybaveniInfo=db_vybaveni, Specialization=db_specialization)
     else:
+        print(request.form)
         if ( "odebrat_id" in request.form ):
             vybaveni_id = request.form["odebrat_id"]
             db_get("""DELETE FROM vybaveni WHERE id=%s""" % (vybaveni_id))
+        if ( "remove_specialization" in request.form ):
+            spec_id = request.form["remove_specialization"]
+            db_get("""DELETE FROM specializace WHERE id=%s""" % (spec_id))
         return redirect(url_for('admin.user_detail', id=id))
