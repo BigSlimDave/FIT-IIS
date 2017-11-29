@@ -52,11 +52,13 @@ def hrac():
 def hrac_prochazet():
     account = session
     hraci = db_get("""
-        SELECT hrac.jmeno, hrac.prezdivka, klan.id, klan.nazev, tym.id, tym.nazev
+        SELECT hrac.jmeno, hrac.prezdivka, klan.id, klan.nazev, tym.id, tym.nazev, hra.nazev_hry
         FROM hrac LEFT JOIN klan_clenstvi ON ( hrac.id = klan_clenstvi.hrac ) 
                   LEFT JOIN klan          ON ( klan.id = klan_clenstvi.klan ) 
                   LEFT JOIN tym_clenstvi  ON ( hrac.id = tym_clenstvi.hrac  )
-                  LEFT JOIN tym           ON ( tym.id  = tym_clenstvi.tym   )""")
+                  LEFT JOIN tym           ON ( tym.id  = tym_clenstvi.tym   )
+                  LEFT JOIN specializace  ON ( specializace.hrac = hrac.id  )
+                  LEFT JOIN hra           ON ( hra.id = specializace.hra    )""")
     tmp = []
     pismeno = ''
     if 'pismeno' in request.args:
@@ -73,11 +75,13 @@ def hrac_prochazet():
 def user_detail(nick):
     account = session
     hrac = db_get("""
-    SELECT hrac.jmeno, hrac.prezdivka, klan.id, klan.nazev, tym.id, tym.nazev
+    SELECT hrac.jmeno, hrac.prezdivka, klan.id, klan.nazev, tym.id, tym.nazev, hra.nazev_hry
     FROM hrac LEFT JOIN klan_clenstvi ON ( hrac.id = klan_clenstvi.hrac ) 
               LEFT JOIN klan          ON ( klan.id = klan_clenstvi.klan ) 
               LEFT JOIN tym_clenstvi  ON ( hrac.id = tym_clenstvi.hrac  )
               LEFT JOIN tym           ON ( tym.id  = tym_clenstvi.tym   )
+              LEFT JOIN specializace  ON ( specializace.hrac = hrac.id  )
+              LEFT JOIN hra           ON ( hra.id = specializace.hra    )
     WHERE hrac.prezdivka='""" + nick+"'")[0]
     vybaveni = db_get("""
     SELECT typ , vyrobce, model ,popis
@@ -423,8 +427,35 @@ def turnaj_detail(id):
     FROM sponzor JOIN sponzoroval ON ( sponzor.id = sponzoroval.sponzor )
     WHERE turnaj=%s
     """%(id))
-    name = db_get("SELECT nazev FROM turnaj WHERE id = %s"%(id))[0][0]
-    return render_template('user/turnaj_detail.html', account=account, table_name='turnaj', zapasy=games, Name=name, sponzors=sponzors)
+    basicinfo = db_get("SELECT nazev,kde,kdy,kapacita,odmena FROM turnaj WHERE id = %s"%(id))[0]
+    vyherce = db_get(""" 
+    SELECT vitez, prvni, druhy, treti, ctvrty, paty FROM turnaj_bezny
+    LEFT JOIN turnaj_wc ON turnaj_bezny.turnaj = turnaj_wc.turnaj
+    WHERE turnaj_bezny.turnaj = %s OR turnaj_wc.turnaj = %s
+    UNION
+    SELECT vitez, prvni, druhy, treti, ctvrty, paty FROM turnaj_bezny
+    RIGHT JOIN turnaj_wc ON turnaj_bezny.turnaj = turnaj_wc.turnaj
+    WHERE turnaj_wc.turnaj = %s OR turnaj_bezny.turnaj = %s
+
+    """%(id,id,id,id))
+    print(vyherce)
+    if ( vyherce ):
+        if ( vyherce[0][0] == None ):
+            vyherce = (
+                       (1,vyherce[0][1], db_get_team_name(vyherce[0][1])), 
+                       (2,vyherce[0][2], db_get_team_name(vyherce[0][2])),
+                       (3,vyherce[0][3], db_get_team_name(vyherce[0][3])), 
+                       (4,vyherce[0][4], db_get_team_name(vyherce[0][4])), 
+                       (5,vyherce[0][5], db_get_team_name(vyherce[0][5]))
+                      )
+            #vyherce_nazvy = 
+        else:
+            vyherce = ((db_get_team_name(vyherce[0][0]), vyherce[0][0]))
+            #vyherce = (vyherce[0][0],None)
+    else:
+        vyherce = (None)
+    print(vyherce)
+    return render_template('user/turnaj_detail.html', account=account, table_name='turnaj', zapasy=games, BasicInfo=basicinfo, sponzors=sponzors, vyherce=vyherce)
 
 @user.route('/sponzor/', methods=['GET', 'POST'])
 @login_required('user')

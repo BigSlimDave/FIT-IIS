@@ -53,6 +53,13 @@ def db_get(command):
     db.close()
     return content
 
+def db_get_team_name(id):
+    if id == None:
+        return None
+    t = db_get("SELECT nazev FROM tym WHERE id = %s"%(id))[0][0]
+    print(t)
+    return t
+
 def db_get_from_all(table_name, *what):
     for item in what:
         what = ', '.join(item) 

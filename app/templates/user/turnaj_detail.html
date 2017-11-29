@@ -1,6 +1,67 @@
 {% extends 'user_base.html' %}
 {% block content %}
-<h2>Zápasy - {{Name}}</h2>
+<h2 style="text-align: center">Základní informace o turnaji</h2>
+<div style="width: 20%; margin:0 auto">
+    <table class="table table-striped">
+        <tbody>
+            <tr>
+                <th>Název</th>
+                <th>{{BasicInfo[0]}}</th>
+            </tr>
+            <tr>
+                <th>Místo konání</th>
+                <th>{{BasicInfo[1]}}</th>
+            </tr>
+            <tr>
+                <th>Datum</th>
+                <th>{{BasicInfo[2]}}</th>
+            </tr>
+            <tr>
+                <th>Kapacita</th>
+                <th>{{BasicInfo[3]}}</th>
+            </tr>
+            <tr>
+                <th>Hlavní cena</th>
+                <th>{{BasicInfo[4]}}</th>
+            </tr>
+            {%if vyherce %}
+            {%if vyherce|length == 2 %}
+            <tr>
+                <th>Vyherce</th>
+                <th>{{vyherce[0]}}</th>
+            </tr>
+            {% endif %}
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+{%if vyherce %}
+{%if vyherce|length > 2 %}
+<h2 style="text-align: center">Výherci</h2>
+
+<div style="width: 10%; margin:0 auto">
+    <table class="table table-striped">
+        <tbody>
+            <tr>
+                <th>Pozice</th>
+                <th>Tym</th>
+            </tr>
+            {% for v in vyherce %}
+            <tr>
+                <th>{{v[0]}}</th>
+                {% if v[2] != None %}
+                <th>{{v[2]}}</th>
+                {% else %}
+                 <th></th>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+{% endif %}
+<h2 style="text-align: center">Zápasy</h2>
 <table class="table table-striped table-hover table-bordered table-condensed">
     <tr>
         <th>Čas</th>
@@ -22,7 +83,7 @@
         {% endfor %}
 </table>
 <br>
-<h2>Sponzoři</h2>
+<h2 style="text-align: center">Sponzoři</h2>
 <table>
         {% for sponzor in sponzors %}
     <tr>
