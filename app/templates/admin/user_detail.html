@@ -10,9 +10,9 @@
 {%endif%}
 
 {% if PlayerInfo[5] %}
-<h3>Tym: {{PlayerInfo[5]}}</h3>  
+<h3>Tym: {{PlayerInfo[5]}}</h3>
 {%else%}
-<h3>Tym:</h3>  
+<h3>Tym:</h3>
 {%endif%}
 
 <table class="table table-striped table-hover table-bordered table-condensed">
@@ -39,4 +39,21 @@
     </tr>
         {% endfor %}
 </table>
+
+
+<h3>Specializace:</h3>
+{% for specialization in Specialization %}
+<font size="4">
+    {{specialization[0]}}
+</font> 
+<form method="post" action="" id="remove_specialization" style="display: inline-block;" >
+    <input type="hidden" name="remove_specialization" value={{specialization[1]}}>
+    <input type="submit" name={{specialization[1]}} value="Odebrat">
+</form>
+
+
+<br>
+{%endfor%}
+
+
 {% endblock %}
