@@ -46,7 +46,7 @@ def check_database_type(type,data):
 
 def db_get(command):
     db, cursor = database()
-    print(command)
+    #print(command)
     cursor.execute(command)
     content = cursor.fetchall()
     db.commit()
