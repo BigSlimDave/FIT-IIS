@@ -1,6 +1,6 @@
 hledani hracu podle
- - hry ( specializace )              // TODO
- - predchozich vysledku v turnajich  // TODO
+ - hry ( specializace )              // COMPLETE: VYPIS, TODO:SMEKY
+ - predchozich vysledku v turnajich  // TODO: HOW ??
 
 prochazeni her podle                 
  - datum vydani                      // COMPLETE
@@ -8,17 +8,17 @@ prochazeni her podle
  - herni mody                        // COMPLETE
  - vydavatele                        // COMPLETE
 
-prihlasovani tymu na zapasy          // TODO 
+prihlasovani tymu na zapasy          // TODO: SMEKY
 
 turnaj
- - vysledky turnaje                  // TODO
+ - vysledky turnaje                  // COMPLETE
  - sponzori turnaje                  // COMPLETE
- - hlavni cena turnaje               // TODO
+ - hlavni cena turnaje               // COMPLETE
  - zapasy ktere se hrali na turnaji  // COMPLETE
 
 statistiky
- - hracu v ramci jednotlivych her    // TODO 
- - hracu v probehlich turnajich      // TODO
- - v ramci klanu                     // TODO
+ - hracu v ramci jednotlivych her    // TODO: HOW ??
+ - hracu v probehlich turnajich      // TODO: HOW ??
+ - v ramci klanu                     // TODO: HOW ??
 
-zapsani se o subscribe informaci     // TODO
+zapsani se o subscribe informaci     // COMPLETE???

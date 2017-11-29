@@ -51,11 +51,13 @@ def hrac():
 def hrac_prochazet():
     account = session
     hraci = db_get("""
-        SELECT hrac.jmeno, hrac.prezdivka, klan.id, klan.nazev, tym.id, tym.nazev
+        SELECT hrac.jmeno, hrac.prezdivka, klan.id, klan.nazev, tym.id, tym.nazev, hra.nazev_hry
         FROM hrac LEFT JOIN klan_clenstvi ON ( hrac.id = klan_clenstvi.hrac ) 
                   LEFT JOIN klan          ON ( klan.id = klan_clenstvi.klan ) 
                   LEFT JOIN tym_clenstvi  ON ( hrac.id = tym_clenstvi.hrac  )
-                  LEFT JOIN tym           ON ( tym.id  = tym_clenstvi.tym   )""")
+                  LEFT JOIN tym           ON ( tym.id  = tym_clenstvi.tym   )
+                  LEFT JOIN specializace  ON ( specializace.hrac = hrac.id  )
+                  LEFT JOIN hra           ON ( hra.id = specializace.hra    )""")
     tmp = []
     pismeno = ''
     if 'pismeno' in request.args:
@@ -72,11 +74,13 @@ def hrac_prochazet():
 def user_detail(nick):
     account = session
     hrac = db_get("""
-    SELECT hrac.jmeno, hrac.prezdivka, klan.id, klan.nazev, tym.id, tym.nazev
+    SELECT hrac.jmeno, hrac.prezdivka, klan.id, klan.nazev, tym.id, tym.nazev, hra.nazev_hry
     FROM hrac LEFT JOIN klan_clenstvi ON ( hrac.id = klan_clenstvi.hrac ) 
               LEFT JOIN klan          ON ( klan.id = klan_clenstvi.klan ) 
               LEFT JOIN tym_clenstvi  ON ( hrac.id = tym_clenstvi.hrac  )
               LEFT JOIN tym           ON ( tym.id  = tym_clenstvi.tym   )
+              LEFT JOIN specializace  ON ( specializace.hrac = hrac.id  )
+              LEFT JOIN hra           ON ( hra.id = specializace.hra    )
     WHERE hrac.prezdivka='""" + nick+"'")[0]
     vybaveni = db_get("""
     SELECT typ , vyrobce, model ,popis
