@@ -28,39 +28,28 @@
     <img src="/static/{{klan[3]}}" />
     <h2>Vudce klanu: {{vudce_klanu}}</h2>
     <h2>Členové</h2>
-    <div class="panel-group">
-      <div class="panel panel-default">
-        <a data-toggle="collapse" href="#collapse1">
-        <div class="panel-heading">
-          <h4 class="panel-title text-center">
-            Zobrazit/skrýt členy
-          </h4>
-        </div>
-        </a>
-        <div id="collapse1" class="panel-collapse">
-            <table class="table table-striped table-hover table-bordered table-condensed">
-                <tr>
-                    <th>Jmeno</th>
-                    <th>Prezdivka</th>
-                    {% if vudce %}<th>Akce</th>{% endif %}
-                </tr>
-                    {% for member in clenove %}
-                <tr>
-                        <td><a href="/user/prochazet/detail/{{member[1]}}">{{member[0]}}</a></td>
-                        <td><a href="/user/prochazet/detail/{{member[1]}}">{{member[1]}}</a></td>
-                        {% if vudce %}
-                        <td>
-                            <form method=post>
-                            <input type="hidden" name="id" value="{{member[2]}}">
-                            <button type="submit" name="vyhodit" class="btn btn-default">Vyhodit člena</button>
-                        </form>
-                        </td>
-                        {% endif %}
-                </tr>
-                    {% endfor %}
-            </table>
-        </div>
-      </div>
+    <div id="collapse1" class="panel-collapse">
+        <table class="table table-striped table-hover table-bordered table-condensed">
+            <tr>
+                <th>Jmeno</th>
+                <th>Prezdivka</th>
+                {% if vudce %}<th>Akce</th>{% endif %}
+            </tr>
+                {% for member in clenove %}
+            <tr>
+                    <td><a href="/user/prochazet/detail/{{member[1]}}">{{member[0]}}</a></td>
+                    <td><a href="/user/prochazet/detail/{{member[1]}}">{{member[1]}}</a></td>
+                    {% if vudce %}
+                    <td>
+                        <form method=post>
+                        <input type="hidden" name="id" value="{{member[2]}}">
+                        <button type="submit" name="vyhodit" class="btn btn-default">Vyhodit člena</button>
+                    </form>
+                    </td>
+                    {% endif %}
+            </tr>
+                {% endfor %}
+        </table>
     </div>
 {% else %}
 <h2>Aktualne nejsi v klanu, muzes ale nejaky zalozit <a href="zalozit/">zde</a>, nebo se k nejakemu <a href="/user/klan_prochazet">pridat</a><h2>

@@ -2,11 +2,11 @@
 <html lang="cs">
     <head>
     <title>Liga e-sportu</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<meta charset utf="8">
-		<!--bootstrap-->
-		<link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset utf="8">
+    <!--bootstrap-->
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
         <script src="{{ url_for('static', filename='js/jquery-2.1.4.min.js') }}"></script>
         <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
     {% block header %}
@@ -50,7 +50,7 @@
               <form class="navbar-form navbar-right" method=post>
                 <button type="submit" name="logout" value=Odhlásit class="btn btn-default">Odhlásit</button>
               </form>
-              <p class="navbar-text navbar-right">Jste přihlášen jako <b><a href="/user/profil/{{ session['username'] }}">{{ session['username'] }}</a></b></p>
+              <p class="navbar-text navbar-right">Jste přihlášen jako <b><a href="/user/hrac/">{{ session['username'] }}</a></b></p>
             </div>
           </div>
         </nav>

@@ -27,6 +27,7 @@ def hrac():
                   LEFT JOIN tym_clenstvi  ON ( hrac.id = tym_clenstvi.hrac  )
                   LEFT JOIN tym           ON ( tym.id  = tym_clenstvi.tym   )
         WHERE hrac.prezdivka='""" + nick+"'")
+    print str(hrac)
     try:
         hrac = hrac[0]
     except:

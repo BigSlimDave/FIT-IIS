@@ -1,16 +1,17 @@
 {% extends 'user_base.html' %}
 {% block content%}
-<a href="prochazet/"><button>Procházet hráče</button></a>
 detail prave prihlaseneho hrace kde si bude moci zmenit heslo a jemno
 <h2>Osobní informace</h2>
 <b>Přezdívka: </b>{{hrac[1]}}<br>
 <b>Jméno: </b>{{hrac[0]}}<br>
 <b>Klan: </b>{{hrac[3]}}<br>
 <b>Tým: </b>{{hrac[5]}}<br>
-<h2 style="display: inline-block">Vybavení hráče</h2>
-<form style="display: inline-block;" method="get" action="add/equipment/">
-    <input type="submit" value="Pridat"/>
-</form>
+<span>
+    <h2 style="display: inline-block">Vybavení hráče</h2>
+    <form style="display: inline-block;" method="get" action="add/equipment/">
+        <input style="margin-bottom: 0.7em" class="btn btn-default" type="submit" value="Přidat"/>
+    </form>
+</span>
 <br>
 <div class="card-deck" style="display: inline-block">
 {% for vyb in vybaveni %}
@@ -20,9 +21,9 @@ detail prave prihlaseneho hrace kde si bude moci zmenit heslo a jemno
       <h4 class="card-title"><b>Výrobce: {{vyb[1]}}</b></h4>
       <p class="card-text"><b>Model: </b>{{vyb[2]}}</p>
       <p class="card-text"><b>Popis: </b>{{vyb[3]}}</p>
-    <form style="display: inline-block;" method="post" action="remove/">
-        <input type="hidden" value="{{vyb[4]}}" name="remove_id">
-        <input type="submit" value="Odstranit" />
+    <form class="navbar-form" style="display: inline-block;" method="post" action="remove/">
+        <input class="btn btn-default" type="hidden" value="{{vyb[4]}}" name="remove_id">
+        <input class="btn btn-default" type="submit" value="Odstranit" />
     </form>
     </div>
   </div>
