@@ -1,11 +1,16 @@
 ADMIN:
   rozliseni turnaj_bezny, turnaj_wc
   prirazeni specializace ?? sam kazdy u sebe ??
-  pridavani sponzoru k turnajum ??
 
 USER:
   prohlizeni klanu podle zamereni ??
   specializace ??
+
+Specializace:
+ - Admin pridani vsem                // COMPLETE
+ - User editace a pridavani svych    // COMPLETE
+ - Prohlizeni u ostatnich            // TODO
+ - vyhledavani hracu podle spec      // TODO
 
 hledani hracu podle
  - hry ( specializace )              // COMPLETE: VYPIS, TODO:SMEKY
@@ -26,8 +31,12 @@ turnaj
  - zapasy ktere se hrali na turnaji  // COMPLETE
 
 statistiky
- - hracu v ramci jednotlivych her    // TODO: HOW ??
- - hracu v probehlich turnajich      // TODO: HOW ??
- - v ramci klanu                     // TODO: HOW ??
+ - hracu v ramci jednotlivych her    // TODO: HOW ?? NEJDE
+ - hracu v probehlich turnajich      // TODO: HOW ?? NEJDE
+ - v ramci klanu                     // TODO: HOW ?? NEJDE
 
 zapsani se o subscribe informaci     // COMPLETE???
+
+
+oznaceni povinnych poli
+

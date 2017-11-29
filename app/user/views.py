@@ -119,13 +119,12 @@ def hrac_odber():
 def hrac_prochazet():
     account = session
     hraci = db_get("""
-        SELECT hrac.jmeno, hrac.prezdivka, klan.id, klan.nazev, tym.id, tym.nazev, hra.nazev_hry
+        SELECT hrac.jmeno, hrac.prezdivka, klan.id, klan.nazev, tym.id, tym.nazev
         FROM hrac LEFT JOIN klan_clenstvi ON ( hrac.id = klan_clenstvi.hrac ) 
                   LEFT JOIN klan          ON ( klan.id = klan_clenstvi.klan ) 
                   LEFT JOIN tym_clenstvi  ON ( hrac.id = tym_clenstvi.hrac  )
                   LEFT JOIN tym           ON ( tym.id  = tym_clenstvi.tym   )
-                  LEFT JOIN specializace  ON ( specializace.hrac = hrac.id  )
-                  LEFT JOIN hra           ON ( hra.id = specializace.hra    )""")
+                  """)
     tmp = []
     pismeno = ''
     if 'pismeno' in request.args:
@@ -154,7 +153,13 @@ def user_detail(nick):
     SELECT typ , vyrobce, model ,popis
     FROM hrac JOIN vybaveni ON ( hrac.id = vybaveni.vlastnik )
     WHERE hrac.prezdivka='""" + nick+"'")
-    return render_template('user/hrac_detail.html', account=account, table_name='prochazet', hrac=hrac, vybaveni=vybaveni)
+    spec = db_get("""
+    SELECT nazev_hry, hra.id
+    FROM hrac JOIN specializace ON ( hrac.id = specializace.hrac )
+            JOIN hra          ON ( hra.id  = specializace.hra  )
+    WHERE hrac.prezdivka = "%s"
+    """%(nick) )
+    return render_template('user/hrac_detail.html', account=account, table_name='prochazet', hrac=hrac, vybaveni=vybaveni, Specialization=spec)
 
 @user.route('/hra/', methods=['GET', 'POST'])
 @login_required('user')
