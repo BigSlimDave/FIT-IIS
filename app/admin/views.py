@@ -317,13 +317,34 @@ def user_detail(id):
         FROM specializace JOIN hra ON hra.id = specializace.hra 
         WHERE hrac = %s
         """%(id))
-        return render_template('admin/user_detail.html', account=account, PlayerInfo=db_c[0] ,PlayerVybaveniInfo=db_vybaveni, Specialization=db_specialization)
+        all_games = db_get("SELECT nazev_hry, id FROM hra")
+        return render_template('admin/user_detail.html', account=account, PlayerInfo=db_c[0] ,PlayerVybaveniInfo=db_vybaveni, Specialization=db_specialization, playerID=id, all_games=all_games)
     else:
-        print(request.form)
         if ( "odebrat_id" in request.form ):
             vybaveni_id = request.form["odebrat_id"]
             db_get("""DELETE FROM vybaveni WHERE id=%s""" % (vybaveni_id))
         if ( "remove_specialization" in request.form ):
             spec_id = request.form["remove_specialization"]
             db_get("""DELETE FROM specializace WHERE id=%s""" % (spec_id))
+        if ( "add_specialization" in request.form ):
+            spec_id = request.form["add_specialization_id"]
+            db_specialization = db_get("""
+            SELECT nazev_hry, specializace.id, hra.id
+            FROM specializace JOIN hra ON hra.id = specializace.hra 
+            WHERE hrac = %s
+            """%(id))
+            for i in db_specialization:
+                if ( int(spec_id) == int(i[2]) ):
+                    flash('Je již ve specializaci')
+                    return redirect(url_for('admin.user_detail', id=id))
+            db_get("INSERT INTO specializace (hrac,hra) VALUES(%s,%s)"%(id,spec_id))
+
         return redirect(url_for('admin.user_detail', id=id))
+
+@admin.route('/hrac/detail/add_spec/<id>', methods=['GET', 'POST'])
+@login_required('admin')
+def neco(id):
+    account = session
+    playerID = id
+    
+    return render_template('admin/add_specialization.html', account=account, playerID=id, all_games=all_games)

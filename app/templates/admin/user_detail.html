@@ -41,7 +41,22 @@
 </table>
 
 
-<h3>Specializace:</h3>
+<h3 style="display: inline-block;" > Specializace:</h3>
+<form style="display: inline-block;" method="post" action="" id="add_specialization">
+        <select form="add_specialization" name="add_specialization_id">
+        {% for game in all_games %}
+            <option value="{{game[1]}}">{{game[0]}}</option>
+        {% endfor %}
+        </select>
+        <!--
+        <label>Částka:</label>
+        <input type="text" name="castka">
+        <input type="submit" name="add_sponsor" value="Přidat sponzora">
+        -->
+        <input type="submit" name="add_specialization" value="Pridat specializaci">
+</form>
+
+<br>
 {% for specialization in Specialization %}
 <font size="4">
     {{specialization[0]}}
