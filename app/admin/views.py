@@ -340,11 +340,3 @@ def user_detail(id):
             db_get("INSERT INTO specializace (hrac,hra) VALUES(%s,%s)"%(id,spec_id))
 
         return redirect(url_for('admin.user_detail', id=id))
-
-@admin.route('/hrac/detail/add_spec/<id>', methods=['GET', 'POST'])
-@login_required('admin')
-def neco(id):
-    account = session
-    playerID = id
-    
-    return render_template('admin/add_specialization.html', account=account, playerID=id, all_games=all_games)
