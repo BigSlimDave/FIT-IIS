@@ -22,13 +22,13 @@ def hrac():
         account = session
         nick = session["username"]
         hrac = db_get("""
-            SELECT hrac.jmeno, hrac.prezdivka, klan.id, klan.nazev, tym.id, tym.nazev
+            SELECT hrac.jmeno, hrac.prezdivka, klan.id, klan.nazev, tym.id, tym.nazev, hrac.odberatel
             FROM hrac LEFT JOIN klan_clenstvi ON ( hrac.id = klan_clenstvi.hrac ) 
                       LEFT JOIN klan          ON ( klan.id = klan_clenstvi.klan ) 
                       LEFT JOIN tym_clenstvi  ON ( hrac.id = tym_clenstvi.hrac  )
                       LEFT JOIN tym           ON ( tym.id  = tym_clenstvi.tym   )
             WHERE hrac.prezdivka='""" + nick+"'")
-        print str(hrac)
+        # print str(hrac)
         try:
             hrac = hrac[0]
         except:
@@ -75,6 +75,20 @@ def hrac_heslo():
             flash("Neznámý požadavek")
             return redirect(url_for('user.hrac_heslo'))
 
+@user.route('/hrac/odber/', methods=['GET', 'POST'])
+@login_required('user')
+def hrac_odber():
+    odber = db_get("""
+            SELECT hrac.odberatel
+            FROM hrac WHERE hrac.prezdivka='""" + session["username"]+"'")[0][0]
+    print odber
+    if odber == 1:
+        print "h1"
+        db_get("""UPDATE hrac SET odberatel='0' WHERE id='%s'""" % (session['id']))
+    else:
+        print "h0"
+        db_get("""UPDATE hrac SET odberatel='1' WHERE id='%s'""" % (session['id']))
+    return redirect(url_for("user.hrac"))
 
 @user.route('/prochazet/', methods=['GET', 'POST'])
 @login_required('user')

@@ -8,6 +8,12 @@
 <b>Jméno: </b>{{hrac[0]}}<br>
 <b>Klan: </b>{{hrac[3]}}<br>
 <b>Tým: </b>{{hrac[5]}}<br>
+{% if hrac[6] == 1 %}
+<b>Odebírám novinky <b><button onclick="location.href='odber';">Změnit</button>
+{% else %}
+<b>Neodebírám novinky </b><button onclick="location.href='odber';">Změnit</button>
+{% endif %}
+<br>
 <span>
     <h2 style="display: inline-block">Vybavení hráče</h2>
     <form style="display: inline-block;" method="get" action="add/equipment/">
