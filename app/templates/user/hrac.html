@@ -9,7 +9,7 @@
 <b>Klan: </b>{{hrac[3]}}<br>
 <b>Tým: </b>{{hrac[5]}}<br>
 {% if hrac[6] == 1 %}
-<b>Odebírám novinky <b><button onclick="location.href='odber';">Změnit</button>
+<b>Odebírám novinky </b><button onclick="location.href='odber';">Změnit</button>
 {% else %}
 <b>Neodebírám novinky </b><button onclick="location.href='odber';">Změnit</button>
 {% endif %}
@@ -39,24 +39,45 @@
 </div><br>
 <h2>Posledních 5 zápasů</h2>
 <table class="table table-striped table-hover table-bordered table-condensed">
-        <tr>
-            <th>ID</th>
-            <th>Skore</th>
-            <th>Mod</th>
-            <th>Hra</th>
-            <th>Tym</th>
-            <th>Datum</th>
-            <th>Lokace</th>
-            <th>Odmena</th>
-        </tr>
-        {% for item1 in content %}
-        <tr>
-            {% for item2 in item1 %}
-                <td>
-                    {{ item2 }}
-                </td>
-            {% endfor %}
-        </tr>
+    <tr>
+        <th>ID</th>
+        <th>Skore</th>
+        <th>Mod</th>
+        <th>Hra</th>
+        <th>Tym</th>
+        <th>Datum</th>
+        <th>Lokace</th>
+        <th>Odmena</th>
+    </tr>
+    {% for item1 in content %}
+    <tr>
+        {% for item2 in item1 %}
+            <td>
+                {{ item2 }}
+            </td>
         {% endfor %}
-    </table>
+    </tr>
+    {% endfor %}
+</table>
+
+<h3 style="display: inline-block;" > Specializace:</h3>
+<form style="display: inline-block;" method="post" action="" id="add_specialization">
+        <select form="add_specialization" name="add_specialization_id">
+        {% for game in all_games %}
+            <option value="{{game[1]}}">{{game[0]}}</option>
+        {% endfor %}
+        </select>
+        <input type="submit" name="add_specialization" value="Pridat specializaci">
+</form><br>
+{% for specialization in Specialization %}
+<font size="4">
+    {{specialization[0]}}
+</font>
+<form method="post" action="" id="remove_specialization" style="display: inline-block;" >
+    <input type="hidden" name="remove_specialization" value={{specialization[1]}}>
+    <input type="submit" name={{specialization[1]}} value="Odebrat">
+</form>
+<br>
+{% endfor %}
+
 {% endblock %}

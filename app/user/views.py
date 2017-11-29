@@ -46,8 +46,32 @@ def hrac():
                   JOIN turnaj ON ( turnaj.id = zapas.turnaj )
                   JOIN hra ON ( hra.id = zapas.hra )
         WHERE hrac.prezdivka = \"%s\" """ %(str(nick)))
-        return render_template('user/hrac.html', account=account, table_name='hrac', hrac=hrac, vybaveni=vybaveni, content=zapasy )
+        all_games = db_get("SELECT nazev_hry, id FROM hra")
+        spec = db_get("""
+        SELECT nazev_hry, specializace.id
+        FROM specializace JOIN hra ON hra.id = specializace.hra 
+        WHERE hrac = %s
+        """%(session['id']))
+        return render_template('user/hrac.html', account=account, table_name='hrac', hrac=hrac, vybaveni=vybaveni, content=zapasy, all_games=all_games, Specialization=spec )
     else:
+        #print(request.form)
+        if ( 'add_specialization' in request.form):
+            spec_id = request.form["add_specialization_id"]
+            db_specialization = db_get("""
+            SELECT nazev_hry, specializace.id, hra.id
+            FROM specializace JOIN hra ON hra.id = specializace.hra 
+            WHERE hrac = %s
+            """%(session['id']))
+            for i in db_specialization:
+                if ( int(spec_id) == int(i[2]) ):
+                    flash('Je již ve specializaci')
+                    return redirect(url_for('user.hrac', id=session['id']))
+            db_get("INSERT INTO specializace (hrac,hra) VALUES(%s,%s)"%(session['id'],spec_id))
+            return redirect(url_for('user.hrac', id=session['id']))
+        elif ( 'remove_specialization' in request.form ):
+            spec_id = request.form["remove_specialization"]
+            db_get("""DELETE FROM specializace WHERE id=%s""" % (spec_id))
+            return redirect(url_for('user.hrac', id=session['id']))
         flash("Neznámý požadavek")
         return redirect(url_for("hrac"))
 
