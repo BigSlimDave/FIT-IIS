@@ -249,6 +249,9 @@ def turnament_detail(id):
         if 'add_sponsor' in request.form:
             id_sponzora = request.form['sponsor_id_add']
             castka = request.form['castka']
+            if castka == '':
+                flash("Musite vyplnit částku!")
+                return redirect(url_for("admin.turnament_detail", id=id))
             db_get("""INSERT INTO sponzoroval (castka, sponzor, turnaj) VALUES
                     (%s, %s, %s)""" % (castka, id_sponzora, id))
             return redirect(url_for('admin.turnament_detail', id=id))
