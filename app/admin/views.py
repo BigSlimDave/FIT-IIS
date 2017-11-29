@@ -97,7 +97,7 @@ def uzivatele_remove():
 def hrac():
     account = session
     table_head = db_describe("hrac")
-    content = db_get_from_all("hrac", ['*'])
+    content = db_get(" SELECT * FROM hrac")
     return render_template('admin/hrac.html', account=account, content=content, table_head=table_head)
 
 @admin.route('/vybaveni/', methods=['GET', 'POST'])
@@ -299,16 +299,22 @@ def games_publisher(pub):
 @admin.route('/hrac/detail/<id>', methods=['GET', 'POST'])
 @login_required('admin')
 def user_detail(id):
-    account = session
-    db_c = db_get("""
-    SELECT hrac.jmeno, hrac.prezdivka, klan.id, klan.nazev, tym.id, tym.nazev
-    FROM hrac LEFT JOIN klan_clenstvi ON ( hrac.id = klan_clenstvi.hrac ) 
-              LEFT JOIN klan          ON ( klan.id = klan_clenstvi.klan ) 
-              LEFT JOIN tym_clenstvi  ON ( hrac.id = tym_clenstvi.hrac  )
-              LEFT JOIN tym           ON ( tym.id  = tym_clenstvi.tym   )
-    WHERE hrac.id =""" + str(id))
-    db_vybaveni = db_get("""
-    SELECT typ , vyrobce, model ,popis
-    FROM hrac JOIN vybaveni ON ( hrac.id = vybaveni.vlastnik )
-    WHERE hrac.id = """ + str(id))
-    return render_template('admin/user_detail.html', account=account, PlayerInfo=db_c ,PlayerVybaveniInfo=db_vybaveni)
+    if request.method == 'GET':
+        account = session
+        db_c = db_get("""
+        SELECT hrac.jmeno, hrac.prezdivka, klan.id, klan.nazev, tym.id, tym.nazev
+        FROM hrac LEFT JOIN klan_clenstvi ON ( hrac.id = klan_clenstvi.hrac ) 
+                LEFT JOIN klan          ON ( klan.id = klan_clenstvi.klan ) 
+                LEFT JOIN tym_clenstvi  ON ( hrac.id = tym_clenstvi.hrac  )
+                LEFT JOIN tym           ON ( tym.id  = tym_clenstvi.tym   )
+        WHERE hrac.id =""" + str(id))
+        db_vybaveni = db_get("""
+        SELECT typ , vyrobce, model ,popis, vybaveni.id
+        FROM hrac JOIN vybaveni ON ( hrac.id = vybaveni.vlastnik )
+        WHERE hrac.id = """ + str(id))
+        return render_template('admin/user_detail.html', account=account, PlayerInfo=db_c[0] ,PlayerVybaveniInfo=db_vybaveni)
+    else:
+        if ( "odebrat_id" in request.form ):
+            vybaveni_id = request.form["odebrat_id"]
+            db_get("""DELETE FROM vybaveni WHERE id=%s""" % (vybaveni_id))
+        return redirect(url_for('admin.user_detail', id=id))
