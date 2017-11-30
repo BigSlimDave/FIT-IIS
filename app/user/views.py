@@ -615,3 +615,8 @@ def games_publisher(pub):
     account = session
     db_c = db_get("SELECT nazev_hry, rok_vydani_hry, zanr_hry FROM hra WHERE vydavatel_hry=\"%s\"" %(pub))
     return render_template('user/hra_vydavatel.html', account=account, PubSort=db_c, publisher=pub)
+
+@user.route('/hrac/specializace/<game_id>', methods=['GET', 'POST'])
+@login_required('user')
+def specialization_detail(game_id):
+    return "TODO MISSING"

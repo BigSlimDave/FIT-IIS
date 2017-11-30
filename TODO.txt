@@ -1,19 +1,20 @@
-ADMIN:
-  rozliseni turnaj_bezny, turnaj_wc
-  prirazeni specializace ?? sam kazdy u sebe ??
+Tym:
+ - stejne jako klan                  // TODO: SMEKY
+Klan:
+ - prohlizeni klanu podle zamereni   // TODO: SMEKY
 
-USER:
-  prohlizeni klanu podle zamereni ??
-  specializace ??
+Turnaj:  
+ - Rozliseni turnaj_bezny, turnaj_wc // TODO:
+ - Admin - Pridavani vysledku        // TODO:
 
 Specializace:
  - Admin pridani vsem                // COMPLETE
  - User editace a pridavani svych    // COMPLETE
- - Prohlizeni u ostatnich            // TODO
- - vyhledavani hracu podle spec      // TODO
+ - Prohlizeni u ostatnich            // COMPLETE
+ - vyhledavani hracu podle spec      // TODO: MARA
 
 hledani hracu podle
- - hry ( specializace )              // COMPLETE: VYPIS, TODO:SMEKY
+ - hry ( specializace )              // COMPLETE: VYPIS, TODO: MARA
  - predchozich vysledku v turnajich  // TODO: HOW ??
 
 prochazeni her podle                 
