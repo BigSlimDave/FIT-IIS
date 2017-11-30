@@ -11,10 +11,10 @@ Specializace:
  - Admin pridani vsem                // COMPLETE
  - User editace a pridavani svych    // COMPLETE
  - Prohlizeni u ostatnich            // COMPLETE
- - vyhledavani hracu podle spec      // TODO: MARA
+ - vyhledavani hracu podle spec      // COMPLETE
 
 hledani hracu podle
- - hry ( specializace )              // COMPLETE: VYPIS, TODO: MARA
+ - hry ( specializace )              // COMPLETE
  - predchozich vysledku v turnajich  // TODO: HOW ??
 
 prochazeni her podle                 

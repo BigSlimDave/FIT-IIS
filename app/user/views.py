@@ -619,4 +619,13 @@ def games_publisher(pub):
 @user.route('/hrac/specializace/<game_id>', methods=['GET', 'POST'])
 @login_required('user')
 def specialization_detail(game_id):
-    return "TODO MISSING"
+    account = session
+    game_aggr = db_get("""
+    SELECT prezdivka, jmeno, tym.nazev, klan.nazev, hrac.id, tym.id, klan.id
+    FROM specializace JOIN hrac          ON ( specializace.hrac  = hrac.id ) 
+                      JOIN klan_clenstvi ON ( klan_clenstvi.hrac = hrac.id )
+                      JOIN klan          ON ( klan_clenstvi.klan = klan.id )
+                      JOIN tym_clenstvi  ON ( tym_clenstvi.hrac  = hrac.id )
+                      JOIN tym           ON ( tym_clenstvi.tym   = tym.id  ) 
+    WHERE specializace.hra = %s"""%(game_id))
+    return render_template('user/specializace.html', account=account, game_aggr=game_aggr)
