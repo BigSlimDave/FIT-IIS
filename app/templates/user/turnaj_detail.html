@@ -28,7 +28,11 @@
             {%if vyherce|length == 3 %}
             <tr>
                 <th>Vyherce</th>
-                <th>{{vyherce[1]}}</th>
+                {% if vyherce[1] %}
+                <th><a href="/user/tym_prochazet/detail/{{vyherce[1]}}">{{vyherce[1]}}</a></th>
+                {% else %}
+                <th></th>
+                {% endif %}
             </tr>
             {% endif %}
             {% endif %}
@@ -50,7 +54,7 @@
             <tr>
                 <th>{{loop.index}}</th>
                 {% if v %}
-                <th><a href="/user/tym_prochazet/detail/{{v}}">{{v}}</th>
+                <th><a href="/user/tym_prochazet/detail/{{v}}">{{v}}</a></th>
                 {% else %}
                 <th></th>
                 {% endif %}
