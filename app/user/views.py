@@ -41,7 +41,7 @@ def hrac():
         SELECT id_zapas, skore, typ, hra.nazev_hry, tym.nazev, zapas.kdy, turnaj.kde, turnaj.odmena
         FROM hrac JOIN tym_clenstvi ON ( hrac.id = tym_clenstvi.hrac )
                   JOIN tym          ON ( tym.id  = tym_clenstvi.tym  )
-                  JOIN ucastnici_zapasu ON ( ucastnici_zapasu.id_tym = tym.id )
+                  JOIN ucastnici_zapasu ON ( ucastnici_zapasu.id_tym1 = tym.id )
                   JOIN zapas ON ( ucastnici_zapasu.id_zapas = zapas.id )
                   JOIN turnaj ON ( turnaj.id = zapas.turnaj )
                   JOIN hra ON ( hra.id = zapas.hra )
@@ -500,32 +500,29 @@ def turnaj_detail(id):
     WHERE turnaj=%s
     """%(id))
     basicinfo = db_get("SELECT nazev,kde,kdy,kapacita,odmena FROM turnaj WHERE id = %s"%(id))[0]
-    vyherce = db_get(""" 
-    SELECT vitez, prvni, druhy, treti, ctvrty, paty FROM turnaj_bezny
-    LEFT JOIN turnaj_wc ON turnaj_bezny.turnaj = turnaj_wc.turnaj
-    WHERE turnaj_bezny.turnaj = %s OR turnaj_wc.turnaj = %s
-    UNION
-    SELECT vitez, prvni, druhy, treti, ctvrty, paty FROM turnaj_bezny
-    RIGHT JOIN turnaj_wc ON turnaj_bezny.turnaj = turnaj_wc.turnaj
-    WHERE turnaj_wc.turnaj = %s OR turnaj_bezny.turnaj = %s
-
-    """%(id,id,id,id))
+    vyherce = db_get("SELECT bezny, wc FROM turnaj WHERE id = %s"%(id))[0]
     print(vyherce)
-    if ( vyherce ):
-        if ( vyherce[0][0] == None ):
-            vyherce = (
-                       (1,vyherce[0][1], db_get_team_name(vyherce[0][1])), 
-                       (2,vyherce[0][2], db_get_team_name(vyherce[0][2])),
-                       (3,vyherce[0][3], db_get_team_name(vyherce[0][3])), 
-                       (4,vyherce[0][4], db_get_team_name(vyherce[0][4])), 
-                       (5,vyherce[0][5], db_get_team_name(vyherce[0][5]))
-                      )
-            #vyherce_nazvy = 
-        else:
-            vyherce = ((db_get_team_name(vyherce[0][0]), vyherce[0][0]))
-            #vyherce = (vyherce[0][0],None)
+    if ( vyherce[0] ):
+        print("bezny")
+        vyherce = db_get("""
+        SELECT vitez, tym.nazev, tym.id
+        FROM turnaj JOIN turnaj_bezny ON turnaj.bezny = turnaj_bezny.id 
+                    JOIN tym          ON turnaj_bezny.vitez = tym.id
+        WHERE turnaj.id = %s"""%(id))[0]
     else:
-        vyherce = (None)
+        print("wc")
+        vyherce = db_get("""
+        SELECT prvni, druhy, treti, ctvrty, paty
+        FROM turnaj JOIN turnaj_wc ON turnaj.wc = turnaj_wc.id
+                    JOIN tym       ON turnaj_wc.prvni = tym.id
+        WHERE turnaj.id = %s"""%(id))[0]
+        vyherce = (
+            db_get_team_name(vyherce[0]),
+            db_get_team_name(vyherce[1]),
+            db_get_team_name(vyherce[2]),
+            db_get_team_name(vyherce[3]),
+            db_get_team_name(vyherce[4])
+        )
     print(vyherce)
     return render_template('user/turnaj_detail.html', account=account, table_name='turnaj', zapasy=games, BasicInfo=basicinfo, sponzors=sponzors, vyherce=vyherce)
 

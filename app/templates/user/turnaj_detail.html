@@ -25,10 +25,10 @@
                 <th>{{BasicInfo[4]}}</th>
             </tr>
             {%if vyherce %}
-            {%if vyherce|length == 2 %}
+            {%if vyherce|length == 3 %}
             <tr>
                 <th>Vyherce</th>
-                <th>{{vyherce[0]}}</th>
+                <th>{{vyherce[1]}}</th>
             </tr>
             {% endif %}
             {% endif %}
@@ -36,23 +36,23 @@
     </table>
 </div>
 {%if vyherce %}
-{%if vyherce|length > 2 %}
+{%if vyherce|length > 3 %}
 <h2 style="text-align: center">Výherci</h2>
 
-<div style="width: 10%; margin:0 auto">
+<div style="width: 15%; margin:0 auto">
     <table class="table table-striped">
         <tbody>
             <tr>
                 <th>Pozice</th>
-                <th>Tym</th>
+                <th>Tým</th>
             </tr>
-            {% for v in vyherce %}
+            {%for v in vyherce %}
             <tr>
-                <th>{{v[0]}}</th>
-                {% if v[2] != None %}
-                <th>{{v[2]}}</th>
+                <th>{{loop.index}}</th>
+                {% if v %}
+                <th><a href="/user/tym_prochazet/detail/{{v}}">{{v}}</th>
                 {% else %}
-                 <th></th>
+                <th></th>
                 {% endif %}
             </tr>
             {% endfor %}
@@ -61,6 +61,8 @@
 </div>
 {% endif %}
 {% endif %}
+
+
 <h2 style="text-align: center">Zápasy</h2>
 <table class="table table-striped table-hover table-bordered table-condensed">
     <tr>
