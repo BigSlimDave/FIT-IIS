@@ -41,7 +41,16 @@ def hrac():
         SELECT id_zapas, skore, typ, hra.nazev_hry, tym.nazev, zapas.kdy, turnaj.kde, turnaj.odmena
         FROM hrac JOIN tym_clenstvi ON ( hrac.id = tym_clenstvi.hrac )
                   JOIN tym          ON ( tym.id  = tym_clenstvi.tym  )
-                  JOIN ucastnici_zapasu ON ( ucastnici_zapasu.id_tym = tym.id )
+                  JOIN ucastnici_zapasu ON ( ucastnici_zapasu.id_tym1 = tym.id )
+                  JOIN zapas ON ( ucastnici_zapasu.id_zapas = zapas.id )
+                  JOIN turnaj ON ( turnaj.id = zapas.turnaj )
+                  JOIN hra ON ( hra.id = zapas.hra )
+        WHERE hrac.prezdivka = \"%s\" """ %(str(nick)))
+        zapasy += db_get("""
+        SELECT id_zapas, skore, typ, hra.nazev_hry, tym.nazev, zapas.kdy, turnaj.kde, turnaj.odmena
+        FROM hrac JOIN tym_clenstvi ON ( hrac.id = tym_clenstvi.hrac )
+                  JOIN tym          ON ( tym.id  = tym_clenstvi.tym  )
+                  JOIN ucastnici_zapasu ON ( ucastnici_zapasu.id_tym2 = tym.id )
                   JOIN zapas ON ( ucastnici_zapasu.id_zapas = zapas.id )
                   JOIN turnaj ON ( turnaj.id = zapas.turnaj )
                   JOIN hra ON ( hra.id = zapas.hra )
@@ -586,13 +595,13 @@ def games_detail(name):
     WHERE nazev_hry = "%s"
     GROUP BY nazev, turnaj.kde, mod_hry, kapacita, turnaj.kdy, zapas.typ, turnaj.id"""%(name))
     zapasy = db_get("""
-    SELECT zapas.kdy, turnaj.kde, t1.nazev, skore, t2.nazev, typ
-    FROM zapas JOIN turnaj ON ( zapas.turnaj = turnaj.id ) 
-               JOIN ucastnici_zapasu ON ( ucastnici_zapasu.id_zapas = zapas.id )
-               JOIN tym t1 ON ( id_tym = t1.id )
-               JOIN tym t2 ON ( id_tym2 = t2.id )
-    WHERE hra = ( SELECT id FROM hra WHERE nazev_hry = "%s" )
-    LIMIT 10"""%(name))
+        SELECT zapas.kdy, turnaj.kde, t1.nazev, skore, t2.nazev, typ
+        FROM zapas JOIN turnaj ON ( zapas.turnaj = turnaj.id ) 
+                   JOIN ucastnici_zapasu ON ( ucastnici_zapasu.id_zapas = zapas.id )
+                   JOIN tym t1 ON ( id_tym1 = t1.id )
+                   JOIN tym t2 ON ( id_tym2 = t2.id )
+        WHERE hra = ( SELECT id FROM hra WHERE nazev_hry = "%s" )
+        LIMIT 10"""%(name))
     return render_template('user/hra_detail.html', account=account, gameInfo=db_c, zapasy=zapasy, name=name)
 
 @user.route('/hra/detail/genre/<genre>', methods=['GET', 'POST'])

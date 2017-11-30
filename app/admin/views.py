@@ -156,6 +156,39 @@ def sponzor():
     content = db_get_from_all("sponzor", ['*'])
     return render_template('admin/sponzor.html', account=account, content=content, table_head=table_head)
 
+@admin.route('/turnaj/add/', methods = ['GET', 'POST'])
+@login_required('admin')
+def turnaj_add():
+    if ( request.method == "GET" ):
+        account = session
+        table_head = db_describe('turnaj')
+        return render_template('admin/turnaj_add.html', account=account, table_name='turnaj', header=table_head)
+    else:
+        typ = request.form['typ']
+        last_id = None;
+        if typ == 'wc':
+            db_get("""INSERT INTO turnaj_wc (prvni, druhy, treti, ctvrty, paty) VALUES (NULL, NULL, NULL, NULL, NULL)""")
+            last_id = db_get("SELECT id FROM turnaj_wc ORDER BY id DESC LIMIT 1;")[0][0]
+            print str(last_id)
+            db_get("""INSERT INTO turnaj (nazev, odmena, kdy, kde, kapacita, bezny, wc) 
+                        VALUES ('%s','%s','%s','%s','%s', NULL, '%s')""" %
+                        (request.form['nazev'], request.form['odmena'], request.form['kdy'],
+                            request.form['kde'], request.form['kapacita'], last_id))
+            flash("Turnaj byl přidán")
+            return redirect(url_for('admin.turnaj'))
+        else: # bezny
+            db_get("""INSERT INTO turnaj_bezny (vitez) VALUES (NULL)""")
+            last_id = db_get("SELECT id FROM turnaj_bezny ORDER BY id DESC LIMIT 1;")[0][0]
+            print str(last_id)
+            db_get("""INSERT INTO turnaj (nazev, odmena, kdy, kde, kapacita, bezny, wc) 
+                        VALUES ('%s','%s','%s','%s','%s', '%s', NULL)""" %
+                        (request.form['nazev'], request.form['odmena'], request.form['kdy'],
+                            request.form['kde'], request.form['kapacita'], last_id))
+            flash("Turnaj byl přidán")
+            return redirect(url_for('admin.turnaj'))
+        # vlozeni veci z turnaje
+
+
 @admin.route('/<table>/add/', methods=['GET', 'POST'])
 @login_required('admin')
 def add(table):
@@ -187,10 +220,10 @@ def remove_row(table):
         db, cursor = database()
         cursor.execute("DELETE FROM %s WHERE id=%s" % (table, request.form['remove_row'],))
         db.commit()
-        return redirect(url_for("admin.index"))
+        return redirect(url_for("admin."+table))
     else:
         flash('Něco se pokazilo')
-        return redirect(url_for("admin.index"))
+        return redirect(url_for("admin."+table))
 
 @admin.route('/<table>/edit/<int:row>/', methods=['GET', 'POST'])
 @login_required('admin')
