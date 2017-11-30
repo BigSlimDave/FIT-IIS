@@ -168,7 +168,20 @@ def user_detail(nick):
             JOIN hra          ON ( hra.id  = specializace.hra  )
     WHERE hrac.prezdivka = "%s"
     """%(nick) )
-    return render_template('user/hrac_detail.html', account=account, table_name='prochazet', hrac=hrac, vybaveni=vybaveni, Specialization=spec)
+    posledni_zapasy = db_get("""
+    SELECT zapas.kdy, hra.nazev_hry, tym1.nazev, zapas.skore, tym2.nazev, hra.mod_hry, hra.id, tym1.id, tym2.id
+    FROM hrac LEFT JOIN tym_clenstvi     ON ( hrac.id = tym_clenstvi.hrac )
+              LEFT JOIN tym              ON ( tym.id  = tym_clenstvi.tym  )
+              LEFT JOIN ucastnici_zapasu ON ( tym.id = ucastnici_zapasu.id_tym1 or tym.id = ucastnici_zapasu.id_tym2 )
+              LEFT JOIN zapas            ON ( ucastnici_zapasu.id_zapas = zapas.id )
+              LEFT JOIN hra              ON ( zapas.hra = hra.id )
+              LEFT JOIN tym as tym2      ON ( tym2.id = ucastnici_zapasu.id_tym2 )
+              LEFT JOIN tym as tym1      ON ( tym1.id = ucastnici_zapasu.id_tym1 )
+    WHERE hrac.prezdivka = 'borec2'
+    ORDER BY YEAR(zapas.kdy) DESC, MONTH(zapas.kdy) DESC, DAY(zapas.kdy) DESC
+    LIMIT 5
+    """)
+    return render_template('user/hrac_detail.html', account=account, table_name='prochazet', hrac=hrac, vybaveni=vybaveni, Specialization=spec, posledni_zapasy=posledni_zapasy)
 
 @user.route('/hra/', methods=['GET', 'POST'])
 @login_required('user')

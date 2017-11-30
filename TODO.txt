@@ -1,11 +1,11 @@
 Tym:
- - stejne jako klan                  // TODO: SMEKY
+ - stejne jako klan                  // COMPLETE
 Klan:
  - prohlizeni klanu podle zamereni   // TODO: SMEKY
 
 Turnaj:  
- - Rozliseni turnaj_bezny, turnaj_wc // TODO:
- - Admin - Pridavani vysledku        // TODO:
+ - Rozliseni turnaj_bezny, turnaj_wc // COMPLETE
+ - Admin - Pridavani vysledku        // TODO: SMEKY
 
 Specializace:
  - Admin pridani vsem                // COMPLETE
@@ -15,7 +15,7 @@ Specializace:
 
 hledani hracu podle
  - hry ( specializace )              // COMPLETE
- - predchozich vysledku v turnajich  // TODO: HOW ??
+ - predchozich vysledku v turnajich  // TODO: NEJDE
 
 prochazeni her podle                 
  - datum vydani                      // COMPLETE
@@ -24,6 +24,9 @@ prochazeni her podle
  - vydavatele                        // COMPLETE
 
 prihlasovani tymu na zapasy          // TODO: SMEKY
+
+hrac
+ - Posledni 5 zapasu tymu            // COMPLETE
 
 turnaj
  - vysledky turnaje                  // COMPLETE
@@ -39,5 +42,5 @@ statistiky
 zapsani se o subscribe informaci     // COMPLETE
 
 
-oznaceni povinnych poli
+oznaceni povinnych poli // TODO: SMEKY
 
