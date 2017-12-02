@@ -52,7 +52,15 @@
         </table>
     </div>
 {% else %}
-<h2>Aktualne nejsi v klanu, muzes ale nejaky zalozit <a href="zalozit/">zde</a>, nebo se k nejakemu <a href="/user/klan_prochazet">pridat</a><h2>
+<div style="margin: 0 auto; width:22%">
+    <h2 align="center">Aktuálně nejsi v žádném klanu.</h2>
+    <a href="zalozit/">
+        <button type="button" class="btn btn-primary btn-block">Založit</button>
+    </a>
+    <a href="/user/klan_prochazet">
+        <button style="margin-top: 5px;"type="button" class="btn btn-primary btn-block">Přidat se k existujícímu</button>
+    </a>
+</div>
 {% endif %}
 
 {% endblock %}

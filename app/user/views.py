@@ -511,9 +511,12 @@ def turnaj_location_detail(location):
 def turnaj_detail(id):
     account = session
     games = db_get("""
-    SELECT zapas.cas, zapas.kdy, turnaj.kde, zapas.skore, hra.nazev_hry, zapas.typ
-    FROM zapas JOIN turnaj ON ( zapas.turnaj = turnaj.id )
-               JOIN hra ON ( hra.id = zapas.hra )
+    SELECT zapas.cas, zapas.kdy, turnaj.kde, tym1.nazev, zapas.skore, tym2.nazev, hra.nazev_hry, zapas.typ
+    FROM zapas JOIN turnaj                ON ( zapas.turnaj = turnaj.id )
+               JOIN hra                   ON ( hra.id = zapas.hra )
+               LEFT JOIN ucastnici_zapasu ON ( zapas.id = ucastnici_zapasu.id_zapas )
+               LEFT JOIN tym as tym1      ON ( ucastnici_zapasu.id_tym1 = tym1.id ) 
+               LEFT JOIN tym as tym2      ON ( ucastnici_zapasu.id_tym2 = tym2.id ) 
     WHERE turnaj = %s
     """%(id))
     sponzors = db_get("""
@@ -641,10 +644,10 @@ def specialization_detail(game_id):
     account = session
     game_aggr = db_get("""
     SELECT prezdivka, jmeno, tym.nazev, klan.nazev, hrac.id, tym.id, klan.id
-    FROM specializace JOIN hrac          ON ( specializace.hrac  = hrac.id ) 
-                      JOIN klan_clenstvi ON ( klan_clenstvi.hrac = hrac.id )
-                      JOIN klan          ON ( klan_clenstvi.klan = klan.id )
-                      JOIN tym_clenstvi  ON ( tym_clenstvi.hrac  = hrac.id )
-                      JOIN tym           ON ( tym_clenstvi.tym   = tym.id  ) 
+    FROM specializace JOIN hrac               ON ( specializace.hrac  = hrac.id ) 
+                      LEFT JOIN klan_clenstvi ON ( klan_clenstvi.hrac = hrac.id )
+                      LEFT JOIN klan          ON ( klan_clenstvi.klan = klan.id )
+                      LEFT JOIN tym_clenstvi  ON ( tym_clenstvi.hrac  = hrac.id )
+                      LEFT JOIN tym           ON ( tym_clenstvi.tym   = tym.id  ) 
     WHERE specializace.hra = %s"""%(game_id))
     return render_template('user/specializace.html', account=account, game_aggr=game_aggr)

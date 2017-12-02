@@ -43,7 +43,7 @@
 {%if vyherce|length > 3 %}
 <h2 style="text-align: center">Výherci</h2>
 
-<div style="width: 15%; margin:0 auto">
+<div style="width: 20%; margin:0 auto">
     <table class="table table-striped">
         <tbody>
             <tr>
@@ -73,7 +73,9 @@
         <th>Čas</th>
         <th>Datum</th>
         <th>Lokace</th>
+        <th>Tym 1</th>
         <th>Score</th>
+        <th>Tym 2</th>
         <th>Hra</th>
         <th>Druh</th>
     </tr>
@@ -81,10 +83,23 @@
     <tr>
         <th>{{zapas[0]}}</th>
         <th>{{zapas[1]}}</th>
-        <th><a href="/user/turnaj/detail/location/{{zapas[2]}}">{{zapas[2]}}</a></th>
-        <th>{{zapas[3]}}</th>
-        <th><a href="/user/hra/detail/{{zapas[4]}}">{{zapas[4]}}</a></th>
-        <th>{{zapas[5]}}</th>
+        <th><a href="/user/turnaj/detail/location/{{zapas[2]}}"> {{zapas[2]}} </a></th>
+
+        {% if zapas[3] %}
+        <th><a href="/user/tym_prochazet/detail/{{zapas[3]}}"> {{zapas[3]}} </a></th>
+        {% else %}
+        <th>Unknown</th>
+        {% endif %}
+
+        <th>{{zapas[4]}}</th>
+        {% if zapas[5] %}
+        <th><a href="/user/tym_prochazet/detail/{{zapas[5]}}"> {{zapas[5]}} </a></th>
+        {% else %}
+        <th>Unknown</th>
+        {% endif %}
+        
+        <th><a href="/user/hra/detail/{{zapas[5]}}">{{zapas[6]}}</a></th>
+        <th>{{zapas[7]}}</th>
     </tr>
         {% endfor %}
 </table>

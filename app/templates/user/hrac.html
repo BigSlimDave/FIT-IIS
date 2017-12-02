@@ -9,9 +9,9 @@
 <b>Klan: </b>{{hrac[3]}}<br>
 <b>Tým: </b>{{hrac[5]}}<br>
 {% if hrac[6] == 1 %}
-<b>Odebírám novinky </b><button onclick="location.href='odber';">Změnit</button>
+<b>Odebírám novinky </b><button class="btn btn-default" onclick="location.href='odber';">Změnit</button>
 {% else %}
-<b>Neodebírám novinky </b><button onclick="location.href='odber';">Změnit</button>
+<b>Neodebírám novinky </b><button class="btn btn-default" onclick="location.href='odber';">Změnit</button>
 {% endif %}
 <br>
 <span>
@@ -29,7 +29,7 @@
       <h4 class="card-title"><b>Výrobce: {{vyb[1]}}</b></h4>
       <p class="card-text"><b>Model: </b>{{vyb[2]}}</p>
       <p class="card-text"><b>Popis: </b>{{vyb[3]}}</p>
-    <form class="navbar-form" style="display: inline-block;" method="post" action="remove/">
+    <form method="post" action="remove/">
         <input class="btn btn-default" type="hidden" value="{{vyb[4]}}" name="remove_id">
         <input class="btn btn-default" type="submit" value="Odstranit" />
     </form>
@@ -61,23 +61,33 @@
 </table>
 
 <h3 style="display: inline-block;" > Specializace:</h3>
-<form style="display: inline-block;" method="post" action="" id="add_specialization">
-        <select form="add_specialization" name="add_specialization_id">
-        {% for game in all_games %}
+<form class="form-inline well" method="post" action="" id="add_specialization">
+    <div class="form-group">
+        <select form="add_specialization" name="add_specialization_id" class="form-control">
+            {% for game in all_games %}
             <option value="{{game[1]}}">{{game[0]}}</option>
-        {% endfor %}
+            {% endfor %}
         </select>
-        <input type="submit" name="add_specialization" value="Pridat specializaci">
-</form><br>
-{% for specialization in Specialization %}
-<font size="4">
-    {{specialization[0]}}
-</font>
-<form method="post" action="" id="remove_specialization" style="display: inline-block;" >
-    <input type="hidden" name="remove_specialization" value={{specialization[1]}}>
-    <input type="submit" name={{specialization[1]}} value="Odebrat">
+        <input type="submit" name="add_specialization" value="Pridat specializaci" class="btn btn-default">
+    </div>
 </form>
-<br>
+
+<table>
+{% for specialization in Specialization %}
+<tr>
+    <th style="padding:0 10px 0 0px">
+        <font size="4">
+            <a href="/user/hrac/specializace/{{specialization[1]}}">{{specialization[0]}}</a>
+        </font>
+    </th>
+    <th>
+        <form method="post" action="" id="remove_specialization" style="display: inline-block;" >
+            <input type="hidden" name="remove_specialization" value={{specialization[1]}}>
+            <input type="submit" name={{specialization[1]}} value="Odebrat" class="btn btn-default">
+        </form>
+    </th>
+</tr>
 {% endfor %}
+</table>
 
 {% endblock %}
