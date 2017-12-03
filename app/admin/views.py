@@ -138,7 +138,48 @@ def zapas():
     account = session
     table_head = db_describe("zapas")
     content = db_get_from_all("zapas", ['*'])
-    return render_template('admin/zapas.html', account=account, content=content, table_head=table_head)
+    ucastnici = db_get_from_all("ucastnici_zapasu", ['*'])
+    turnaje = db_get_from_all("turnaj", ['id', 'nazev'])
+    tymy = db_get_from_all("tym", ['id', 'nazev'])
+    hry = db_get_from_all("hra", ["id", "nazev_hry"])
+    return render_template('admin/zapas.html', account=account, content=content, table_head=table_head, ucastnici = ucastnici, turnaje=turnaje, tymy=tymy, hry=hry)
+
+@admin.route('/zapas/pridat/', methods=['GET', 'POST'])
+@login_required('admin')
+def zapas_pridat():
+    if request.method == "GET":
+        account = session
+        turnaje = db_get_from_all("turnaj", ['id', 'nazev'])
+        tymy = db_get_from_all("tym", ['id', 'nazev'])
+        hry = db_get_from_all("hra", ["id", "nazev_hry"])
+        return render_template('admin/zapas_pridat.html', account=account, turnaje=turnaje, tymy=tymy, hry=hry)
+    else:
+        if 'Odeslat' in request.form:
+            # return str(request.form)
+            tym1 = request.form['tym1']
+            tym2 = request.form['tym2']
+            if tym1 != "NULL":
+                tym1 = "'%s'" % tym1
+            if tym2 != "NULL":
+                tym2 = "'%s'" % tym2
+            last_id = None
+            turnaj = request.form['turnaj']
+            if turnaj != "NULL":
+                turnaj = "'%s'" % turnaj
+            db_get("""INSERT INTO zapas (kdy, skore, typ, hra, turnaj, cas) 
+                VALUES ('%s', '%s', '%s', '%s', %s, '%s')"""
+                % (request.form['kdy'], request.form['skore'], 
+                    request.form['typ'], request.form['hra'], 
+                    turnaj, request.form['cas']))
+            last_id = db_get("SELECT id FROM zapas ORDER BY id DESC LIMIT 1;")[0][0]
+            db_get("""INSERT INTO ucastnici_zapasu (id_zapas, id_tym1, id_tym2) 
+                VALUES ('%s', %s, %s)"""
+                % (last_id, tym1, tym2))
+            flash("Zápas byl úspěšně přidán")
+            return redirect(url_for("admin.zapas"))
+        else:
+            flash("Neznámý požadavek")
+            return redirect(url_for("admin.zapas"))
 
 @admin.route('/turnaj/', methods=['GET', 'POST'])
 @login_required('admin')
@@ -169,7 +210,6 @@ def turnaj_add():
         if typ == 'wc':
             db_get("""INSERT INTO turnaj_wc (prvni, druhy, treti, ctvrty, paty) VALUES (NULL, NULL, NULL, NULL, NULL)""")
             last_id = db_get("SELECT id FROM turnaj_wc ORDER BY id DESC LIMIT 1;")[0][0]
-            print str(last_id)
             db_get("""INSERT INTO turnaj (nazev, odmena, kdy, kde, kapacita, bezny, wc) 
                         VALUES ('%s','%s','%s','%s','%s', NULL, '%s')""" %
                         (request.form['nazev'], request.form['odmena'], request.form['kdy'],
@@ -179,7 +219,6 @@ def turnaj_add():
         else: # bezny
             db_get("""INSERT INTO turnaj_bezny (vitez) VALUES (NULL)""")
             last_id = db_get("SELECT id FROM turnaj_bezny ORDER BY id DESC LIMIT 1;")[0][0]
-            print str(last_id)
             db_get("""INSERT INTO turnaj (nazev, odmena, kdy, kde, kapacita, bezny, wc) 
                         VALUES ('%s','%s','%s','%s','%s', '%s', NULL)""" %
                         (request.form['nazev'], request.form['odmena'], request.form['kdy'],
@@ -187,7 +226,6 @@ def turnaj_add():
             flash("Turnaj byl přidán")
             return redirect(url_for('admin.turnaj'))
         # vlozeni veci z turnaje
-
 
 @admin.route('/<table>/add/', methods=['GET', 'POST'])
 @login_required('admin')

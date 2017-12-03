@@ -1,7 +1,7 @@
 {% extends 'admin_base.html' %}
 {% block content %}
 <h2 style="display: inline-block">Zápasy</h2>
-<a href="/admin/zapas/add/">
+<a href="/admin/zapas/pridat/">
     <button>Pridat</button>
 </a>
 <div class="panel-group">
@@ -19,19 +19,68 @@
                   {% for item in table_head %}
                       <th>{{ item[0] }}</th>
                   {% endfor %}
+                      <th>Tým1</th>
+                      <th>Tým2</th>
                       <th>Akce</th>
                   </tr>
                   {% for item1 in content %}
                   <tr>
                       {% for item2 in item1 %}
                           <td>
-                              {% if loop.index == 6 %}
-                                <a href="/admin/turnaj/detail/{{item2}}">{{item2}}</a>
+                              {% if loop.index == 5%}
+                                {% for hra in hry%}
+                                    {% if hra[0] == item2 %}
+                                      {{hra[1]}}
+                                    {% endif %}
+                                {% endfor %}
+                              {% elif loop.index == 6 %}
+                                {% if item2 == None %}
+                                  scrim- trénink
+                                {% else %}
+                                <a href="/admin/turnaj/detail/{{item2}}">
+                                  {% for turnaj in turnaje%}
+                                    {% if turnaj[0] == item2 %}
+                                      {{turnaj[1]}}
+                                    {% endif %}
+                                  {% endfor %}
+                                </a>
+                                {% endif %}
                               {% else %}
                                 {{ item2 }}
                               {% endif %}
                           </td>
                           {% if loop.last %}
+                          {% for row in ucastnici %}
+                            {% if item1[0] == row[1]%}
+                            <td>
+                              {% for tym in tymy%}
+                                {% if tym[0] == row[2] %}
+                                  {{tym[1]}}
+                                  {% break %}
+                                {% endif %}
+                                {% if loop.last %}
+                                  None
+                                {% endif %}
+                              {% endfor %}
+                            </td>
+                            <td>
+                              {% for tym in tymy%}
+                                {% if tym[0] == row[3] %}
+                                  {{tym[1]}}
+                                {% break %}
+                                {% endif %}
+                                {% if loop.last %}
+                                  None
+                                {% endif %}
+                              {% endfor %}
+                            </td>
+                              {% break %}
+                            {% else %}
+                              {% if loop.last %}
+                              <td>None</td><td>None</td>
+                              {% endif %}
+                            {% endif %}
+                          {% endfor %}
                           <td>
                               <span>
                                   <form style="display: inline-block;" method="post" action="remove/">

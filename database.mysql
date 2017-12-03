@@ -40,8 +40,8 @@ CREATE TABLE hrac(
 CREATE TABLE klan(
     id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
     nazev VARCHAR(50) NOT NULL,
-    hymna VARCHAR(50) NOT NULL,
-    logo VARCHAR(50) NOT NULL,
+    hymna VARCHAR(50),
+    logo VARCHAR(50),
     vudce INT UNSIGNED NOT NULL,    -- cizi klic id hrace
     hra INT UNSIGNED) ENGINE=InnoDB;       -- cizi klic hra
 
@@ -63,17 +63,17 @@ CREATE TABLE tym(
 CREATE TABLE zapas(
     id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
     kdy DATE NOT NULL,
-    skore VARCHAR(32) NOT NULL,
+    skore VARCHAR(32),
     typ VARCHAR(50) NOT NULL,
     hra INT UNSIGNED NOT NULL,                -- napojit na cizi klic id
     turnaj INT UNSIGNED,
-    cas time NOT NULL) ENGINE=InnoDB;                     -- cizi klic id
+    cas time) ENGINE=InnoDB;                     -- cizi klic id
 
 CREATE TABLE ucastnici_zapasu(
     id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
     id_zapas INT UNSIGNED NOT NULL,              -- cizi klic
-    id_tym1 INT UNSIGNED NOT NULL,  -- cizi klic
-    id_tym2 INT UNSIGNED NOT NULL) ENGINE=InnoDB;               -- cizi klic
+    id_tym1 INT UNSIGNED,  -- cizi klic
+    id_tym2 INT UNSIGNED) ENGINE=InnoDB;               -- cizi klic
 
 CREATE TABLE turnaj(
     id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -81,8 +81,8 @@ CREATE TABLE turnaj(
     odmena INT NOT NULL,
     kdy DATE NOT NULL,
     kde VARCHAR(50) NOT NULL,
-    kapacita INT NOT NULL,
-    bezny INT UNSIGNED,    -- -- vizi klic id turnaj bezny
+    kapacita INT,
+    bezny INT UNSIGNED,               -- vizi klic id turnaj bezny
     wc INT UNSIGNED) ENGINE=InnoDB;   -- vizi klic id turnaj wc
 
 CREATE TABLE turnaj_wc(
@@ -101,33 +101,33 @@ CREATE TABLE sponzor(
     id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
     typ VARCHAR(50) NOT NULL,
     nazev VARCHAR(50) NOT NULL,
-    iban VARCHAR(24) NOT NULL) ENGINE=InnoDB;
+    iban VARCHAR(24)) ENGINE=InnoDB;
 
 CREATE TABLE sponzoroval(
     id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
     castka INT NOT NULL,
     sponzor INT UNSIGNED NOT NULL,                  -- cizi klic sponzor id
-    turnaj INT UNSIGNED NOT NULL) ENGINE=InnoDB;                   -- cizi klic turnaj id
+    turnaj INT UNSIGNED NOT NULL) ENGINE=InnoDB;    -- cizi klic turnaj id
 
 CREATE TABLE klan_clenstvi(
     id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    hrac INT UNSIGNED NOT NULL,               -- cizi klic id
-    klan INT UNSIGNED NOT NULL) ENGINE=InnoDB;              -- cizi klic id
+    hrac INT UNSIGNED NOT NULL,                  -- cizi klic id
+    klan INT UNSIGNED NOT NULL) ENGINE=InnoDB;   -- cizi klic id
 
 CREATE TABLE tym_clenstvi(
     id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
     hrac INT UNSIGNED NOT NULL,               -- cizi klic
-    tym INT UNSIGNED NOT NULL) ENGINE=InnoDB;               -- klic klic
+    tym INT UNSIGNED NOT NULL) ENGINE=InnoDB; -- klic klic
 
 CREATE TABLE specializace(
     id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
     hrac INT UNSIGNED NOT NULL,               -- cizi klic id
-    hra INT UNSIGNED NOT NULL) ENGINE=InnoDB;                -- cizi klic id
+    hra INT UNSIGNED NOT NULL) ENGINE=InnoDB; -- cizi klic id
 
 CREATE TABLE zamereni(
     id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
     klan INT UNSIGNED NOT NULL,               -- cizi klic
-    hra INT UNSIGNED NOT NULL) ENGINE=InnoDB;                -- cizi klic
+    hra INT UNSIGNED NOT NULL) ENGINE=InnoDB; -- cizi klic
 
 -- NASTAVENI CIZICH KLICU--
 -- ---------------------------------------------------

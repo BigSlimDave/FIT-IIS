@@ -480,8 +480,25 @@ def tym_detail(nick):
 @login_required('user')
 def zapas():
     account = session
-    database = db_get_from_all('zapas', ['*'])
-    return render_template('user/zapas.html', account=account, table_name='zapas', database=database)
+    vudce = False
+    tym = db_get_from_where_one('tym', "vudce='{}'".format(session['id']), ['id'])
+    if tym != None:
+        vudce = True
+    else:
+        tym = db_get("""SELECT tym FROM tym_clenstvi WHERE hrac='%s'""" 
+                        % (session['id']))[0]
+    if tym == None:
+        return render_template('user/zapas.html', account=account, table_name='zapas', zapasy=None)
+    zapasy = db_get("""SELECT * FROM zapas
+                INNER JOIN ucastnici_zapasu ON (zapas.id = ucastnici_zapasu.id_zapas)
+                WHERE ucastnici_zapasu.id_tym1 = '%s'""" % (tym[0]))
+    zapasy += db_get("""SELECT * FROM zapas
+                INNER JOIN ucastnici_zapasu ON (zapas.id = ucastnici_zapasu.id_zapas)
+                WHERE ucastnici_zapasu.id_tym2 = '%s'""" % (tym[0]))
+    turnaje = db_get_from_all("turnaj", ['id', 'nazev'])
+    tymy = db_get_from_all("tym", ['id', 'nazev'])
+    hry = db_get_from_all("hra", ["id", "nazev_hry"])
+    return render_template('user/zapas.html', account=account, table_name='zapas', zapasy=zapasy, vudce=vudce, hry=hry, turnaje=turnaje, tymy=tymy)
 
 @user.route('/turnaj/', methods=['GET', 'POST'])
 @login_required('user')
@@ -535,14 +552,12 @@ def turnaj_detail(id):
     vyherce = db_get("SELECT bezny, wc FROM turnaj WHERE id = %s"%(id))[0]
     print(vyherce)
     if ( vyherce[0] ):
-        print("bezny")
         vyherce = db_get("""
         SELECT vitez, tym.nazev, tym.id
         FROM turnaj JOIN turnaj_bezny ON turnaj.bezny = turnaj_bezny.id 
                     JOIN tym          ON turnaj_bezny.vitez = tym.id
         WHERE turnaj.id = %s"""%(id))[0]
     else:
-        print("wc")
         vyherce = db_get("""
         SELECT prvni, druhy, treti, ctvrty, paty
         FROM turnaj JOIN turnaj_wc ON turnaj.wc = turnaj_wc.id

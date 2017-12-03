@@ -1,0 +1,141 @@
+{% extends 'user_base.html' %}
+{% block content%}
+{% if zapasy == None %}
+Zápasy jsou týmovou aktivitou, jelikož nejsi v žádném týmu, tak nemáš žádné zápasy.
+{% else %}
+<h1>Zápasy</h1>
+    {% if vudce %}
+    <h2>Dostupné zápasy</h2>
+    {% endif %}
+    <h2>Nehrané zápasy</h2><br>
+        <div class="panel-group">
+        <div class="panel panel-default">
+          <div id="collapse1" class="panel-collapse">
+              <table class="table table-striped table-hover table-bordered table-condensed">
+                  <tr>
+                      <th>Datum</th>
+                      <th>Čas</th>
+                      <th>Turnaj</th>
+                      <th>Hra</th>
+                      <th>Typ</th>
+                      <th>Tým1</th>
+                      <th>Tým2</th>
+                      {% if vudce %}
+                      <th>Akce</th>
+                      {% endif %}
+                  </tr>
+                  <tr>
+                  {% for zapas in zapasy %}
+                    {% if zapas[2] == '' %}
+                    <td>{{zapas[1]}}</td>
+                    <td>{{zapas[6]}}</td>
+                    <td>
+                        {% if zapas[5] == None %}
+                              scrim- trénink
+                            {% else %}
+                            {% for turnaj in turnaje%}
+                                {% if turnaj[0] == zapas[5] %}
+                                <a href="/user/turnaj/detail/{{turnaj[0]}}">
+                                  {{turnaj[1]}}
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    </td>
+                    <td>
+                    {% for hra in hry%}
+                        {% if hra[0] == zapas[4] %}
+                          {{hra[1]}}
+                        {% endif %}
+                    {% endfor %}
+                    </td>
+                    <td>{{zapas[3]}}</td>
+                    <td>{% for tym in tymy%}
+                        {% if tym[0] == zapas[9] %}
+                          {{tym[1]}}
+                          {% break %}
+                        {% endif %}
+                      {% endfor %}
+                    </td>
+                    <td>{% for tym in tymy%}
+                        {% if tym[0] == zapas[10] %}
+                          {{tym[1]}}
+                          {% break %}
+                        {% endif %}
+                      {% endfor %}
+                    </td>
+                    {% if vudce %}
+                    <td><button onclick="location.href='odhlasit?id={{zapas[0]}}'">Odhlásit se</button></td>
+                    {% endif %}
+                    {% endif %}
+                  {% endfor %}
+                  </tr>
+              </table>
+            </div>
+        </div>
+        </div> 
+    <h2>Odehrané zápasy</h2><br>
+        <div class="panel-group">
+        <div class="panel panel-default">
+          <div id="collapse1" class="panel-collapse">
+              <table class="table table-striped table-hover table-bordered table-condensed">
+                  <tr>
+                      <th>Datum</th>
+                      <th>Čas</th>
+                      <th>Turnaj</th>
+                      <th>Hra</th>
+                      <th>Skóre:</th>
+                      <th>Typ</th>
+                      <th>Tým1</th>
+                      <th>Tým2</th>
+                  </tr>
+                  <tr>
+                  {% for zapas in zapasy %}
+                    {% if zapas[2] != '' %}
+                    <td>{{zapas[1]}}</td>
+                    <td>{{zapas[6]}}</td>
+                    <td>
+                    {% if zapas[5] == None %}
+                          scrim- trénink
+                        {% else %}
+                        {% for turnaj in turnaje%}
+                            {% if turnaj[0] == zapas[5] %}
+                            <a href="/user/turnaj/detail/{{turnaj[0]}}">
+                              {{turnaj[1]}}
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                    </td>
+                    <td>
+                    {% for hra in hry%}
+                        {% if hra[0] == zapas[4] %}
+                          {{hra[1]}}
+                        {% endif %}
+                    {% endfor %}
+                    </td>
+                    <td>{{zapas[2]}}</td>
+                    <td>{{zapas[3]}}</td>
+                    <td>
+                    {% for tym in tymy%}
+                        {% if tym[0] == zapas[9] %}
+                          {{tym[1]}}
+                          {% break %}
+                        {% endif %}
+                      {% endfor %}
+                    </td>
+                    <td>
+                    {% for tym in tymy%}
+                        {% if tym[0] == zapas[10] %}
+                          {{tym[1]}}
+                          {% break %}
+                        {% endif %}
+                      {% endfor %}
+                    </td>
+                    {% endif %}
+                  {% endfor %}
+                  </tr>
+              </table>
+            </div>
+        </div>
+        </div> 
+{% endif %}
+{% endblock %}

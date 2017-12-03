@@ -1,0 +1,114 @@
+{% extends 'admin_base.html' %}
+{% block content %}
+<h1>Přidat zápas</h1>
+    <form method="POST" action="" id=zapasek>
+        <table>
+        <tr>
+            <td style="text-align:right">
+                <label>Kdy:</label>
+            </td>
+            <td>
+                <input type="text" name="kdy">
+            </td>
+            <td>
+                Formát: YYYY-MM-DD
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align:right">
+                <label>Skóre:</label>
+            </td>
+            <td>
+                <input type="text" name="skore">
+            </td>
+            <td>
+                např.: 5:2
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align:right">
+                <label>Typ:</label>
+            </td>
+            <td>
+                <input type="text" name="typ">
+            </td>
+            <td>
+                např.: deathmatch
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align:right">
+                <label>Hra:</label>
+            </td>
+            <td>
+                <select name="hra" form="zapasek">
+                    {% for hra in hry %}
+                  <option value="{{hra[0]}}">{{hra[1]}}</option>
+                    {% endfor %}
+                </select>
+            </td>
+            <td>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align:right">
+                <label>Turnaj:</label>
+            </td>
+            <td>
+                <select name="turnaj" form="zapasek">
+                  <option value="NULL">Trénink - scrim</option>
+                    {% for turnaj in turnaje %}
+                  <option value="{{turnaj[0]}}">{{turnaj[1]}}</option>
+                    {% endfor %}
+                </select>
+            </td>
+            <td>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align:right">
+                <label>Čas:</label>
+            </td>
+            <td>
+                <input type="text" name="cas">
+            </td>
+            <td>
+                Formát: HH:MM:SS
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align:right">
+                <label>Tým 1:</label>
+            </td>
+            <td>
+                <select name="tym1" form="zapasek">
+                    <option value="NULL">!Nevybráno</option>
+                    {% for tym in tymy %}
+                  <option value="{{tym[0]}}">{{tym[1]}}</option>
+                    {% endfor %}
+                </select>
+            </td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align:right">
+                <label>Tým 2:</label>
+            </td>
+            <td>
+                <select name="tym2" form="zapasek">
+                    <option value="NULL">!Nevybráno</option>
+                    {% for tym in tymy %}
+                  <option value="{{tym[0]}}">{{tym[1]}}</option>
+                    {% endfor %}
+                </select>
+            </td>
+            <td>
+                
+            </td>
+        </tr>
+        </table>
+        <input type="submit" name="Odeslat" value="Odeslat">
+    </form>
+{% endblock %}
