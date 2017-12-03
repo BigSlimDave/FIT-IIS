@@ -495,10 +495,50 @@ def zapas():
     zapasy += db_get("""SELECT * FROM zapas
                 INNER JOIN ucastnici_zapasu ON (zapas.id = ucastnici_zapasu.id_zapas)
                 WHERE ucastnici_zapasu.id_tym2 = '%s'""" % (tym[0]))
+    dostupne = db_get("""SELECT * FROM zapas
+                INNER JOIN ucastnici_zapasu ON (zapas.id = ucastnici_zapasu.id_zapas)
+                WHERE (ucastnici_zapasu.id_tym1 IS NULL AND 
+                        ucastnici_zapasu.id_tym2 IS NULL )""")
+    dostupne += db_get("""SELECT * FROM zapas
+                INNER JOIN ucastnici_zapasu ON (zapas.id = ucastnici_zapasu.id_zapas)
+                WHERE (ucastnici_zapasu.id_tym1 IS NULL AND 
+                        ucastnici_zapasu.id_tym2 != '%s' )""" % (tym[0]))
+    dostupne += db_get("""SELECT * FROM zapas
+                INNER JOIN ucastnici_zapasu ON (zapas.id = ucastnici_zapasu.id_zapas)
+                WHERE (ucastnici_zapasu.id_tym2 IS NULL AND 
+                        ucastnici_zapasu.id_tym1 != '%s' )""" % (tym[0]))
     turnaje = db_get_from_all("turnaj", ['id', 'nazev'])
     tymy = db_get_from_all("tym", ['id', 'nazev'])
     hry = db_get_from_all("hra", ["id", "nazev_hry"])
-    return render_template('user/zapas.html', account=account, table_name='zapas', zapasy=zapasy, vudce=vudce, hry=hry, turnaje=turnaje, tymy=tymy)
+    return render_template('user/zapas.html', account=account, table_name='zapas', zapasy=zapasy, vudce=vudce, hry=hry, turnaje=turnaje, tymy=tymy, dostupne=dostupne, tym=tym[0])
+
+@user.route('/zapas/prihlasit', methods=['GET'])
+@login_required('user')
+def zapas_prihlasit():
+    tym1, tym2 = db_get("""SELECT id_tym1, id_tym2 FROM ucastnici_zapasu 
+                    WHERE id_zapas = '%s'""" % (str(request.args['id'])))[0]
+    if tym1 == None:
+        db_get("""UPDATE ucastnici_zapasu SET id_tym1 = '%s'
+            WHERE id_zapas = '%s'""" % (request.args['tym'] , request.args['id']))
+    else:
+        db_get("""UPDATE ucastnici_zapasu SET id_tym2 = '%s'
+            WHERE id_zapas = '%s'""" % (request.args['tym'] , request.args['id']))
+    flash("Úspěšně jste se přihllásily na zápas")
+    return redirect(url_for('user.zapas'))
+
+@user.route('/zapas/odhlasit', methods=['GET'])
+@login_required('user')
+def zapas_odhlasit():
+    tym1, tym2 = db_get("""SELECT id_tym1, id_tym2 FROM ucastnici_zapasu 
+                    WHERE id_zapas = '%s'""" % (str(request.args['id'])))[0]
+    if str(tym1) == str(request.args['tym']):
+        db_get("""UPDATE ucastnici_zapasu SET id_tym1 = NULL
+            WHERE id_zapas = '%s'""" % (request.args['id']))
+    else:
+        db_get("""UPDATE ucastnici_zapasu SET id_tym2 = NULL
+            WHERE id_zapas = '%s'""" % (request.args['id']))
+    flash("Úspěšně jste se odhlásily ze zápasu")
+    return redirect(url_for('user.zapas'))
 
 @user.route('/turnaj/', methods=['GET', 'POST'])
 @login_required('user')

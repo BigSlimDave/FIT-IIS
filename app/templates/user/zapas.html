@@ -6,6 +6,65 @@ Zápasy jsou týmovou aktivitou, jelikož nejsi v žádném týmu, tak nemáš �
 <h1>Zápasy</h1>
     {% if vudce %}
     <h2>Dostupné zápasy</h2>
+    <div class="panel-group">
+        <div class="panel panel-default">
+          <div id="collapse1" class="panel-collapse">
+              <table class="table table-striped table-hover table-bordered table-condensed">
+                  <tr>
+                      <th>Datum</th>
+                      <th>Čas</th>
+                      <th>Turnaj</th>
+                      <th>Hra</th>
+                      <th>Typ</th>
+                      <th>Tým1</th>
+                      <th>Tým2</th>
+                      <th>Akce</th>
+                  </tr>
+                  <tr>
+                  {% for zapas in dostupne %}
+                    <td>{{zapas[1]}}</td>
+                    <td>{{zapas[6]}}</td>
+                    <td>
+                        {% if zapas[5] == None %}
+                              scrim- trénink
+                            {% else %}
+                            {% for turnaj in turnaje%}
+                                {% if turnaj[0] == zapas[5] %}
+                                <a href="/user/turnaj/detail/{{turnaj[0]}}">
+                                  {{turnaj[1]}}
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    </td>
+                    <td>
+                    {% for hra in hry%}
+                        {% if hra[0] == zapas[4] %}
+                          {{hra[1]}}
+                        {% endif %}
+                    {% endfor %}
+                    </td>
+                    <td>{{zapas[3]}}</td>
+                    <td>{% for tym in tymy%}
+                        {% if tym[0] == zapas[9] %}
+                          {{tym[1]}}
+                          {% break %}
+                        {% endif %}
+                      {% endfor %}
+                    </td>
+                    <td>{% for tym in tymy%}
+                        {% if tym[0] == zapas[10] %}
+                          {{tym[1]}}
+                          {% break %}
+                        {% endif %}
+                      {% endfor %}
+                    </td>
+                    <td><button onclick="location.href='prihlasit?id={{zapas[0]}}&tym={{tym}}'">Přihlásit se</button></td>
+                  </tr>
+                  {% endfor %}
+              </table>
+            </div>
+        </div>
+        </div> 
     {% endif %}
     <h2>Nehrané zápasy</h2><br>
         <div class="panel-group">
@@ -64,11 +123,11 @@ Zápasy jsou týmovou aktivitou, jelikož nejsi v žádném týmu, tak nemáš �
                       {% endfor %}
                     </td>
                     {% if vudce %}
-                    <td><button onclick="location.href='odhlasit?id={{zapas[0]}}'">Odhlásit se</button></td>
+                    <td><button onclick="location.href='odhlasit?id={{zapas[0]}}&tym={{tym}}'">Odhlásit se</button></td>
                     {% endif %}
                     {% endif %}
-                  {% endfor %}
                   </tr>
+                  {% endfor %}
               </table>
             </div>
         </div>
@@ -131,8 +190,8 @@ Zápasy jsou týmovou aktivitou, jelikož nejsi v žádném týmu, tak nemáš �
                       {% endfor %}
                     </td>
                     {% endif %}
-                  {% endfor %}
                   </tr>
+                  {% endfor %}
               </table>
             </div>
         </div>
