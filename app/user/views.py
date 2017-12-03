@@ -284,16 +284,23 @@ def klan_zalozit():
 def klan_prochazet():
     account = session
     klany = db_get_from_all('klan', ['*'])
+    hry = db_get_from_all('hra', ['*'])
     tmp = []
     pismeno = ''
     if 'pismeno' in request.args:
         pismeno = request.args['pismeno']
-        print pismeno.lower()
         for i in range(len(klany)):
             if (klany[i][1][0] == pismeno.upper()) or (klany[i][1][0] == pismeno.lower()):
                 tmp.append(klany[i])
         klany = tmp
-    return render_template('user/klan_prochazet.html', account=account, table_name='klan_prochazet', klany=klany)
+    if 'hra' in request.args:
+        id_hra = request.args['hra']
+        for i in range(len(klany)):
+            if str(klany[i][5]) == str(id_hra):
+                tmp.append(klany[i])
+        klany = tmp
+        print tmp
+    return render_template('user/klan_prochazet.html', account=account, table_name='klan_prochazet', klany=klany, hry=hry)
 
 @user.route('/klan_prochazet/detail/<string:nick>', methods=['GET', 'POST'])
 @login_required('user')
