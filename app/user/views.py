@@ -83,7 +83,7 @@ def hrac():
             db_get("""DELETE FROM specializace WHERE id=%s""" % (spec_id))
             return redirect(url_for('user.hrac', id=session['id']))
         flash("Neznámý požadavek")
-        return redirect(url_for("hrac"))
+        return redirect(url_for("user.hrac"))
 
 @user.route('/hrac/heslo/', methods=['GET', 'POST'])
 @login_required('user')
