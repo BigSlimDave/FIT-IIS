@@ -115,6 +115,9 @@ def db_update_where_what(table_name, where, *what):
     for i in what[0]:
         if i == 'Odeslat':
             continue
+        if what[0][i].encode('utf-8') == "":
+            bla += ["{0}={1}".format(i.encode('utf-8'), "NULL")]
+            continue
         bla += ["{0}='{1}'".format(i.encode('utf-8'), what[0][i].encode('utf-8'))]
     values = ", ".join(bla)
     db, cursor = database()
