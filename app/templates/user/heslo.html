@@ -1,11 +1,21 @@
 {% extends 'user_base.html' %}
 {% block content%}
 <h2>Změna hesla</h2>
-<form method="post" action="">
+<form method="post" action="" id="data_form" data-parsley-validate="">
     <label>Staré heslo:</label>
-    <input type="password" name="stare">
+    <input class="form-control" required="" type="password" name="stare">
     <label>Nové heslo:</label>
-    <input type="password" name="nove">
+    <input class="form-control" required="" type="password" name="nove">
     <input type="submit" name="odeslat" value="Změnit">
 </form>
+
+<script type="text/javascript">
+$(function () {
+  $('#data-form').parsley().on('field:validated', function() {
+  })
+  .on('form:submit', function() {
+    return true;
+  });
+});
+</script>
 {% endblock %}

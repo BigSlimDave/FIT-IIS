@@ -272,11 +272,13 @@ def edit_row(table, row):
         return render_template('admin/admin_table_edit.html', content=content, account=session, header=table_head, table_name=table)
     elif 'Odeslat' in request.form:
         if db_update_where_what(table, "id='{0}'".format(row), request.form) == True:
-            return redirect(url_for('admin.index'))
+            return redirect('/admin/%s/' % (table))
         else:
-            return "chyba databaze"
+            flash("Chyba databáze, požadavek se nepodařilo dokončit")
+            return redirect('/admin/%s/' % (table))
     else: # POST
-        pass
+        flash("Neznámý požadavek :(")
+        return redirect('/admin/%s/' % (table))
 
 @admin.route('/klan/detail/<nazev>/<id>', methods=['GET', 'POST'])
 @login_required('admin')

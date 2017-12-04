@@ -13,6 +13,7 @@ user = Blueprint('user', __name__, static_folder='static', template_folder='temp
 @login_required('user')
 def index():
     account = session
+    return redirect(url_for('user.hrac'))
     return render_template('user/index.html', account=account, table_name='')
 
 @user.route('/hrac/', methods=['GET', 'POST'])
@@ -486,8 +487,10 @@ def zapas():
         vudce = True
     else:
         tym = db_get("""SELECT tym FROM tym_clenstvi WHERE hrac='%s'""" 
-                        % (session['id']))[0]
-    if tym == None:
+                        % (session['id']))
+        if tym != ():
+            tym = tym[0]
+    if tym == None or tym == ():
         return render_template('user/zapas.html', account=account, table_name='zapas', zapasy=None)
     zapasy = db_get("""SELECT * FROM zapas
                 INNER JOIN ucastnici_zapasu ON (zapas.id = ucastnici_zapasu.id_zapas)

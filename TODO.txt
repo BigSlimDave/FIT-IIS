@@ -1,7 +1,7 @@
 Tym:
  - stejne jako klan                  // COMPLETE
 Klan:
- - prohlizeni klanu podle zamereni   // TODO: SMEKY
+ - prohlizeni klanu podle zamereni   // COMPLETE
 
 Turnaj:  
  - Rozliseni turnaj_bezny, turnaj_wc // COMPLETE
@@ -23,7 +23,7 @@ prochazeni her podle
  - herni mody                        // COMPLETE
  - vydavatele                        // COMPLETE
 
-prihlasovani tymu na zapasy          // TODO: SMEKY
+prihlasovani tymu na zapasy          // COMPLETE
 
 hrac
  - Posledni 5 zapasu tymu            // COMPLETE

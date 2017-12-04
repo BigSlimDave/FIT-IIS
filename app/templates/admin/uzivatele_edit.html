@@ -1,7 +1,7 @@
 {% extends 'admin_base.html' %}
 {% block content %}
 <h1>Upravit položku tabulky {{table_name}}</h1>
-    <form method="POST" action="">
+    <form method="POST" action="" id="data-form" data-parsley-validate="">
         {% for head in header %}
             <label>{{head[0]}}</label>
             {% if head[0] == 'role' %}
@@ -10,9 +10,19 @@
                   <option value="user" {% if content[loop.index-1] == 'user' %}selected=selected{% endif %}>User</option>
                 </select>
             {% else %}
-                <input type="text" name="{{head[0]}}" value="{{content[loop.index-1]}}" {% if head[0] == 'id' or head[0] == 'heslo'%}disabled{% endif %}>
+                <input class="form-control" required="" type="text" name="{{head[0]}}" value="{{content[loop.index-1]}}" {% if head[0] == 'id' or head[0] == 'heslo'%}disabled{% endif %}>
             {% endif %}
         {% endfor %}
             <input type="submit" name="Odeslat" value="Odeslat">
     </form>
+
+<script type="text/javascript">
+$(function () {
+  $('#data-form').parsley().on('field:validated', function() {
+  })
+  .on('form:submit', function() {
+    return true;
+  });
+});
+</script>
 {% endblock %}

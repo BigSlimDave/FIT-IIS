@@ -5,21 +5,31 @@
                     <div class="col-md-6 log">
                          <h1>Přidat nového uživatele</h1>
                          <div class="strip"></div>
-                         <form method="POST" action="">
-                            <label>Přezdívka: </label>
-                            <input type="text" name="prezdivka"><br>
-                            <label>Heslo: </label>
-                            <input type="password" name="heslo"><br>
+                         <form method="POST" action="" id="data-form" data-parsley-validate="">
+                            <label>Přezdívka: *</label>
+                            <input class="form-control" type="text" name="prezdivka" required=""><br>
+                            <label>Heslo: *</label>
+                            <input class="form-control" type="password" name="heslo" required=""><br>
                             <label>Role: </label>
                             <select name="role">
                               <option value="admin">Admin</option>
                               <option value="user" >User</option>
                             </select><br>
-                            <label>Jméno: </label>
-                            <input type="text" name="jmeno"><br>
-                            <input type="submit" name="Odeslat" value="Odeslat">
+                            <label>Jméno: *</label>
+                            <input class="form-control" type="text" name="jmeno" required=""><br>
+                            <input type="submit" name="Odeslat" value="Odeslat" required="">
                         </form>
                     </div>
                 </div>
             </div>
+
+<script type="text/javascript">
+$(function () {
+  $('#data-form').parsley().on('field:validated', function() {
+  })
+  .on('form:submit', function() {
+    return true;
+  });
+});
+</script>
 {% endblock %}

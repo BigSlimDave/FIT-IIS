@@ -6,9 +6,9 @@
                     <div class="col-md-6 log">
                          <h3>Změna hesla uživatele {{prezdivka}}</h3>
                          <div class="strip"></div>
-                         <form method=post>
+                         <form method=post id="data-form" data-parsley-validate="">
                             <label>Zadejte nové heslo: </label>
-                            <input type="password" name="heslo">
+                            <input class="form-control" required="" type="password" name="heslo">
                             <p><input type=submit value=Změnit>
                          </form>
                     </div>
@@ -16,4 +16,13 @@
             </div>
         </div>
 
+<script type="text/javascript">
+$(function () {
+  $('#data-form').parsley().on('field:validated', function() {
+  })
+  .on('form:submit', function() {
+    return true;
+  });
+});
+</script>
 {% endblock %}

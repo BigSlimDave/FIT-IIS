@@ -1,14 +1,14 @@
 {% extends 'admin_base.html' %}
 {% block content %}
 <h1>Přidat zápas</h1>
-    <form method="POST" action="" id=zapasek>
+    <form method="POST" action="" id=zapasek data-parsley-validate="">
         <table>
         <tr>
             <td style="text-align:right">
                 <label>Kdy:</label>
             </td>
             <td>
-                <input type="text" name="kdy">
+                <input class="form-control" required="" type="text" name="kdy">
             </td>
             <td>
                 Formát: YYYY-MM-DD
@@ -19,7 +19,7 @@
                 <label>Skóre:</label>
             </td>
             <td>
-                <input type="text" name="skore">
+                <input class="form-control" type="text" name="skore">
             </td>
             <td>
                 např.: 5:2
@@ -30,7 +30,7 @@
                 <label>Typ:</label>
             </td>
             <td>
-                <input type="text" name="typ">
+                <input class="form-control" required="" type="text" name="typ">
             </td>
             <td>
                 např.: deathmatch
@@ -111,4 +111,14 @@
         </table>
         <input type="submit" name="Odeslat" value="Odeslat">
     </form>
+
+<script type="text/javascript">
+$(function () {
+  $('#zapasek').parsley().on('field:validated', function() {
+  })
+  .on('form:submit', function() {
+    return true;
+  });
+});
+</script>
 {% endblock %}

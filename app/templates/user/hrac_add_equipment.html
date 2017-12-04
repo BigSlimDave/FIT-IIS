@@ -3,14 +3,14 @@
 <div style="width: 50%; margin: 0 auto;">
     <h1 align="center">Přidat {{table_name}}</h1>
 
-    <form method="POST" action="">
+    <form method="POST" action="" id="data_form" data-parsley-validate="">
         {% for head in header if head[0] != 'id'%}
         {% if head[0] == 'vlastnik' %}
         <input type="hidden" value="{{id}}" name="{{head[0]}}">
         {% else %}
         <div class="input-group">
             <span style="min-width:75px;" class="input-group-addon">{{head[0]}}</span>
-            <input id="msg" type="text" class="form-control" name="{{head[0]}}">
+            <input class="form-control" {% if head[2] == "NO" %}required=""{% endif %} {% if head[1][:3] == "int" %}data-parsley-type="integer"{% endif %} id="msg" type="text" name="{{head[0]}}">
         </div>
         {% endif %}
         {% endfor %}
@@ -21,4 +21,13 @@
     </form>
 </div>
 
+<script type="text/javascript">
+$(function () {
+  $('#data-form').parsley().on('field:validated', function() {
+  })
+  .on('form:submit', function() {
+    return true;
+  });
+});
+</script>
 {% endblock %}

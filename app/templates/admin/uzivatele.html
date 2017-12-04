@@ -1,19 +1,17 @@
 {% extends 'admin_base.html' %}
 {% block content %}
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('#data_table').DataTable();
+} );
+</script>
 <h1>Uživatelé</h1>
 <a href="pridat_uzivatele"><button>Přidat uživatele</button></a>
 <h2>Databáze uživatelů</h2>
 <div class="panel-group">
         <div class="panel panel-default">
-          <a data-toggle="collapse" href="#collapse1">
-          <div class="panel-heading">
-            <h4 class="panel-title text-center">
-              Vypsat databázy
-            </h4>
-          </div>
-          </a>
           <div id="collapse1" class="panel-collapse">
-              <table class="table table-striped table-hover table-bordered table-condensed">
+              <table class="table table-striped table-hover table-bordered table-condensed" id="data_table">
                   <tr>
                   {% for item in table_head %}
                       <th>{{ item[0] }}</th>
