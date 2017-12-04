@@ -10,6 +10,7 @@ admin = Blueprint('admin', __name__, static_folder='static', template_folder='te
 @admin.route('/', methods=['GET', 'POST'])
 @login_required('admin')
 def index():
+    return redirect(url_for('admin.uzivatele'))
     return render_template('admin/index.html', account=session, table='')
 
 ################# uzivatele ###########################
@@ -19,7 +20,7 @@ def uzivatele():
     account = session
     table_head = db_describe("uzivatele")
     content = db_get_from_all("uzivatele", ['*'])
-    return render_template('admin/uzivatele.html', account=account, content=content, table_head=table_head)
+    return render_template('admin/uzivatele.html', account=account, content=content, table_head=table_head, table_name='uzivatele')
 
 @admin.route('/uzivatele/edit/<int:id>/', methods=['GET', 'POST'])
 @login_required('admin')
@@ -98,7 +99,7 @@ def hrac():
     account = session
     table_head = db_describe("hrac")
     content = db_get(" SELECT * FROM hrac")
-    return render_template('admin/hrac.html', account=account, content=content, table_head=table_head)
+    return render_template('admin/hrac.html', account=account, content=content, table_head=table_head, table_name='hrac')
 
 @admin.route('/vybaveni/', methods=['GET', 'POST'])
 @login_required('admin')
@@ -106,7 +107,7 @@ def vybaveni():
     account = session
     table_head = db_describe("vybaveni")
     content = db_get_from_all("vybaveni", ['*'])
-    return render_template('admin/vybaveni.html', account=account, content=content, table_head=table_head)
+    return render_template('admin/vybaveni.html', account=account, content=content, table_head=table_head, table_name='vybaveni')
 
 @admin.route('/hra/', methods=['GET', 'POST'])
 @login_required('admin')
@@ -114,7 +115,7 @@ def hra():
     account = session
     table_head = db_describe("hra")
     content = db_get_from_all("hra", ['*'])
-    return render_template('admin/hra.html', account=account, content=content, table_head=table_head)
+    return render_template('admin/hra.html', account=account, content=content, table_head=table_head, table_name='hra')
 
 @admin.route('/klan/', methods=['GET', 'POST'])
 @login_required('admin')
@@ -122,7 +123,7 @@ def klan():
     account = session
     table_head = db_describe("klan")
     content = db_get_from_all("klan", ['*'])
-    return render_template('admin/klan.html', account=account, content=content, table_head=table_head)
+    return render_template('admin/klan.html', account=account, content=content, table_head=table_head, table_name='klan')
 
 @admin.route('/tym/', methods=['GET', 'POST'])
 @login_required('admin')
@@ -130,7 +131,7 @@ def tym():
     account = session
     table_head = db_describe("tym")
     content = db_get_from_all("tym", ['*'])
-    return render_template('admin/tym.html', account=account, content=content, table_head=table_head)
+    return render_template('admin/tym.html', account=account, content=content, table_head=table_head, table_name='tym')
 
 @admin.route('/zapas/', methods=['GET', 'POST'])
 @login_required('admin')
@@ -142,7 +143,7 @@ def zapas():
     turnaje = db_get_from_all("turnaj", ['id', 'nazev'])
     tymy = db_get_from_all("tym", ['id', 'nazev'])
     hry = db_get_from_all("hra", ["id", "nazev_hry"])
-    return render_template('admin/zapas.html', account=account, content=content, table_head=table_head, ucastnici = ucastnici, turnaje=turnaje, tymy=tymy, hry=hry)
+    return render_template('admin/zapas.html', account=account, content=content, table_head=table_head, ucastnici = ucastnici, turnaje=turnaje, tymy=tymy, hry=hry, table_name='zapas')
 
 @admin.route('/zapas/pridat/', methods=['GET', 'POST'])
 @login_required('admin')
@@ -152,7 +153,7 @@ def zapas_pridat():
         turnaje = db_get_from_all("turnaj", ['id', 'nazev'])
         tymy = db_get_from_all("tym", ['id', 'nazev'])
         hry = db_get_from_all("hra", ["id", "nazev_hry"])
-        return render_template('admin/zapas_pridat.html', account=account, turnaje=turnaje, tymy=tymy, hry=hry)
+        return render_template('admin/zapas_pridat.html', account=account, turnaje=turnaje, tymy=tymy, hry=hry, table_name='zapas')
     else:
         if 'Odeslat' in request.form:
             # return str(request.form)
@@ -187,7 +188,7 @@ def turnaj():
     account = session
     table_head = db_describe("turnaj")
     content = db_get_from_all("turnaj", ['*'])
-    return render_template('admin/turnaj.html', account=account, content=content, table_head=table_head)
+    return render_template('admin/turnaj.html', account=account, content=content, table_head=table_head, table_name='turnaj')
 
 @admin.route('/sponzor/', methods=['GET', 'POST'])
 @login_required('admin')
@@ -195,7 +196,7 @@ def sponzor():
     account = session
     table_head = db_describe("sponzor")
     content = db_get_from_all("sponzor", ['*'])
-    return render_template('admin/sponzor.html', account=account, content=content, table_head=table_head)
+    return render_template('admin/sponzor.html', account=account, content=content, table_head=table_head, table_name='sponzor')
 
 @admin.route('/turnaj/add/', methods = ['GET', 'POST'])
 @login_required('admin')
@@ -288,7 +289,7 @@ def adoj(nazev, id):
     members = members_in_clan(id)
     klan_info = db_get_from_where_one('klan', "id='{0}'".format(id), ['*'])
     #print(klan_info)
-    return render_template('admin/klan_detail.html', account=account, members=members, klan_info=klan_info)
+    return render_template('admin/klan_detail.html', account=account, members=members, klan_info=klan_info, table_name='klan')
 
 @admin.route('/tym/detail/<nazev>/<id>', methods=['GET', 'POST'])
 @login_required('admin')
@@ -296,7 +297,7 @@ def team_members_detail(nazev, id):
     account = session
     members = members_in_team(id)
     print(members)
-    return render_template('admin/team_detail.html', account=account, members=members)
+    return render_template('admin/team_detail.html', account=account, members=members, table_name='tym')
 
 @admin.route('/turnaj/detail/<id>', methods=['GET', 'POST'])
 @login_required('admin')
@@ -316,7 +317,7 @@ def turnament_detail(id):
             WHERE turnaj.id = %s
             """%(id))
         all_sponsors = db_get("""SELECT nazev, typ, id FROM sponzor""")
-        return render_template('admin/turnament_detail.html', account=account, members=games, Name=name[0][0], sponzors=sponzors, all_sponsors=all_sponsors)
+        return render_template('admin/turnament_detail.html', account=account, members=games, Name=name[0][0], sponzors=sponzors, all_sponsors=all_sponsors, table_name='turnaj')
     else:
         print request.form
         if 'add_sponsor' in request.form:
@@ -341,36 +342,35 @@ def turnament_detail(id):
 def turnament_location(location):
     account = session
     db_c = db_get("SELECT id, nazev, odmena, kdy, kapacita FROM turnaj WHERE kde=\"%s\"" %(location))
-    return render_template('admin/turnament_location.html', account=account, turnaments=db_c, place=location )
+    return render_template('admin/turnament_location.html', account=account, turnaments=db_c, place=location , table_name='turnaj')
 
 @admin.route('/hra/detail/<name>', methods=['GET', 'POST'])
 @login_required('admin')
 def games_detail(name):
     account = session
     db_c = db_get("SELECT turnaj.nazev, turnaj.kde, mod_hry, zapas.kdy, typ, turnaj.id FROM (hra JOIN zapas ON ( hra.id = zapas.hra )) JOIN turnaj ON ( zapas.turnaj = turnaj.id) WHERE nazev_hry = \"%s\"" %(name))
-    return render_template('admin/hra_detail.html', account=account, gameInfo=db_c )
+    return render_template('admin/hra_detail.html', account=account, gameInfo=db_c, table_name='hra')
 
 @admin.route('/hra/detail/genre/<genre>', methods=['GET', 'POST'])
 @login_required('admin')
 def games_genre(genre):
     account = session
     db_c = db_get("SELECT nazev_hry, vydavatel_hry, rok_vydani_hry FROM hra WHERE zanr_hry=\"%s\"" %(genre))
-    return render_template('admin/hra_genre.html', account=account, genreSort=db_c, genre=genre)
+    return render_template('admin/hra_genre.html', account=account, genreSort=db_c, genre=genre, table_name='hra')
 
 @admin.route('/hra/detail/mod/<mods>', methods=['GET', 'POST'])
 @login_required('admin')
 def games_mods(mods):
     account = session
     db_c = db_get("SELECT nazev_hry, vydavatel_hry, rok_vydani_hry FROM hra WHERE mod_hry=\"%s\"" %(mods))
-    return render_template('admin/hra_mods.html', account=account, ModSort=db_c, mod=mods )
+    return render_template('admin/hra_mods.html', account=account, ModSort=db_c, mod=mods, table_name='hra')
 
 @admin.route('/hra/detail/publisher/<pub>', methods=['GET', 'POST'])
 @login_required('admin')
 def games_publisher(pub):
     account = session
     db_c = db_get("SELECT nazev_hry, rok_vydani_hry, zanr_hry FROM hra WHERE vydavatel_hry=\"%s\"" %(pub))
-    return render_template('admin/hra_vydavatel.html', account=account, PubSort=db_c, publisher=pub)
-
+    return render_template('admin/hra_vydavatel.html', account=account, PubSort=db_c, publisher=pub, table_name='hra')
 
 @admin.route('/hrac/detail/<id>', methods=['GET', 'POST'])
 @login_required('admin')
@@ -394,7 +394,7 @@ def user_detail(id):
         WHERE hrac = %s
         """%(id))
         all_games = db_get("SELECT nazev_hry, id FROM hra")
-        return render_template('admin/user_detail.html', account=account, PlayerInfo=db_c[0] ,PlayerVybaveniInfo=db_vybaveni, Specialization=db_specialization, playerID=id, all_games=all_games)
+        return render_template('admin/user_detail.html', account=account, PlayerInfo=db_c[0] ,PlayerVybaveniInfo=db_vybaveni, Specialization=db_specialization, playerID=id, all_games=all_games, table_name='hrac')
     else:
         if ( "odebrat_id" in request.form ):
             vybaveni_id = request.form["odebrat_id"]

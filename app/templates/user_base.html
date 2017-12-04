@@ -74,6 +74,9 @@
                 <li{% if table_name == 'zapas' %} class="active"{% endif %}><a href="/user/zapas/">Zápasy</a></li>
                 <li{% if table_name == 'turnaj' %} class="active"{% endif %}><a href="/user/turnaj/">Turnaje</a></li>
                 <!--<li{% if table_name == 'sponzor' %} class="active"{% endif %}><a href="/user/sponzor/">Sponzor</a></li>-->
+                {% if account['logged'] == "admin" %}
+                <li><a href="/admin/"><b>Admin site</b></a></li>
+                {% endif %}
               </ul>
               <form class="navbar-form navbar-right" method=post>
                 <button id="logout" type="submit" name="logout" value=Odhlásit class="btn btn-default">Odhlásit</button>

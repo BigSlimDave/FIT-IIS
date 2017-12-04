@@ -85,7 +85,7 @@ Zápasy jsou týmovou aktivitou, jelikož nejsi v žádném týmu, tak nemáš �
                   </tr>
                   <tr>
                   {% for zapas in zapasy %}
-                    {% if zapas[2] == '' %}
+                    {% if zapas[2] == '' or zapas[2] == None %}
                     <td>{{zapas[1]}}</td>
                     <td>{{zapas[6]}}</td>
                     <td>
@@ -149,7 +149,7 @@ Zápasy jsou týmovou aktivitou, jelikož nejsi v žádném týmu, tak nemáš �
                   </tr>
                   <tr>
                   {% for zapas in zapasy %}
-                    {% if zapas[2] != '' %}
+                    {% if zapas[2] != '' and zapas[2] != None %}
                     <td>{{zapas[1]}}</td>
                     <td>{{zapas[6]}}</td>
                     <td>

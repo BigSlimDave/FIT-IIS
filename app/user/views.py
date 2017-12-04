@@ -593,27 +593,31 @@ def turnaj_detail(id):
     """%(id))
     basicinfo = db_get("SELECT nazev,kde,kdy,kapacita,odmena FROM turnaj WHERE id = %s"%(id))[0]
     vyherce = db_get("SELECT bezny, wc FROM turnaj WHERE id = %s"%(id))[0]
-    print(vyherce)
+    # print(vyherce)
     if ( vyherce[0] ):
         vyherce = db_get("""
         SELECT vitez, tym.nazev, tym.id
         FROM turnaj JOIN turnaj_bezny ON turnaj.bezny = turnaj_bezny.id 
                     JOIN tym          ON turnaj_bezny.vitez = tym.id
-        WHERE turnaj.id = %s"""%(id))[0]
+        WHERE turnaj.id = %s"""%(id))
+        if vyherce != ():
+            vyherce = vyherce[0]
     else:
         vyherce = db_get("""
         SELECT prvni, druhy, treti, ctvrty, paty
         FROM turnaj JOIN turnaj_wc ON turnaj.wc = turnaj_wc.id
                     JOIN tym       ON turnaj_wc.prvni = tym.id
-        WHERE turnaj.id = %s"""%(id))[0]
-        vyherce = (
+        WHERE turnaj.id = %s"""%(id))
+        if vyherce != ():
+            vyherce = vyherce[0]
+            vyherce = (
             db_get_team_name(vyherce[0]),
             db_get_team_name(vyherce[1]),
             db_get_team_name(vyherce[2]),
             db_get_team_name(vyherce[3]),
             db_get_team_name(vyherce[4])
-        )
-    print(vyherce)
+            )
+    # print(vyherce)
     return render_template('user/turnaj_detail.html', account=account, table_name='turnaj', zapasy=games, BasicInfo=basicinfo, sponzors=sponzors, vyherce=vyherce)
 
 @user.route('/sponzor/', methods=['GET', 'POST'])
